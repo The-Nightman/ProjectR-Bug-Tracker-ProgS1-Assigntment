@@ -54,6 +54,7 @@
             // 
             lblDashboardProjectsTitle.AutoSize = true;
             lblDashboardProjectsTitle.Font = new Font("Microsoft Sans Serif", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblDashboardProjectsTitle.ForeColor = SystemColors.ControlLightLight;
             lblDashboardProjectsTitle.Location = new Point(16, 16);
             lblDashboardProjectsTitle.Margin = new Padding(0);
             lblDashboardProjectsTitle.Name = "lblDashboardProjectsTitle";
@@ -75,6 +76,7 @@
             // 
             lblDashboardActivity.AutoSize = true;
             lblDashboardActivity.Font = new Font("Microsoft Sans Serif", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblDashboardActivity.ForeColor = SystemColors.ControlLightLight;
             lblDashboardActivity.Location = new Point(16, 392);
             lblDashboardActivity.Margin = new Padding(0, 0, 0, 16);
             lblDashboardActivity.Name = "lblDashboardActivity";
@@ -102,6 +104,7 @@
             // 
             lblDashboardActivityWeekly.AutoSize = true;
             lblDashboardActivityWeekly.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblDashboardActivityWeekly.ForeColor = SystemColors.ControlLightLight;
             lblDashboardActivityWeekly.Location = new Point(19, 440);
             lblDashboardActivityWeekly.Name = "lblDashboardActivityWeekly";
             lblDashboardActivityWeekly.Size = new Size(165, 31);
@@ -112,6 +115,7 @@
             // 
             lblDashboardActivityByLevels.AutoSize = true;
             lblDashboardActivityByLevels.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblDashboardActivityByLevels.ForeColor = SystemColors.ControlLightLight;
             lblDashboardActivityByLevels.Location = new Point(389, 440);
             lblDashboardActivityByLevels.Name = "lblDashboardActivityByLevels";
             lblDashboardActivityByLevels.Size = new Size(188, 31);
@@ -122,6 +126,7 @@
             // 
             lblDashboardActivityProjects.AutoSize = true;
             lblDashboardActivityProjects.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblDashboardActivityProjects.ForeColor = SystemColors.ControlLightLight;
             lblDashboardActivityProjects.Location = new Point(730, 440);
             lblDashboardActivityProjects.Name = "lblDashboardActivityProjects";
             lblDashboardActivityProjects.Size = new Size(207, 31);
