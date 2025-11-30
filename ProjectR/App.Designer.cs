@@ -50,7 +50,7 @@
             // 
             // panelNavBar
             // 
-            panelNavBar.BackColor = Color.FromArgb(40, 40, 40);
+            panelNavBar.BackColor = Color.FromArgb(57, 57, 57);
             panelNavBar.Controls.Add(lblApplicationTitle);
             panelNavBar.Controls.Add(pictureBox1);
             panelNavBar.Controls.Add(btnNavbarProjects);
@@ -86,11 +86,11 @@
             // 
             btnNavbarProjects.BackColor = Color.Transparent;
             btnNavbarProjects.FlatAppearance.BorderSize = 0;
+            btnNavbarProjects.FlatAppearance.MouseDownBackColor = Color.FromArgb(204, 18, 18, 18);
+            btnNavbarProjects.FlatAppearance.MouseOverBackColor = Color.FromArgb(204, 87, 87, 87);
             btnNavbarProjects.FlatStyle = FlatStyle.Flat;
             btnNavbarProjects.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnNavbarProjects.ForeColor = Color.FromArgb(222, 182, 96);
-            btnNavbarProjects.FlatAppearance.MouseOverBackColor = Color.FromArgb(204, 87, 87, 87);
-            btnNavbarProjects.FlatAppearance.MouseDownBackColor = Color.FromArgb(204, 18, 18, 18);
             btnNavbarProjects.ImageAlign = ContentAlignment.MiddleLeft;
             btnNavbarProjects.ImageList = imageListNavbarIconsControl;
             btnNavbarProjects.Location = new Point(3, 152);
@@ -113,11 +113,11 @@
             // 
             btnNavbarDashboard.BackColor = Color.Transparent;
             btnNavbarDashboard.FlatAppearance.BorderSize = 0;
+            btnNavbarDashboard.FlatAppearance.MouseDownBackColor = Color.FromArgb(204, 18, 18, 18);
+            btnNavbarDashboard.FlatAppearance.MouseOverBackColor = Color.FromArgb(204, 87, 87, 87);
             btnNavbarDashboard.FlatStyle = FlatStyle.Flat;
             btnNavbarDashboard.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnNavbarDashboard.ForeColor = Color.FromArgb(222, 182, 96);
-            btnNavbarDashboard.FlatAppearance.MouseOverBackColor = Color.FromArgb(204, 87, 87, 87);
-            btnNavbarDashboard.FlatAppearance.MouseDownBackColor = Color.FromArgb(204, 18, 18, 18);
             btnNavbarDashboard.ImageAlign = ContentAlignment.MiddleLeft;
             btnNavbarDashboard.ImageList = imageListNavbarIconsControl;
             btnNavbarDashboard.Location = new Point(3, 87);
