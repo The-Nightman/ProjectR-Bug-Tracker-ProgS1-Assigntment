@@ -151,7 +151,7 @@
             Controls.Add(flowLayoutPanelProjectCards);
             Controls.Add(separator);
             Controls.Add(lblDashboardActivity);
-            Margin = new Padding(3, 4, 3, 4);
+            Margin = new Padding(0);
             Name = "Dashboard";
             Padding = new Padding(16);
             Size = new Size(1133, 718);
