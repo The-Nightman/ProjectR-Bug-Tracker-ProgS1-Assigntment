@@ -107,15 +107,19 @@ namespace ProjectR
                 );
             }
 
-            Tick[] projectTicks = [.. data.Select<Datapoint, Tick>((p, i) => new(i, p.ProjectName))];
+            Tick[] projectTicks =
+            [
+                .. data.Select<Datapoint, Tick>(
+                    (p, i) => new(i, Utils.TrimString(p.ProjectName, 6))
+                ),
+            ];
 
             formPlotDashboardActivityProjects.Plot.Axes.Bottom.TickGenerator =
                 new ScottPlot.TickGenerators.NumericManual(projectTicks);
-            formPlotDashboardActivityProjects.Plot.Axes.Bottom.TickLabelStyle.Rotation = -30;
             formPlotDashboardActivityWeekly.Plot.Axes.Bottom.TickLabelStyle.Alignment = ScottPlot
                 .Alignment
                 .MiddleRight;
-            formPlotDashboardActivityProjects.Plot.Axes.Margins(bottom: 0);
+            formPlotDashboardActivityProjects.Plot.Axes.Margins(left: 0, right: 0, bottom: 0);
 
             formPlotDashboardActivityProjects.Refresh();
         }
