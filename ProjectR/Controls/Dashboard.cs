@@ -10,6 +10,13 @@ namespace ProjectR.Controls
             InitializeComponent();
         }
 
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Region = new Region(Utils.PaintRoundedCorners(this, 10));
+
+            base.OnPaint(e);
+        }
+
         private List<ProjectPreview> projectPreviews =
         [
             new ProjectPreview("Project A", 12, 2, 5, DateTime.Now),

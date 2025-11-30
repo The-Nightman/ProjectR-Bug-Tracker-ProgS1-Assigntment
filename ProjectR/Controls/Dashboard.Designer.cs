@@ -140,8 +140,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Name = "Dashboard";
-            Size = new Size(1133, 718);
+            BackColor = Color.FromArgb(57, 57, 57);
             Controls.Add(formPlotDashboardActivityProjects);
             Controls.Add(lblDashboardActivityProjects);
             Controls.Add(lblDashboardActivityByLevels);
@@ -153,10 +152,13 @@
             Controls.Add(separator);
             Controls.Add(lblDashboardActivity);
             Margin = new Padding(3, 4, 3, 4);
+            Name = "Dashboard";
             Padding = new Padding(16);
-            SizeChanged += App_SizeChanged;
+            Size = new Size(1133, 718);
             Load += Dashboard_Load;
+            SizeChanged += App_SizeChanged;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
