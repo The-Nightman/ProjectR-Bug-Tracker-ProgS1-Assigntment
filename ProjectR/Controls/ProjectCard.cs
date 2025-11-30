@@ -15,6 +15,13 @@ namespace ProjectR.Controls
             lblProjLastActive.Text = $"Last Active: {previewData.LastUpdatedToString()}";
         }
 
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Region = new Region(Utils.PaintRoundedCorners(this, 10));
+
+            base.OnPaint(e);
+        }
+
         private void ProjectCard_Click(object sender, EventArgs e)
         {
             _ = MessageBox.Show("NOT YET IMPLEMENTED", "ProjectR", MessageBoxButtons.OK);

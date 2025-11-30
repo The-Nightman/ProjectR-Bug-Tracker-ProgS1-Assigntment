@@ -105,7 +105,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ControlLight;
+            BackColor = Color.FromArgb(139, 139, 139);
             Controls.Add(lblProjLastActive);
             Controls.Add(separator);
             Controls.Add(lblProjThisWeek);
