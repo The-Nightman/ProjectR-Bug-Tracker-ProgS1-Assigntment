@@ -59,7 +59,7 @@ namespace ProjectR
                 return;
 
             currentView = "PROJECTS";
-            _ = MessageBox.Show("NOT YET IMPLEMENTED", "ProjectR", MessageBoxButtons.OK);
+            NavigateTo(new Controls.ProjectView());
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#575757"
