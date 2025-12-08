@@ -14,7 +14,9 @@ namespace ProjectR.Entities
         public required string Status { get; set; }
         public required DateTime LastUpdated { get; set; }
         public required DateTime CreatedAt { get; set; } = DateTime.Now;
-        public List<Issue> Issues { get; set; } = [];
+        public List<Change> Changes { get; set; } = [];
         public List<Media> Media { get; set; } = [];
+        public required int ProjectId { get; set; }
+        public required Project Project { get; set; }
     }
 }
