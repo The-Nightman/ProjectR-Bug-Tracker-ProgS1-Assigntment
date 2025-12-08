@@ -27,6 +27,18 @@ namespace ProjectR.Controls
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
+            int[] testTiles = new int[10];
+
+            foreach (var item in testTiles)
+            {
+                flowLayoutPanelBugTiles.Controls.Add(new BugTile());
+            }
+
+            if (flowLayoutPanelBugTiles.VerticalScroll.Visible)
+            {
+                flowLayoutPanelBugTiles.Width += SystemInformation.VerticalScrollBarWidth;
+            }
+
             int year = DateTime.Now.Year;
 
             CoordinateRange xRange = new(

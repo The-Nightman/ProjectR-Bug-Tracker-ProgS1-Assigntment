@@ -143,11 +143,14 @@
             // 
             // flowLayoutPanelBugTiles
             // 
+            flowLayoutPanelBugTiles.AutoScroll = true;
             flowLayoutPanelBugTiles.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanelBugTiles.Location = new Point(19, 98);
+            flowLayoutPanelBugTiles.Location = new Point(16, 95);
+            flowLayoutPanelBugTiles.Margin = new Padding(0);
             flowLayoutPanelBugTiles.Name = "flowLayoutPanelBugTiles";
-            flowLayoutPanelBugTiles.Size = new Size(1095, 269);
+            flowLayoutPanelBugTiles.Size = new Size(1101, 269);
             flowLayoutPanelBugTiles.TabIndex = 24;
+            flowLayoutPanelBugTiles.WrapContents = false;
             // 
             // ProjectView
             // 
