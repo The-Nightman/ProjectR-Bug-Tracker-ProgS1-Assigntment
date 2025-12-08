@@ -1,7 +1,11 @@
+using ProjectR.Data;
+
 namespace ProjectR
 {
     public partial class App : Form
     {
+        private DatabaseContext? dbContext;
+
         private string currentView = "DASHBOARD";
 
         public App()
@@ -9,8 +13,12 @@ namespace ProjectR
             InitializeComponent();
         }
 
-        private void App_Load(object sender, EventArgs e)
+        private async void App_Load(object sender, EventArgs e)
         {
+            dbContext = new DatabaseContext();
+
+            await SeedData.SeedDatabase(dbContext);
+
             panelMainView.Controls.Add(new Controls.Dashboard());
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
