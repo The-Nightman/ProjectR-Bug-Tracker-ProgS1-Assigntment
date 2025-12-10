@@ -1,4 +1,5 @@
-﻿using ProjectR.Data;
+﻿using ProjectR.Classes;
+using ProjectR.Data;
 using ScottPlot;
 using System.Globalization;
 
@@ -6,10 +7,14 @@ namespace ProjectR.Controls
 {
     public partial class ProjectView : UserControl
     {
+        private readonly int _projectId;
+        private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
 
-        public ProjectView(DatabaseContext dbContext)
+        public ProjectView(DatabaseContext dbContext, Navigation mainNav, int projId)
         {
+            _projectId = projId;
+            _mainNav = mainNav;
             _context = dbContext;
             InitializeComponent();
         }
