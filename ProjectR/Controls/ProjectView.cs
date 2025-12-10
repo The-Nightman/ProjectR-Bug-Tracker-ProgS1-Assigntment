@@ -1,12 +1,16 @@
-﻿using ScottPlot;
+﻿using ProjectR.Data;
+using ScottPlot;
 using System.Globalization;
 
 namespace ProjectR.Controls
 {
     public partial class ProjectView : UserControl
     {
-        public ProjectView()
+        private readonly DatabaseContext _context;
+
+        public ProjectView(DatabaseContext dbContext)
         {
+            _context = dbContext;
             InitializeComponent();
         }
 
