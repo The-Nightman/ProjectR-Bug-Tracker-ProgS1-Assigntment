@@ -19,7 +19,7 @@ namespace ProjectR
 
             await SeedData.SeedDatabase(dbContext);
 
-            panelMainView.Controls.Add(new Controls.Dashboard());
+            panelMainView.Controls.Add(new Controls.Dashboard(dbContext));
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
                 Properties.Resources.dashboardIconStateActiveDark
@@ -48,7 +48,7 @@ namespace ProjectR
                 return;
 
             currentView = "DASHBOARD";
-            NavigateTo(new Controls.Dashboard());
+            NavigateTo(new Controls.Dashboard(dbContext!));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"
@@ -67,7 +67,7 @@ namespace ProjectR
                 return;
 
             currentView = "PROJECTS";
-            NavigateTo(new Controls.ProjectView());
+            NavigateTo(new Controls.ProjectView(dbContext!));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#575757"
@@ -84,6 +84,13 @@ namespace ProjectR
         {
             panelMainView.Controls.Clear();
             panelMainView.Controls.Add(screen);
+        }
+
+        private void App_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            dbContext?.Dispose();
+
+            dbContext = null;
         }
     }
 }

@@ -141,6 +141,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "App";
             Text = "ProjectR";
+            FormClosing += App_FormClosing;
             Load += App_Load;
             panelNavBar.ResumeLayout(false);
             panelNavBar.PerformLayout();
