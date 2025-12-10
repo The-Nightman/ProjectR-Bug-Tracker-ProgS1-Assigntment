@@ -6,10 +6,12 @@ namespace ProjectR.Controls
 {
     public partial class Dashboard : UserControl
     {
+        private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
 
-        public Dashboard(DatabaseContext dbContext)
+        public Dashboard(DatabaseContext dbContext, Navigation mainNav)
         {
+            _mainNav = mainNav;
             _context = dbContext;
             InitializeComponent();
         }
@@ -34,6 +36,7 @@ namespace ProjectR.Controls
             projectPreviews =
             [
                 .. _context.Projects.Select(p => new ProjectPreview(
+                    p.Id,
                     p.Name,
                     p.Issues.Count(i => i.Status != "Fixed"),
                     p.Issues.Count(i => i.Severity == "Critical" && i.Status != "Fixed"),
@@ -81,7 +84,7 @@ namespace ProjectR.Controls
 
             foreach (ProjectPreview proj in projectPreviews)
             {
-                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj));
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav));
             }
 
             double[] xs = [.. scatterData.Select(gd => gd.XSeries.Date.ToOADate())];
