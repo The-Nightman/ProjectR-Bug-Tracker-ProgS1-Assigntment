@@ -1,9 +1,11 @@
+using ProjectR.Classes;
 using ProjectR.Data;
 
 namespace ProjectR
 {
     public partial class App : Form
     {
+        private Navigation? mainNav;
         private DatabaseContext? dbContext;
 
         private string currentView = "DASHBOARD";
@@ -15,6 +17,7 @@ namespace ProjectR
 
         private async void App_Load(object sender, EventArgs e)
         {
+            mainNav = new(panelMainView);
             dbContext = new DatabaseContext();
 
             await SeedData.SeedDatabase(dbContext);
@@ -48,7 +51,7 @@ namespace ProjectR
                 return;
 
             currentView = "DASHBOARD";
-            NavigateTo(new Controls.Dashboard(dbContext!));
+            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"
@@ -67,7 +70,7 @@ namespace ProjectR
                 return;
 
             currentView = "PROJECTS";
-            NavigateTo(new Controls.ProjectView(dbContext!));
+            mainNav!.UseNavigate(new Controls.ProjectView(dbContext!));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#575757"
@@ -78,12 +81,6 @@ namespace ProjectR
                 "#33DEB660"
             );
             btnNavbarProjects.ImageKey = "projectsDarkActive";
-        }
-
-        private void NavigateTo(UserControl screen)
-        {
-            panelMainView.Controls.Clear();
-            panelMainView.Controls.Add(screen);
         }
 
         private void App_FormClosing(object sender, FormClosingEventArgs e)
