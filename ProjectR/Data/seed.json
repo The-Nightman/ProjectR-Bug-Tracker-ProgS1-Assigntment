@@ -38,8 +38,8 @@
       {
         "Name": "Patient login failure on iOS",
         "Description": "Some iOS users are unable to log in after the 2FA rollout",
-        "Severity": "High",
-        "Status": "In Progress",
+        "Severity": "Critical",
+        "Status": "Investigating",
         "LastUpdated": -1,
         "CreatedAt": -12,
         "Changes": [
@@ -65,7 +65,7 @@
         "Name": "Medication interaction alert missing",
         "Description": "Interaction alerts between some prescriptions are not displayed",
         "Severity": "Critical",
-        "Status": "Open",
+        "Status": "Investigating",
         "LastUpdated": -2,
         "CreatedAt": -20,
         "Changes": [
@@ -91,7 +91,7 @@
         "Name": "Lab results sync failures",
         "Description": "Periodic failures when syncing lab results from external provider",
         "Severity": "Medium",
-        "Status": "Open",
+        "Status": "Investigating",
         "LastUpdated": -4,
         "CreatedAt": -30,
         "Changes": [
@@ -110,7 +110,7 @@
         "Name": "UI accessibility issues in patient dashboard",
         "Description": "Screen reader labels missing and low contrast in critical areas",
         "Severity": "Low",
-        "Status": "Open",
+        "Status": "Investigating",
         "LastUpdated": -7,
         "CreatedAt": -40,
         "Changes": [
@@ -134,7 +134,7 @@
         "Name": "Transaction double-charge",
         "Description": "Users report being charged twice for a single payment",
         "Severity": "Critical",
-        "Status": "In Progress",
+        "Status": "Investigating",
         "LastUpdated": -1,
         "CreatedAt": -8,
         "Changes": [
@@ -159,7 +159,7 @@
       {
         "Name": "Mobile crash on launch (Android 12)",
         "Description": "App crashes on some Android 12 devices during cold start",
-        "Severity": "High",
+        "Severity": "Critical",
         "Status": "Fixed",
         "LastUpdated": 0,
         "CreatedAt": -15,
@@ -179,7 +179,7 @@
         "Name": "Slow balance updates",
         "Description": "Balance refresh takes too long after transactions",
         "Severity": "Medium",
-        "Status": "Open",
+        "Status": "Investigating",
         "LastUpdated": -5,
         "CreatedAt": -25,
         "Changes": [
@@ -202,8 +202,8 @@
       {
         "Name": "Booking date mismatch in confirmation email",
         "Description": "Confirmation emails show a different travel date than booking page",
-        "Severity": "High",
-        "Status": "Open",
+        "Severity": "Critical",
+        "Status": "Investigating",
         "LastUpdated": -2,
         "CreatedAt": -18,
         "Changes": [
@@ -222,7 +222,7 @@
         "Name": "Seat assignment not persisted",
         "Description": "Selected seats are not saved for some bookings made via API",
         "Severity": "Medium",
-        "Status": "In Progress",
+        "Status": "Investigating",
         "LastUpdated": -1,
         "CreatedAt": -22,
         "Changes": [
@@ -247,8 +247,8 @@
       {
         "Name": "Push notifications not delivered to EU users",
         "Description": "Push notifications fail for users located in certain EU regions",
-        "Severity": "High",
-        "Status": "Open",
+        "Severity": "Critical",
+        "Status": "Investigating",
         "LastUpdated": -3,
         "CreatedAt": -10,
         "Changes": [
