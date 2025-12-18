@@ -19,23 +19,43 @@ namespace ProjectR.Controls
             InitializeComponent();
         }
 
-        private class Datapoint(int count, string level)
-        {
-            public int Count { get; set; } = count;
-            public string Level { get; set; } = level;
-        }
-
-        private readonly List<Datapoint> data =
-        [
-            new Datapoint(5, "Low"),
-            new Datapoint(15, "Medium"),
-            new Datapoint(9, "Breaking"),
-            new Datapoint(25, "In Review"),
-            new Datapoint(7, "Investigating"),
-        ];
+        private List<GraphData<string>> issuesData = [];
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
+            List<string> severityLevels = ["Low", "Medium", "Critical"];
+            List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
+
+            var querySeverity = _context
+                .Issues.Where(i => i.ProjectId == _projectId)
+                .GroupBy(g => g.Severity)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            var queryStatus = _context
+                .Issues.Where(c => c.ProjectId == _projectId)
+                .GroupBy(c => c.Status)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            List<GraphData<string>> listSeverity =
+            [
+                .. severityLevels.Select(s => new GraphData<string>(
+                    s,
+                    querySeverity.TryGetValue(s, out int value) ? value : 0
+                )),
+            ];
+
+            List<GraphData<string>> listStatus =
+            [
+                .. statusLevels.Select(s => new GraphData<string>(
+                    s,
+                    queryStatus.TryGetValue(s, out int value) ? value : 0
+                )),
+            ];
+
+            issuesData = [.. listSeverity.Concat(listStatus)];
+
             int[] testTiles = new int[10];
 
             foreach (var item in testTiles)
@@ -95,11 +115,11 @@ namespace ProjectR.Controls
             formPlotProjectActivityHeatmap.UserInputProcessor.Disable();
             formPlotProjectActivityHeatmap.Refresh();
 
-            for (int i = 0; i < data.Count; i++)
+            for (int i = 0; i < issuesData.Count; i++)
             {
                 var bar = formPlotCurrentOpenBugs.Plot.Add.Bar(
                     position: i,
-                    value: data[i].Count
+                    value: issuesData[i].Value
                 );
 
                 bar.Color = i switch
@@ -115,9 +135,7 @@ namespace ProjectR.Controls
 
             Tick[] projectTicks =
             [
-                .. data.Select<Datapoint, Tick>(
-                    (p, i) => new(i, p.Level)
-                ),
+                .. issuesData.Select<GraphData<string>, Tick>((p, i) => new(i, p.XSeries)),
             ];
 
             formPlotCurrentOpenBugs.Plot.Axes.Bottom.TickGenerator =
@@ -133,6 +151,14 @@ namespace ProjectR.Controls
 
         private static double[,] PreProcessHeatmapData()
         {
+            // create dictionary of dayOfYear key to Changes.Count value
+            // interate through cells in loop
+            // if cell number exists as key then cell value = Changes.Count
+            // else cell value = 0
+
+            // TODO :  explore styling cells with 0.5/1px borders to create grid effect
+            // TODO : explore colour grading options for heatmap and whether to invert values
+
             List<List<double>> yearData2d =
             [
                 [],
