@@ -111,29 +111,44 @@ namespace ProjectR.Controls
             );
             formPlotDashboardActivityWeekly.Refresh();
 
-            List<GraphData<string>> radarQuerySeverity =
+            List<string> severityLevels = ["Low", "Medium", "Critical"];
+            List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
+
+            var radarQuerySeverity = _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.Issue.Severity)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            var radarQueryStatus = _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.Issue.Status)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            List<GraphData<string>> radarListSeverity =
             [
-                .. _context
-                    .Changes.Where(c =>
-                        c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                        && c.CreatedAt.Date <= DateTime.Now.Date
-                    )
-                    .GroupBy(c => c.Issue.Severity)
-                    .Select(s => new GraphData<string>(s.Key, s.Count())),
+                .. severityLevels.Select(s => new GraphData<string>(
+                    s,
+                    radarQuerySeverity.TryGetValue(s, out int value) ? value : 0
+                )),
             ];
 
-            List<GraphData<string>> radarQueryStatus =
+            List<GraphData<string>> radarListStatus =
             [
-                .. _context
-                    .Changes.Where(c =>
-                        c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                        && c.CreatedAt.Date <= DateTime.Now.Date
-                    )
-                    .GroupBy(c => c.Issue.Status)
-                    .Select(s => new GraphData<string>(s.Key, s.Count())),
+                .. statusLevels.Select(s => new GraphData<string>(
+                    s,
+                    radarQueryStatus.TryGetValue(s, out int value) ? value : 0
+                )),
             ];
 
-            radarData = [.. radarQuerySeverity.Concat(radarQueryStatus)];
+            radarData = [.. radarListSeverity.Concat(radarListStatus)];
 
             double[] radarYs = [.. radarData.Select(gd => gd.Value)];
 
