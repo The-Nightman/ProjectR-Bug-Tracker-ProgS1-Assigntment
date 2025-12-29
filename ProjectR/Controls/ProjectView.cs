@@ -79,8 +79,10 @@ namespace ProjectR.Controls
             heatmap.Rectangle = new(xRange, new(0.5, 6.5));
             heatmap.CellAlignment = Alignment.LowerLeft;
             heatmap.Position = new(xRange.Min, xRange.Max, 0.5, 6.5);
-            heatmap.Colormap = new ScottPlot.Colormaps.Greens();
-            formPlotProjectActivityHeatmap.Plot.Add.ColorBar(heatmap);
+            string[] colourStrings = ["#151b23", "#033a16", "#196c2e", "#2ea043", "#56d364"]; // github heatmap colour map
+            ScottPlot.Color[] colours = [.. colourStrings.Select(cs => ScottPlot.Color.FromHex(cs))];
+            heatmap.Colormap = new ScottPlot.Colormaps.Custom(colours, false);
+            heatmap.ManualRange = new ScottPlot.Range(0, 4);
             formPlotProjectActivityHeatmap.Plot.HideGrid();
             formPlotProjectActivityHeatmap.Plot.Axes.Margins(0, 0);
 
@@ -149,16 +151,8 @@ namespace ProjectR.Controls
             formPlotCurrentOpenBugs.Refresh();
         }
 
-        private static double[,] PreProcessHeatmapData()
+        private double[,] PreProcessHeatmapData()
         {
-            // create dictionary of dayOfYear key to Changes.Count value
-            // interate through cells in loop
-            // if cell number exists as key then cell value = Changes.Count
-            // else cell value = 0
-
-            // TODO :  explore styling cells with 0.5/1px borders to create grid effect
-            // TODO : explore colour grading options for heatmap and whether to invert values
-
             List<List<double>> yearData2d =
             [
                 [],
@@ -175,6 +169,16 @@ namespace ProjectR.Controls
             DateOnly startDate = DateOnly.Parse($"01-01-{year}", new CultureInfo("en-GB"));
             DateOnly endDate = DateOnly.Parse($"31-12-{year}", new CultureInfo("en-GB"));
 
+            var queryChangesHeatmap = _context
+                .Changes.Where(c =>
+                    c.Issue.ProjectId == _projectId
+                    && c.CreatedAt >= startDate.ToDateTime(TimeOnly.MinValue)
+                    && c.CreatedAt <= endDate.ToDateTime(TimeOnly.MaxValue)
+                )
+                .GroupBy(g => g.CreatedAt.DayOfYear)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
             int maxDays = DateTime.IsLeapYear(year) ? 366 : 365;
 
             int dayOffset = -(int)startDate.DayOfWeek;
@@ -183,10 +187,29 @@ namespace ProjectR.Controls
 
             for (int i = dayOffset; i < maxDays + Math.Abs(dayOffset); i++)
             {
-                double dayData =
-                    i < 0 ? double.NaN
-                    : i >= maxDays ? double.NaN
-                    : i + 1;
+                double dayData;
+
+                if (i < 0 || i >= maxDays)
+                {
+                    dayData = double.NaN;
+                }
+                else
+                {
+                    // bucket the values into 5 levels for heatmap display, this lets us consolidate
+                    // values and is due to issues with the colour bar not showing the full colour
+                    // map and incremental values not being very relevant or understandable
+                    dayData = queryChangesHeatmap.TryGetValue(i + 1, out int value) switch
+                    {
+                        true => value switch
+                        {
+                            <= 5 => 1,
+                            <= 10 => 2,
+                            <= 15 => 3,
+                            _ => 4,
+                        },
+                        false => 0,
+                    };
+                }
 
                 DateOnly currentDate = startDate.AddDays(i);
 
