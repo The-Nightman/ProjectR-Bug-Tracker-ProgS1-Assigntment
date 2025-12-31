@@ -1,7 +1,13 @@
+using ProjectR.Classes;
+using ProjectR.Data;
+
 namespace ProjectR
 {
     public partial class App : Form
     {
+        private Navigation? mainNav;
+        private DatabaseContext? dbContext;
+
         private string currentView = "DASHBOARD";
 
         public App()
@@ -9,9 +15,14 @@ namespace ProjectR
             InitializeComponent();
         }
 
-        private void App_Load(object sender, EventArgs e)
+        private async void App_Load(object sender, EventArgs e)
         {
-            panelMainView.Controls.Add(new Controls.Dashboard());
+            mainNav = new(panelMainView);
+            dbContext = new DatabaseContext();
+
+            await SeedData.SeedDatabase(dbContext);
+
+            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav));
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
                 Properties.Resources.dashboardIconStateActiveDark
@@ -40,7 +51,7 @@ namespace ProjectR
                 return;
 
             currentView = "DASHBOARD";
-            NavigateTo(new Controls.Dashboard());
+            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"
@@ -59,7 +70,7 @@ namespace ProjectR
                 return;
 
             currentView = "PROJECTS";
-            NavigateTo(new Controls.ProjectView());
+            //mainNav!.UseNavigate(new Controls.ProjectView(dbContext!, mainNav, ));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#575757"
@@ -72,10 +83,11 @@ namespace ProjectR
             btnNavbarProjects.ImageKey = "projectsDarkActive";
         }
 
-        private void NavigateTo(UserControl screen)
+        private void App_FormClosing(object sender, FormClosingEventArgs e)
         {
-            panelMainView.Controls.Clear();
-            panelMainView.Controls.Add(screen);
+            dbContext?.Dispose();
+
+            dbContext = null;
         }
     }
 }

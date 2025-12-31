@@ -1,11 +1,23 @@
 ﻿using ProjectR.Classes;
+using ProjectR.Data;
 
 namespace ProjectR.Controls
 {
     public partial class ProjectCard : UserControl
     {
-        public ProjectCard(ProjectPreview previewData)
+        private readonly int _projId;
+        private readonly Navigation _mainNav;
+        private readonly DatabaseContext _context;
+
+        public ProjectCard(
+            ProjectPreview previewData,
+            DatabaseContext dbContext,
+            Navigation mainNav
+        )
         {
+            _projId = previewData.ProjectId;
+            _mainNav = mainNav;
+            _context = dbContext;
             InitializeComponent();
 
             lblProjCardTitle.Text = previewData.ProjectName;
@@ -24,7 +36,7 @@ namespace ProjectR.Controls
 
         private void ProjectCard_Click(object sender, EventArgs e)
         {
-            _ = MessageBox.Show("NOT YET IMPLEMENTED", "ProjectR", MessageBoxButtons.OK);
+            _mainNav.UseNavigate(new ProjectView(_context, _mainNav, _projId));
         }
     }
 }

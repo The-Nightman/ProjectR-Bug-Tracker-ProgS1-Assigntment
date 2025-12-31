@@ -1,0 +1,268 @@
+﻿[
+  {
+    "Name": "Open Health",
+    "issues": [
+      {
+        "Name": "Appointment Daylight savings",
+        "Description": "Appointments show wrong datetime when crossing daylight savings",
+        "Severity": "Medium",
+        "Status": "Fixed",
+        "LastUpdated": 0,
+        "CreatedAt": -3,
+        "Changes": [
+          {
+            "ChangeHash": "brother-clearly-snow",
+            "Name": "Refactor database datetime to utc conversion",
+            "Description": "Refactor database datetime to utc conversion",
+            "CreatedAt": -2,
+            "IssueId": 1
+          },
+          {
+            "ChangeHash": "happy-poetry-shout",
+            "Name": "Parse datetime from db",
+            "Description": "Properly parse datetime upon collection database through query",
+            "CreatedAt": -1,
+            "IssueId": 1
+          },
+          {
+            "ChangeHash": "die-port-left",
+            "Name": "Update frontend",
+            "Description": "Update frontend to reflect accurate datetime accounting for dst",
+            "CreatedAt": -1,
+            "IssueId": 1
+          }
+        ],
+        "Media": [],
+        "ProjectId": 1
+      },
+      {
+        "Name": "Patient login failure on iOS",
+        "Description": "Some iOS users are unable to log in after the 2FA rollout",
+        "Severity": "Critical",
+        "Status": "Investigating",
+        "LastUpdated": -1,
+        "CreatedAt": -12,
+        "Changes": [
+          {
+            "ChangeHash": "quiet-forest-47",
+            "Name": "Rollback 2FA client-side changes",
+            "Description": "Temporarily rollback the iOS client 2FA changes that caused failures",
+            "CreatedAt": -10,
+            "IssueId": 2
+          },
+          {
+            "ChangeHash": "silent-river-11",
+            "Name": "Patch 2FA flow",
+            "Description": "Fix edge-case when device time is skewed and 2FA tokens are rejected",
+            "CreatedAt": -2,
+            "IssueId": 2
+          }
+        ],
+        "Media": [],
+        "ProjectId": 1
+      },
+      {
+        "Name": "Medication interaction alert missing",
+        "Description": "Interaction alerts between some prescriptions are not displayed",
+        "Severity": "Critical",
+        "Status": "Investigating",
+        "LastUpdated": -2,
+        "CreatedAt": -20,
+        "Changes": [
+          {
+            "ChangeHash": "sharp-ocean-92",
+            "Name": "Update drug interaction ruleset",
+            "Description": "Refresh third-party interactions dataset and mapping rules",
+            "CreatedAt": -15,
+            "IssueId": 3
+          },
+          {
+            "ChangeHash": "mellow-sky-05",
+            "Name": "Add missing mapping for compound names",
+            "Description": "Map alternate drug names to canonical identifiers",
+            "CreatedAt": -3,
+            "IssueId": 3
+          }
+        ],
+        "Media": [],
+        "ProjectId": 1
+      },
+      {
+        "Name": "Lab results sync failures",
+        "Description": "Periodic failures when syncing lab results from external provider",
+        "Severity": "Medium",
+        "Status": "Investigating",
+        "LastUpdated": -4,
+        "CreatedAt": -30,
+        "Changes": [
+          {
+            "ChangeHash": "granite-hill-66",
+            "Name": "Retry logic for lab sync",
+            "Description": "Implement exponential backoff and idempotent writes for lab sync",
+            "CreatedAt": -5,
+            "IssueId": 4
+          }
+        ],
+        "Media": [],
+        "ProjectId": 1
+      },
+      {
+        "Name": "UI accessibility issues in patient dashboard",
+        "Description": "Screen reader labels missing and low contrast in critical areas",
+        "Severity": "Low",
+        "Status": "Investigating",
+        "LastUpdated": -7,
+        "CreatedAt": -40,
+        "Changes": [
+          {
+            "ChangeHash": "amber-lamp-23",
+            "Name": "Add ARIA labels",
+            "Description": "Add missing ARIA attributes and improve color contrast for buttons",
+            "CreatedAt": -6,
+            "IssueId": 5
+          }
+        ],
+        "Media": [],
+        "ProjectId": 1
+      }
+    ]
+  },
+  {
+    "Name": "Smart Wallet",
+    "issues": [
+      {
+        "Name": "Transaction double-charge",
+        "Description": "Users report being charged twice for a single payment",
+        "Severity": "Critical",
+        "Status": "Investigating",
+        "LastUpdated": -1,
+        "CreatedAt": -8,
+        "Changes": [
+          {
+            "ChangeHash": "fast-coin-81",
+            "Name": "Add idempotency keys",
+            "Description": "Introduce idempotency keys to prevent duplicate charges on retries",
+            "CreatedAt": -4,
+            "IssueId": 1
+          },
+          {
+            "ChangeHash": "calm-wallet-02",
+            "Name": "Reconcile historical duplicates",
+            "Description": "Run reconciliation and issue refunds where necessary",
+            "CreatedAt": -2,
+            "IssueId": 1
+          }
+        ],
+        "Media": [],
+        "ProjectId": 2
+      },
+      {
+        "Name": "Mobile crash on launch (Android 12)",
+        "Description": "App crashes on some Android 12 devices during cold start",
+        "Severity": "Critical",
+        "Status": "Fixed",
+        "LastUpdated": 0,
+        "CreatedAt": -15,
+        "Changes": [
+          {
+            "ChangeHash": "battery-amber-19",
+            "Name": "Fix null pointer in startup service",
+            "Description": "Guard against null return from persisted session service",
+            "CreatedAt": -3,
+            "IssueId": 2
+          }
+        ],
+        "Media": [],
+        "ProjectId": 2
+      },
+      {
+        "Name": "Slow balance updates",
+        "Description": "Balance refresh takes too long after transactions",
+        "Severity": "Medium",
+        "Status": "Investigating",
+        "LastUpdated": -5,
+        "CreatedAt": -25,
+        "Changes": [
+          {
+            "ChangeHash": "swift-ledger-33",
+            "Name": "Optimize balance caching",
+            "Description": "Improve caching strategy and reduce unnecessary network calls",
+            "CreatedAt": -2,
+            "IssueId": 3
+          }
+        ],
+        "Media": [],
+        "ProjectId": 2
+      }
+    ]
+  },
+  {
+    "Name": "GoAir",
+    "issues": [
+      {
+        "Name": "Booking date mismatch in confirmation email",
+        "Description": "Confirmation emails show a different travel date than booking page",
+        "Severity": "Critical",
+        "Status": "Investigating",
+        "LastUpdated": -2,
+        "CreatedAt": -18,
+        "Changes": [
+          {
+            "ChangeHash": "paper-plane-77",
+            "Name": "Fix timezone formatting in email template",
+            "Description": "Ensure template uses booking UTC time and formats to user timezone correctly",
+            "CreatedAt": -5,
+            "IssueId": 1
+          }
+        ],
+        "Media": [],
+        "ProjectId": 3
+      },
+      {
+        "Name": "Seat assignment not persisted",
+        "Description": "Selected seats are not saved for some bookings made via API",
+        "Severity": "Medium",
+        "Status": "Investigating",
+        "LastUpdated": -1,
+        "CreatedAt": -22,
+        "Changes": [
+          {
+            "ChangeHash": "blue-runway-08",
+            "Name": "Fix transactional save for seat assignments",
+            "Description": "Wrap seat selection and reservation in a single transaction",
+            "CreatedAt": -3,
+            "IssueId": 2
+          },
+          {
+            "ChangeHash": "silent-tarmac-60",
+            "Name": "Add API contract validation",
+            "Description": "Validate incoming payloads to prevent missing seat fields",
+            "CreatedAt": -2,
+            "IssueId": 2
+          }
+        ],
+        "Media": [],
+        "ProjectId": 3
+      },
+      {
+        "Name": "Push notifications not delivered to EU users",
+        "Description": "Push notifications fail for users located in certain EU regions",
+        "Severity": "Critical",
+        "Status": "Investigating",
+        "LastUpdated": -3,
+        "CreatedAt": -10,
+        "Changes": [
+          {
+            "ChangeHash": "north-star-14",
+            "Name": "Update push provider config",
+            "Description": "Switch to regional endpoints and refresh API credentials",
+            "CreatedAt": -4,
+            "IssueId": 3
+          }
+        ],
+        "Media": [],
+        "ProjectId": 3
+      }
+    ]
+  }
+]

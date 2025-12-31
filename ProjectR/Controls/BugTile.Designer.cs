@@ -91,21 +91,21 @@
             // 
             lblBugCreatedAt.AutoSize = true;
             lblBugCreatedAt.Font = new Font("Microsoft Sans Serif", 10.2F);
-            lblBugCreatedAt.Location = new Point(875, 16);
+            lblBugCreatedAt.Location = new Point(910, 16);
             lblBugCreatedAt.Name = "lblBugCreatedAt";
-            lblBugCreatedAt.Size = new Size(201, 20);
+            lblBugCreatedAt.Size = new Size(166, 20);
             lblBugCreatedAt.TabIndex = 5;
-            lblBugCreatedAt.Text = "Date Created: nn/nn/nnnn";
+            lblBugCreatedAt.Text = "Created: dd/mm/yyyy";
             // 
             // lblBugLastUpdatedAt
             // 
             lblBugLastUpdatedAt.AutoSize = true;
             lblBugLastUpdatedAt.Font = new Font("Microsoft Sans Serif", 10.2F);
-            lblBugLastUpdatedAt.Location = new Point(657, 16);
+            lblBugLastUpdatedAt.Location = new Point(706, 16);
             lblBugLastUpdatedAt.Name = "lblBugLastUpdatedAt";
-            lblBugLastUpdatedAt.Size = new Size(192, 20);
+            lblBugLastUpdatedAt.Size = new Size(198, 20);
             lblBugLastUpdatedAt.TabIndex = 6;
-            lblBugLastUpdatedAt.Text = "Last Update: nn/nn/nnnn";
+            lblBugLastUpdatedAt.Text = "Last Update: dd/mm/yyyy";
             // 
             // BugTile
             // 
@@ -122,6 +122,7 @@
             Name = "BugTile";
             Padding = new Padding(16);
             Size = new Size(1095, 60);
+            Load += BugTile_Load;
             ResumeLayout(false);
             PerformLayout();
         }

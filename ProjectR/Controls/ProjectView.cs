@@ -1,37 +1,72 @@
-﻿using ScottPlot;
+﻿using ProjectR.Classes;
+using ProjectR.Data;
+using ScottPlot;
 using System.Globalization;
 
 namespace ProjectR.Controls
 {
     public partial class ProjectView : UserControl
     {
-        public ProjectView()
+        private readonly int _projectId;
+        private readonly Navigation _mainNav;
+        private readonly DatabaseContext _context;
+
+        public ProjectView(DatabaseContext dbContext, Navigation mainNav, int projId)
         {
+            _projectId = projId;
+            _mainNav = mainNav;
+            _context = dbContext;
             InitializeComponent();
         }
 
-        private class Datapoint(int count, string level)
-        {
-            public int Count { get; set; } = count;
-            public string Level { get; set; } = level;
-        }
-
-        private readonly List<Datapoint> data =
-        [
-            new Datapoint(5, "Low"),
-            new Datapoint(15, "Medium"),
-            new Datapoint(9, "Breaking"),
-            new Datapoint(25, "In Review"),
-            new Datapoint(7, "Investigating"),
-        ];
+        private List<GraphData<string>> issuesData = [];
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
-            int[] testTiles = new int[10];
+            lblProjectsProjectTitle.Text = _context.Projects.Where(p => p.Id == _projectId).Select(p => p.Name).FirstOrDefault();
 
-            foreach (var item in testTiles)
+            List<string> severityLevels = ["Low", "Medium", "Critical"];
+            List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
+
+            var querySeverity = _context
+                .Issues.Where(i => i.ProjectId == _projectId)
+                .GroupBy(g => g.Severity)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            var queryStatus = _context
+                .Issues.Where(c => c.ProjectId == _projectId)
+                .GroupBy(c => c.Status)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            List<GraphData<string>> listSeverity =
+            [
+                .. severityLevels.Select(s => new GraphData<string>(
+                    s,
+                    querySeverity.TryGetValue(s, out int value) ? value : 0
+                )),
+            ];
+
+            List<GraphData<string>> listStatus =
+            [
+                .. statusLevels.Select(s => new GraphData<string>(
+                    s,
+                    queryStatus.TryGetValue(s, out int value) ? value : 0
+                )),
+            ];
+
+            var issuesQuery = _context.Issues
+                .Where(i => i.ProjectId == _projectId)
+                .OrderByDescending(o => o.LastUpdated)
+                .Select(i => new IssueListItem(i.Id, i.Name, i.Changes.Count, i.Status, i.Severity, i.CreatedAt, i.LastUpdated))
+                .ToList();
+
+            issuesData = [.. listSeverity.Concat(listStatus)];
+
+            foreach (var item in issuesQuery)
             {
-                flowLayoutPanelBugTiles.Controls.Add(new BugTile());
+                flowLayoutPanelBugTiles.Controls.Add(new BugTile(_context, _mainNav, item));
             }
 
             if (flowLayoutPanelBugTiles.VerticalScroll.Visible)
@@ -50,8 +85,10 @@ namespace ProjectR.Controls
             heatmap.Rectangle = new(xRange, new(0.5, 6.5));
             heatmap.CellAlignment = Alignment.LowerLeft;
             heatmap.Position = new(xRange.Min, xRange.Max, 0.5, 6.5);
-            heatmap.Colormap = new ScottPlot.Colormaps.Greens();
-            formPlotProjectActivityHeatmap.Plot.Add.ColorBar(heatmap);
+            string[] colourStrings = ["#151b23", "#033a16", "#196c2e", "#2ea043", "#56d364"]; // github heatmap colour map
+            ScottPlot.Color[] colours = [.. colourStrings.Select(cs => ScottPlot.Color.FromHex(cs))];
+            heatmap.Colormap = new ScottPlot.Colormaps.Custom(colours, false);
+            heatmap.ManualRange = new ScottPlot.Range(0, 4);
             formPlotProjectActivityHeatmap.Plot.HideGrid();
             formPlotProjectActivityHeatmap.Plot.Axes.Margins(0, 0);
 
@@ -86,11 +123,11 @@ namespace ProjectR.Controls
             formPlotProjectActivityHeatmap.UserInputProcessor.Disable();
             formPlotProjectActivityHeatmap.Refresh();
 
-            for (int i = 0; i < data.Count; i++)
+            for (int i = 0; i < issuesData.Count; i++)
             {
                 var bar = formPlotCurrentOpenBugs.Plot.Add.Bar(
                     position: i,
-                    value: data[i].Count
+                    value: issuesData[i].Value
                 );
 
                 bar.Color = i switch
@@ -106,9 +143,7 @@ namespace ProjectR.Controls
 
             Tick[] projectTicks =
             [
-                .. data.Select<Datapoint, Tick>(
-                    (p, i) => new(i, p.Level)
-                ),
+                .. issuesData.Select<GraphData<string>, Tick>((p, i) => new(i, p.XSeries)),
             ];
 
             formPlotCurrentOpenBugs.Plot.Axes.Bottom.TickGenerator =
@@ -122,7 +157,7 @@ namespace ProjectR.Controls
             formPlotCurrentOpenBugs.Refresh();
         }
 
-        private static double[,] PreProcessHeatmapData()
+        private double[,] PreProcessHeatmapData()
         {
             List<List<double>> yearData2d =
             [
@@ -140,6 +175,16 @@ namespace ProjectR.Controls
             DateOnly startDate = DateOnly.Parse($"01-01-{year}", new CultureInfo("en-GB"));
             DateOnly endDate = DateOnly.Parse($"31-12-{year}", new CultureInfo("en-GB"));
 
+            var queryChangesHeatmap = _context
+                .Changes.Where(c =>
+                    c.Issue.ProjectId == _projectId
+                    && c.CreatedAt >= startDate.ToDateTime(TimeOnly.MinValue)
+                    && c.CreatedAt <= endDate.ToDateTime(TimeOnly.MaxValue)
+                )
+                .GroupBy(g => g.CreatedAt.DayOfYear)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
             int maxDays = DateTime.IsLeapYear(year) ? 366 : 365;
 
             int dayOffset = -(int)startDate.DayOfWeek;
@@ -148,10 +193,29 @@ namespace ProjectR.Controls
 
             for (int i = dayOffset; i < maxDays + Math.Abs(dayOffset); i++)
             {
-                double dayData =
-                    i < 0 ? double.NaN
-                    : i >= maxDays ? double.NaN
-                    : i + 1;
+                double dayData;
+
+                if (i < 0 || i >= maxDays)
+                {
+                    dayData = double.NaN;
+                }
+                else
+                {
+                    // bucket the values into 5 levels for heatmap display, this lets us consolidate
+                    // values and is due to issues with the colour bar not showing the full colour
+                    // map and incremental values not being very relevant or understandable
+                    dayData = queryChangesHeatmap.TryGetValue(i + 1, out int value) switch
+                    {
+                        true => value switch
+                        {
+                            <= 5 => 1,
+                            <= 10 => 2,
+                            <= 15 => 3,
+                            _ => 4,
+                        },
+                        false => 0,
+                    };
+                }
 
                 DateOnly currentDate = startDate.AddDays(i);
 

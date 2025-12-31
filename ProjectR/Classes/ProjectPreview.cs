@@ -1,12 +1,19 @@
 ﻿namespace ProjectR.Classes
 {
-    public class ProjectPreview(string projectName, int openIssues, int criticalIssues, int thisWeekIssues, DateTime lastUpdated)
+    public class ProjectPreview(int projectId, string projectName, int openIssues, int criticalIssues, int thisWeekIssues, DateTime lastUpdated)
     {
+        private int _projectId = projectId;
         private string _projectName = projectName;
         private int _openIssues = openIssues;
         private int _criticalIssues = criticalIssues;
         private int _thisWeekIssues = thisWeekIssues;
         private DateTime _lastUpdated = lastUpdated;
+
+        public int ProjectId
+        {
+            get => _projectId;
+            set => _projectId = value;
+        }
 
         public string ProjectName
         {
