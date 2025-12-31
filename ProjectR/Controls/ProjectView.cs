@@ -23,6 +23,8 @@ namespace ProjectR.Controls
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
+            lblProjectsProjectTitle.Text = _context.Projects.Where(p => p.Id == _projectId).Select(p => p.Name).FirstOrDefault();
+
             List<string> severityLevels = ["Low", "Medium", "Critical"];
             List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
 
@@ -54,13 +56,17 @@ namespace ProjectR.Controls
                 )),
             ];
 
+            var issuesQuery = _context.Issues
+                .Where(i => i.ProjectId == _projectId)
+                .OrderByDescending(o => o.LastUpdated)
+                .Select(i => new IssueListItem(i.Id, i.Name, i.Changes.Count, i.Status, i.Severity, i.CreatedAt, i.LastUpdated))
+                .ToList();
+
             issuesData = [.. listSeverity.Concat(listStatus)];
 
-            int[] testTiles = new int[10];
-
-            foreach (var item in testTiles)
+            foreach (var item in issuesQuery)
             {
-                flowLayoutPanelBugTiles.Controls.Add(new BugTile());
+                flowLayoutPanelBugTiles.Controls.Add(new BugTile(_context, _mainNav, item));
             }
 
             if (flowLayoutPanelBugTiles.VerticalScroll.Visible)
