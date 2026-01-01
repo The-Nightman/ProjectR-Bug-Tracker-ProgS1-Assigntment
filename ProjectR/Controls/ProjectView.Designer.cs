@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             lblProjectsProjectTitle = new Label();
             lblProjectActivityHeatmapTitle = new Label();
             formPlotProjectActivityHeatmap = new ScottPlot.WinForms.FormsPlot();
@@ -37,9 +38,19 @@
             lblProjectCurrentOpenBugs = new Label();
             panelHeatmap = new Panel();
             panel1 = new Panel();
-            flowLayoutPanelBugTiles = new FlowLayoutPanel();
+            issueListItemBindingSource = new BindingSource(components);
+            dataGridViewIssues = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
+            titleDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            changesCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            severityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            createdAtDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            lastUpdatedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             panelHeatmap.SuspendLayout();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)issueListItemBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewIssues).BeginInit();
             SuspendLayout();
             // 
             // lblProjectsProjectTitle
@@ -122,11 +133,11 @@
             panelHeatmap.BackColor = Color.FromArgb(57, 57, 57);
             panelHeatmap.Controls.Add(lblProjectActivityHeatmapTitle);
             panelHeatmap.Controls.Add(formPlotProjectActivityHeatmap);
-            panelHeatmap.Location = new Point(19, 404);
+            panelHeatmap.Location = new Point(16, 406);
             panelHeatmap.Margin = new Padding(0);
             panelHeatmap.Name = "panelHeatmap";
             panelHeatmap.Padding = new Padding(16);
-            panelHeatmap.Size = new Size(636, 298);
+            panelHeatmap.Size = new Size(639, 296);
             panelHeatmap.TabIndex = 22;
             // 
             // panel1
@@ -141,23 +152,97 @@
             panel1.Size = new Size(451, 296);
             panel1.TabIndex = 23;
             // 
-            // flowLayoutPanelBugTiles
+            // issueListItemBindingSource
             // 
-            flowLayoutPanelBugTiles.AutoScroll = true;
-            flowLayoutPanelBugTiles.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanelBugTiles.Location = new Point(16, 95);
-            flowLayoutPanelBugTiles.Margin = new Padding(0);
-            flowLayoutPanelBugTiles.Name = "flowLayoutPanelBugTiles";
-            flowLayoutPanelBugTiles.Size = new Size(1101, 269);
-            flowLayoutPanelBugTiles.TabIndex = 24;
-            flowLayoutPanelBugTiles.WrapContents = false;
+            issueListItemBindingSource.DataSource = typeof(Classes.IssueListItem);
+            // 
+            // dataGridViewIssues
+            // 
+            dataGridViewIssues.AllowUserToAddRows = false;
+            dataGridViewIssues.AllowUserToDeleteRows = false;
+            dataGridViewIssues.AllowUserToResizeRows = false;
+            dataGridViewIssues.AutoGenerateColumns = false;
+            dataGridViewIssues.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewIssues.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewIssues.Columns.AddRange(new DataGridViewColumn[] { Id, titleDataGridViewTextBoxColumn, changesCountDataGridViewTextBoxColumn, statusDataGridViewTextBoxColumn, severityDataGridViewTextBoxColumn, createdAtDataGridViewTextBoxColumn, lastUpdatedDataGridViewTextBoxColumn });
+            dataGridViewIssues.DataSource = issueListItemBindingSource;
+            dataGridViewIssues.Location = new Point(16, 95);
+            dataGridViewIssues.Margin = new Padding(0);
+            dataGridViewIssues.Name = "dataGridViewIssues";
+            dataGridViewIssues.ReadOnly = true;
+            dataGridViewIssues.RowHeadersWidth = 51;
+            dataGridViewIssues.Size = new Size(1101, 275);
+            dataGridViewIssues.TabIndex = 25;
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Id";
+            Id.MinimumWidth = 6;
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Visible = false;
+            // 
+            // titleDataGridViewTextBoxColumn
+            // 
+            titleDataGridViewTextBoxColumn.DataPropertyName = "Title";
+            titleDataGridViewTextBoxColumn.FillWeight = 60F;
+            titleDataGridViewTextBoxColumn.HeaderText = "Title";
+            titleDataGridViewTextBoxColumn.MinimumWidth = 6;
+            titleDataGridViewTextBoxColumn.Name = "titleDataGridViewTextBoxColumn";
+            titleDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // changesCountDataGridViewTextBoxColumn
+            // 
+            changesCountDataGridViewTextBoxColumn.DataPropertyName = "ChangesCount";
+            changesCountDataGridViewTextBoxColumn.FillWeight = 15F;
+            changesCountDataGridViewTextBoxColumn.HeaderText = "Changes";
+            changesCountDataGridViewTextBoxColumn.MinimumWidth = 6;
+            changesCountDataGridViewTextBoxColumn.Name = "changesCountDataGridViewTextBoxColumn";
+            changesCountDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            statusDataGridViewTextBoxColumn.FillWeight = 32.2580643F;
+            statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            statusDataGridViewTextBoxColumn.MinimumWidth = 6;
+            statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            statusDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // severityDataGridViewTextBoxColumn
+            // 
+            severityDataGridViewTextBoxColumn.DataPropertyName = "Severity";
+            severityDataGridViewTextBoxColumn.FillWeight = 25F;
+            severityDataGridViewTextBoxColumn.HeaderText = "Severity";
+            severityDataGridViewTextBoxColumn.MinimumWidth = 6;
+            severityDataGridViewTextBoxColumn.Name = "severityDataGridViewTextBoxColumn";
+            severityDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // createdAtDataGridViewTextBoxColumn
+            // 
+            createdAtDataGridViewTextBoxColumn.DataPropertyName = "FormattedCreatedAt";
+            createdAtDataGridViewTextBoxColumn.FillWeight = 32.2580643F;
+            createdAtDataGridViewTextBoxColumn.HeaderText = "Created at";
+            createdAtDataGridViewTextBoxColumn.MinimumWidth = 6;
+            createdAtDataGridViewTextBoxColumn.Name = "createdAtDataGridViewTextBoxColumn";
+            createdAtDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // lastUpdatedDataGridViewTextBoxColumn
+            // 
+            lastUpdatedDataGridViewTextBoxColumn.DataPropertyName = "FormattedLastUpdated";
+            lastUpdatedDataGridViewTextBoxColumn.FillWeight = 32.2580643F;
+            lastUpdatedDataGridViewTextBoxColumn.HeaderText = "Last updated";
+            lastUpdatedDataGridViewTextBoxColumn.MinimumWidth = 6;
+            lastUpdatedDataGridViewTextBoxColumn.Name = "lastUpdatedDataGridViewTextBoxColumn";
+            lastUpdatedDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // ProjectView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
-            Controls.Add(flowLayoutPanelBugTiles);
+            Controls.Add(dataGridViewIssues);
             Controls.Add(panel1);
             Controls.Add(panelHeatmap);
             Controls.Add(lblProjectTrackedIssuesTitle);
@@ -172,6 +257,8 @@
             panelHeatmap.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)issueListItemBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewIssues).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -187,6 +274,14 @@
         private Label lblProjectCurrentOpenBugs;
         private Panel panelHeatmap;
         private Panel panel1;
-        private FlowLayoutPanel flowLayoutPanelBugTiles;
+        private BindingSource issueListItemBindingSource;
+        private DataGridView dataGridViewIssues;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn titleDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn changesCountDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn severityDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn createdAtDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn lastUpdatedDataGridViewTextBoxColumn;
     }
 }

@@ -62,17 +62,9 @@ namespace ProjectR.Controls
                 .Select(i => new IssueListItem(i.Id, i.Name, i.Changes.Count, i.Status, i.Severity, i.CreatedAt, i.LastUpdated))
                 .ToList();
 
+            dataGridViewIssues.DataSource = issuesQuery;
+
             issuesData = [.. listSeverity.Concat(listStatus)];
-
-            foreach (var item in issuesQuery)
-            {
-                flowLayoutPanelBugTiles.Controls.Add(new BugTile(_context, _mainNav, item));
-            }
-
-            if (flowLayoutPanelBugTiles.VerticalScroll.Visible)
-            {
-                flowLayoutPanelBugTiles.Width += SystemInformation.VerticalScrollBarWidth;
-            }
 
             int year = DateTime.Now.Year;
 
