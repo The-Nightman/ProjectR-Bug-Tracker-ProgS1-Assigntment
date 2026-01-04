@@ -23,7 +23,10 @@ namespace ProjectR.Controls
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
-            lblProjectsProjectTitle.Text = _context.Projects.Where(p => p.Id == _projectId).Select(p => p.Name).FirstOrDefault();
+            lblProjectsProjectTitle.Text = _context
+                .Projects.Where(p => p.Id == _projectId)
+                .Select(p => p.Name)
+                .FirstOrDefault();
 
             List<string> severityLevels = ["Low", "Medium", "Critical"];
             List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
@@ -56,10 +59,18 @@ namespace ProjectR.Controls
                 )),
             ];
 
-            var issuesQuery = _context.Issues
-                .Where(i => i.ProjectId == _projectId)
+            var issuesQuery = _context
+                .Issues.Where(i => i.ProjectId == _projectId)
                 .OrderByDescending(o => o.LastUpdated)
-                .Select(i => new IssueListItem(i.Id, i.Name, i.Changes.Count, i.Status, i.Severity, i.CreatedAt, i.LastUpdated))
+                .Select(i => new IssueListItem(
+                    i.Id,
+                    i.Name,
+                    i.Changes.Count,
+                    i.Status,
+                    i.Severity,
+                    i.CreatedAt,
+                    i.LastUpdated
+                ))
                 .ToList();
 
             dataGridViewIssues.DataSource = issuesQuery;
@@ -78,7 +89,10 @@ namespace ProjectR.Controls
             heatmap.CellAlignment = Alignment.LowerLeft;
             heatmap.Position = new(xRange.Min, xRange.Max, 0.5, 6.5);
             string[] colourStrings = ["#151b23", "#033a16", "#196c2e", "#2ea043", "#56d364"]; // github heatmap colour map
-            ScottPlot.Color[] colours = [.. colourStrings.Select(cs => ScottPlot.Color.FromHex(cs))];
+            ScottPlot.Color[] colours =
+            [
+                .. colourStrings.Select(cs => ScottPlot.Color.FromHex(cs)),
+            ];
             heatmap.Colormap = new ScottPlot.Colormaps.Custom(colours, false);
             heatmap.ManualRange = new ScottPlot.Range(0, 4);
             formPlotProjectActivityHeatmap.Plot.HideGrid();
@@ -225,6 +239,26 @@ namespace ProjectR.Controls
             }
 
             return processedData;
+        }
+
+        private void dataGridViewIssues_SelectionChanged(object sender, EventArgs e)
+        {
+            btnOpenIssue.Enabled = dataGridViewIssues.SelectedRows.Count > 0 ? true : false;
+        }
+
+        private void dataGridViewIssues_DataBindingComplete(
+            object sender,
+            DataGridViewBindingCompleteEventArgs e
+        )
+        {
+            dataGridViewIssues.ClearSelection();
+        }
+
+        private void btnOpenIssue_Click(object sender, EventArgs e)
+        {
+            int selectedIssueId = (int)dataGridViewIssues.SelectedRows[0].Cells["Id"].Value;
+
+            _mainNav.UseNavigate(new IssueView(_context, selectedIssueId));
         }
     }
 }

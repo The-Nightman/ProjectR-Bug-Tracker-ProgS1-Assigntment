@@ -40,6 +40,8 @@
             panel1 = new Panel();
             issueListItemBindingSource = new BindingSource(components);
             dataGridViewIssues = new DataGridView();
+            btnAddNewIssue = new Button();
+            btnOpenIssue = new Button();
             Id = new DataGridViewTextBoxColumn();
             titleDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             changesCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -168,11 +170,42 @@
             dataGridViewIssues.DataSource = issueListItemBindingSource;
             dataGridViewIssues.Location = new Point(16, 95);
             dataGridViewIssues.Margin = new Padding(0);
+            dataGridViewIssues.MultiSelect = false;
             dataGridViewIssues.Name = "dataGridViewIssues";
             dataGridViewIssues.ReadOnly = true;
+            dataGridViewIssues.RowHeadersVisible = false;
             dataGridViewIssues.RowHeadersWidth = 51;
+            dataGridViewIssues.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewIssues.Size = new Size(1101, 275);
             dataGridViewIssues.TabIndex = 25;
+            dataGridViewIssues.DataBindingComplete += dataGridViewIssues_DataBindingComplete;
+            dataGridViewIssues.SelectionChanged += dataGridViewIssues_SelectionChanged;
+            // 
+            // btnAddNewIssue
+            // 
+            btnAddNewIssue.BackColor = Color.LawnGreen;
+            btnAddNewIssue.FlatStyle = FlatStyle.Popup;
+            btnAddNewIssue.Location = new Point(845, 61);
+            btnAddNewIssue.Margin = new Padding(0, 0, 8, 0);
+            btnAddNewIssue.Name = "btnAddNewIssue";
+            btnAddNewIssue.Size = new Size(128, 30);
+            btnAddNewIssue.TabIndex = 26;
+            btnAddNewIssue.Text = "Track New Issue";
+            btnAddNewIssue.UseVisualStyleBackColor = false;
+            // 
+            // btnOpenIssue
+            // 
+            btnOpenIssue.BackColor = Color.DodgerBlue;
+            btnOpenIssue.Enabled = false;
+            btnOpenIssue.FlatStyle = FlatStyle.Flat;
+            btnOpenIssue.Location = new Point(989, 61);
+            btnOpenIssue.Margin = new Padding(8, 0, 0, 0);
+            btnOpenIssue.Name = "btnOpenIssue";
+            btnOpenIssue.Size = new Size(128, 30);
+            btnOpenIssue.TabIndex = 27;
+            btnOpenIssue.Text = "Open Issue";
+            btnOpenIssue.UseVisualStyleBackColor = false;
+            btnOpenIssue.Click += btnOpenIssue_Click;
             // 
             // Id
             // 
@@ -186,7 +219,7 @@
             // titleDataGridViewTextBoxColumn
             // 
             titleDataGridViewTextBoxColumn.DataPropertyName = "Title";
-            titleDataGridViewTextBoxColumn.FillWeight = 60F;
+            titleDataGridViewTextBoxColumn.FillWeight = 82F;
             titleDataGridViewTextBoxColumn.HeaderText = "Title";
             titleDataGridViewTextBoxColumn.MinimumWidth = 6;
             titleDataGridViewTextBoxColumn.Name = "titleDataGridViewTextBoxColumn";
@@ -204,7 +237,7 @@
             // statusDataGridViewTextBoxColumn
             // 
             statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            statusDataGridViewTextBoxColumn.FillWeight = 32.2580643F;
+            statusDataGridViewTextBoxColumn.FillWeight = 20F;
             statusDataGridViewTextBoxColumn.HeaderText = "Status";
             statusDataGridViewTextBoxColumn.MinimumWidth = 6;
             statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
@@ -213,7 +246,7 @@
             // severityDataGridViewTextBoxColumn
             // 
             severityDataGridViewTextBoxColumn.DataPropertyName = "Severity";
-            severityDataGridViewTextBoxColumn.FillWeight = 25F;
+            severityDataGridViewTextBoxColumn.FillWeight = 18F;
             severityDataGridViewTextBoxColumn.HeaderText = "Severity";
             severityDataGridViewTextBoxColumn.MinimumWidth = 6;
             severityDataGridViewTextBoxColumn.Name = "severityDataGridViewTextBoxColumn";
@@ -222,7 +255,7 @@
             // createdAtDataGridViewTextBoxColumn
             // 
             createdAtDataGridViewTextBoxColumn.DataPropertyName = "FormattedCreatedAt";
-            createdAtDataGridViewTextBoxColumn.FillWeight = 32.2580643F;
+            createdAtDataGridViewTextBoxColumn.FillWeight = 24F;
             createdAtDataGridViewTextBoxColumn.HeaderText = "Created at";
             createdAtDataGridViewTextBoxColumn.MinimumWidth = 6;
             createdAtDataGridViewTextBoxColumn.Name = "createdAtDataGridViewTextBoxColumn";
@@ -231,7 +264,7 @@
             // lastUpdatedDataGridViewTextBoxColumn
             // 
             lastUpdatedDataGridViewTextBoxColumn.DataPropertyName = "FormattedLastUpdated";
-            lastUpdatedDataGridViewTextBoxColumn.FillWeight = 32.2580643F;
+            lastUpdatedDataGridViewTextBoxColumn.FillWeight = 24F;
             lastUpdatedDataGridViewTextBoxColumn.HeaderText = "Last updated";
             lastUpdatedDataGridViewTextBoxColumn.MinimumWidth = 6;
             lastUpdatedDataGridViewTextBoxColumn.Name = "lastUpdatedDataGridViewTextBoxColumn";
@@ -242,6 +275,8 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
+            Controls.Add(btnOpenIssue);
+            Controls.Add(btnAddNewIssue);
             Controls.Add(dataGridViewIssues);
             Controls.Add(panel1);
             Controls.Add(panelHeatmap);
@@ -276,6 +311,8 @@
         private Panel panel1;
         private BindingSource issueListItemBindingSource;
         private DataGridView dataGridViewIssues;
+        private Button btnAddNewIssue;
+        private Button btnOpenIssue;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn titleDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn changesCountDataGridViewTextBoxColumn;
