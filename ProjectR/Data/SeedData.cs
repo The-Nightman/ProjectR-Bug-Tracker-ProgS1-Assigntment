@@ -63,10 +63,24 @@ namespace ProjectR.Data
                         };
                         context.Changes.Add(newChange);
                     }
-                }
-            }
 
-            await context.SaveChangesAsync();
+                    foreach (var media in issue.Media)
+                    {
+                        var newMedia = new Entities.Media
+                        {
+                            Title = media.Title,
+                            Description = media.Description,
+                            Path = media.Path,
+                            MediaType = media.MediaType,
+                            IssueId = newIssue.Id,
+                            Issue = newIssue
+                        };
+                        context.Media.Add(newMedia);
+                    }
+                }
+
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
