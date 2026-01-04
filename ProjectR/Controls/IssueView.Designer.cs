@@ -222,6 +222,7 @@
             btnEditMedia.TabIndex = 23;
             btnEditMedia.Text = "Edit Media";
             btnEditMedia.UseVisualStyleBackColor = false;
+            btnEditMedia.Click += btnEditMedia_Click;
             // 
             // btnOpenChange
             // 

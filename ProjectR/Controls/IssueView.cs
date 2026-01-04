@@ -7,7 +7,7 @@ namespace ProjectR.Controls
 {
     public partial class IssueView : UserControl
     {
-        private int _issueId;
+        private readonly int _issueId;
         private readonly DatabaseContext _context;
         private Issue? _issue;
 
@@ -125,12 +125,31 @@ namespace ProjectR.Controls
             Form dialog = new AddMediaDialog(_issue!, _context);
             dialog.ShowDialog();
 
-            // Refresh media list after dialog is closed, we could call the onLoad event however it is unnecessary
+            await ReloadMedia();
+        }
+
+        private async void btnEditMedia_Click(object sender, EventArgs e)
+        {
+            if (listBoxMedia.SelectedItem == null)
+                return;
+
+            Form dialog = new EditMediaDialog(
+                (Media)listBoxMedia.SelectedItem,
+                _context
+            );
+            dialog.ShowDialog();
+
+            await ReloadMedia();
+        }
+
+        private async Task ReloadMedia()
+        {
             var newMedia = await _context.Media.Where(m => m.IssueId == _issueId).ToListAsync();
 
             _issue!.Media = newMedia;
 
             listBoxMedia.DataSource = _issue!.Media;
+            listBoxMedia.Refresh(); // Force refresh for safety
         }
     }
 }
