@@ -209,6 +209,7 @@
             btnAddNewMedia.TabIndex = 22;
             btnAddNewMedia.Text = "Add New";
             btnAddNewMedia.UseVisualStyleBackColor = false;
+            btnAddNewMedia.Click += btnAddNewMedia_Click;
             // 
             // btnEditMedia
             // 

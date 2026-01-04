@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectR.Data;
 using ProjectR.Entities;
+using ProjectR.Forms;
 
 namespace ProjectR.Controls
 {
@@ -8,6 +9,7 @@ namespace ProjectR.Controls
     {
         private int _issueId;
         private readonly DatabaseContext _context;
+        private Issue? _issue;
 
         public IssueView(DatabaseContext dbContenxt, int issueId)
         {
@@ -26,25 +28,25 @@ namespace ProjectR.Controls
 
             // Loading related entities as a property technically runs multiple queries
             // and this may cause the related entities to not be loaded even with async
-            Issue issue = await _context
+            _issue = await _context
                 .Issues.Include(i => i.Media)
                 .Include(i => i.Changes)
                 .FirstAsync(i => i.Id == _issueId);
 
-            lblIssueTitle.Text = issue.Name;
-            lblIssueCreatedDate.Text = $"Created: {issue.CreatedAt:dd/MM/yyyy HH:mm}";
-            richTextBoxIssueDesc.Text = issue.Description;
+            lblIssueTitle.Text = _issue.Name;
+            lblIssueCreatedDate.Text = $"Created: {_issue.CreatedAt:dd/MM/yyyy HH:mm}";
+            richTextBoxIssueDesc.Text = _issue.Description;
             listBoxMedia.DisplayMember = "Title";
-            listBoxMedia.DataSource = issue.Media;
-            dataGridViewChanges.DataSource = issue.Changes;
+            listBoxMedia.DataSource = _issue.Media;
+            dataGridViewChanges.DataSource = _issue.Changes;
 
             btnIssueNameEditSave.Location = new Point(
                 lblIssueTitle.Location.X + lblIssueTitle.Width + lblIssueTitle.Padding.Right,
                 lblIssueTitle.Location.Y
             );
 
-            comboBoxSeverityLevels.SelectedItem = issue.Severity;
-            comboBoxStatusLevels.SelectedItem = issue.Status;
+            comboBoxSeverityLevels.SelectedItem = _issue.Severity;
+            comboBoxStatusLevels.SelectedItem = _issue.Status;
 
             toolTip.SetToolTip(pictureBoxIssueMedia, "Click to view fullscreen");
         }
@@ -116,6 +118,19 @@ namespace ProjectR.Controls
                     lblIssueTitle.Location.Y
                 );
             }
+        }
+
+        private async void btnAddNewMedia_Click(object sender, EventArgs e)
+        {
+            Form dialog = new AddMediaDialog(_issue!, _context);
+            dialog.ShowDialog();
+
+            // Refresh media list after dialog is closed, we could call the onLoad event however it is unnecessary
+            var newMedia = await _context.Media.Where(m => m.IssueId == _issueId).ToListAsync();
+
+            _issue!.Media = newMedia;
+
+            listBoxMedia.DataSource = _issue!.Media;
         }
     }
 }
