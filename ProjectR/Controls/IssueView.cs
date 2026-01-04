@@ -142,6 +142,19 @@ namespace ProjectR.Controls
             await ReloadMedia();
         }
 
+        private async void btnAddNewChange_Click(object sender, EventArgs e)
+        {
+            Form dialog = new AddNewChangeDialog(_issue!, _context);
+            dialog.ShowDialog();
+
+            await ReloadChanges();
+        }
+
+        private void btnOpenChange_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private async Task ReloadMedia()
         {
             var newMedia = await _context.Media.Where(m => m.IssueId == _issueId).ToListAsync();
@@ -149,7 +162,17 @@ namespace ProjectR.Controls
             _issue!.Media = newMedia;
 
             listBoxMedia.DataSource = _issue!.Media;
-            listBoxMedia.Refresh(); // Force refresh for safety
+            listBoxMedia.Refresh();
+        }
+
+        private async Task ReloadChanges()
+        {
+            var newChanges = await _context.Changes.Where(m => m.IssueId == _issueId).ToListAsync();
+
+            _issue!.Changes = newChanges;
+
+            dataGridViewChanges.DataSource = newChanges;
+            dataGridViewChanges.Refresh();
         }
     }
 }

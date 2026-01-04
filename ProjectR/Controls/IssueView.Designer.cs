@@ -235,6 +235,7 @@
             btnOpenChange.TabIndex = 25;
             btnOpenChange.Text = "Open Change";
             btnOpenChange.UseVisualStyleBackColor = false;
+            btnOpenChange.Click += btnOpenChange_Click;
             // 
             // btnAddNewChange
             // 
@@ -249,6 +250,7 @@
             btnAddNewChange.TabIndex = 24;
             btnAddNewChange.Text = "Add New";
             btnAddNewChange.UseVisualStyleBackColor = false;
+            btnAddNewChange.Click += btnAddNewChange_Click;
             // 
             // lblIssueSeverityTitle
             // 
