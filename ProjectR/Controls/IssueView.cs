@@ -35,10 +35,11 @@ namespace ProjectR.Controls
 
             lblIssueTitle.Text = _issue.Name;
             lblIssueCreatedDate.Text = $"Created: {_issue.CreatedAt:dd/MM/yyyy HH:mm}";
+            lblIssueLastUpdated.Text = $"Last Updated: {_issue.LastUpdated:dd/MM/yyyy HH:mm}";
             richTextBoxIssueDesc.Text = _issue.Description;
             listBoxMedia.DisplayMember = "Title";
             listBoxMedia.DataSource = _issue.Media;
-            dataGridViewChanges.DataSource = _issue.Changes;
+            dataGridViewChanges.DataSource = _issue.Changes.OrderByDescending(c => c.CreatedAt).ToList();
 
             btnIssueNameEditSave.Location = new Point(
                 lblIssueTitle.Location.X + lblIssueTitle.Width + lblIssueTitle.Padding.Right,
@@ -84,6 +85,11 @@ namespace ProjectR.Controls
             pictureBoxIssueMedia.ImageLocation = Path.Combine(AppContext.BaseDirectory, image.Path);
 
             richTextBoxMediaDesc.Text = image.Description;
+        }
+
+        private void dataGridViewChanges_SelectionChanged(object sender, EventArgs e)
+        {
+            btnOpenChange.Enabled = dataGridViewChanges.SelectedRows.Count > 0;
         }
 
         private void btnIssueNameEditSave_Click(object sender, EventArgs e)
@@ -177,8 +183,14 @@ namespace ProjectR.Controls
 
             _issue!.Changes = newChanges;
 
-            dataGridViewChanges.DataSource = newChanges;
+            dataGridViewChanges.DataSource = newChanges.OrderByDescending(c => c.CreatedAt).ToList();
             dataGridViewChanges.Refresh();
+
+            var issueToUpdate = await _context.Issues.Where(i => i.Id == _issueId).Select(i => i.LastUpdated).FirstAsync();
+
+            _issue!.LastUpdated = issueToUpdate;
+
+            lblIssueLastUpdated.Text = $"Last Updated: {_issue!.LastUpdated:dd/MM/yyyy HH:mm}";
         }
     }
 }

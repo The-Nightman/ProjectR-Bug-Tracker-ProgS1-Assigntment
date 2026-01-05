@@ -243,7 +243,7 @@ namespace ProjectR.Controls
 
         private void dataGridViewIssues_SelectionChanged(object sender, EventArgs e)
         {
-            btnOpenIssue.Enabled = dataGridViewIssues.SelectedRows.Count > 0 ? true : false;
+            btnOpenIssue.Enabled = dataGridViewIssues.SelectedRows.Count > 0;
         }
 
         private void dataGridViewIssues_DataBindingComplete(
