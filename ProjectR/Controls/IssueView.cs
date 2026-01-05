@@ -150,9 +150,15 @@ namespace ProjectR.Controls
             await ReloadChanges();
         }
 
-        private void btnOpenChange_Click(object sender, EventArgs e)
+        private async void btnOpenChange_Click(object sender, EventArgs e)
         {
+            Form dialog = new OpenChangeDialog(
+                (int)dataGridViewChanges.SelectedRows[0].Cells["Id"].Value,
+                _context
+            );
+            dialog.ShowDialog();
 
+            await ReloadChanges(); // The dialog does have functionality to edit the changes so we should still reload
         }
 
         private async Task ReloadMedia()

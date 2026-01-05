@@ -38,11 +38,6 @@
             richTextBoxMediaDesc = new RichTextBox();
             lblIssueChangesTitle = new Label();
             dataGridViewChanges = new DataGridView();
-            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            changeHashDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            descriptionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            createdAtDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             changeBindingSource = new BindingSource(components);
             btnAddNewMedia = new Button();
             btnEditMedia = new Button();
@@ -58,6 +53,11 @@
             btnIssueNameEditSave = new Button();
             imageList = new ImageList(components);
             textBoxIssueTitleEdit = new TextBox();
+            Id = new DataGridViewTextBoxColumn();
+            changeHashDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            descriptionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            createdAtDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)pictureBoxIssueMedia).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewChanges).BeginInit();
             ((System.ComponentModel.ISupportInitialize)changeBindingSource).BeginInit();
@@ -137,7 +137,7 @@
             dataGridViewChanges.AutoGenerateColumns = false;
             dataGridViewChanges.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewChanges.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewChanges.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, changeHashDataGridViewTextBoxColumn, nameDataGridViewTextBoxColumn, descriptionDataGridViewTextBoxColumn, createdAtDataGridViewTextBoxColumn });
+            dataGridViewChanges.Columns.AddRange(new DataGridViewColumn[] { Id, changeHashDataGridViewTextBoxColumn, nameDataGridViewTextBoxColumn, descriptionDataGridViewTextBoxColumn, createdAtDataGridViewTextBoxColumn });
             dataGridViewChanges.DataSource = changeBindingSource;
             dataGridViewChanges.Location = new Point(16, 367);
             dataGridViewChanges.Margin = new Padding(0);
@@ -149,48 +149,6 @@
             dataGridViewChanges.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewChanges.Size = new Size(657, 335);
             dataGridViewChanges.TabIndex = 21;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            idDataGridViewTextBoxColumn.HeaderText = "Id";
-            idDataGridViewTextBoxColumn.MinimumWidth = 6;
-            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            idDataGridViewTextBoxColumn.ReadOnly = true;
-            idDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // changeHashDataGridViewTextBoxColumn
-            // 
-            changeHashDataGridViewTextBoxColumn.DataPropertyName = "ChangeHash";
-            changeHashDataGridViewTextBoxColumn.HeaderText = "Change hash";
-            changeHashDataGridViewTextBoxColumn.MinimumWidth = 6;
-            changeHashDataGridViewTextBoxColumn.Name = "changeHashDataGridViewTextBoxColumn";
-            changeHashDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            nameDataGridViewTextBoxColumn.MinimumWidth = 6;
-            nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            descriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
-            descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            descriptionDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // createdAtDataGridViewTextBoxColumn
-            // 
-            createdAtDataGridViewTextBoxColumn.DataPropertyName = "CreatedAt";
-            createdAtDataGridViewTextBoxColumn.FillWeight = 75F;
-            createdAtDataGridViewTextBoxColumn.HeaderText = "Created at";
-            createdAtDataGridViewTextBoxColumn.MinimumWidth = 6;
-            createdAtDataGridViewTextBoxColumn.Name = "createdAtDataGridViewTextBoxColumn";
-            createdAtDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // changeBindingSource
             // 
@@ -378,6 +336,48 @@
             textBoxIssueTitleEdit.TabIndex = 34;
             textBoxIssueTitleEdit.Visible = false;
             // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Id";
+            Id.MinimumWidth = 6;
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Visible = false;
+            // 
+            // changeHashDataGridViewTextBoxColumn
+            // 
+            changeHashDataGridViewTextBoxColumn.DataPropertyName = "ChangeHash";
+            changeHashDataGridViewTextBoxColumn.HeaderText = "Change hash";
+            changeHashDataGridViewTextBoxColumn.MinimumWidth = 6;
+            changeHashDataGridViewTextBoxColumn.Name = "changeHashDataGridViewTextBoxColumn";
+            changeHashDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            nameDataGridViewTextBoxColumn.MinimumWidth = 6;
+            nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            descriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
+            descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            descriptionDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // createdAtDataGridViewTextBoxColumn
+            // 
+            createdAtDataGridViewTextBoxColumn.DataPropertyName = "CreatedAt";
+            createdAtDataGridViewTextBoxColumn.FillWeight = 75F;
+            createdAtDataGridViewTextBoxColumn.HeaderText = "Created at";
+            createdAtDataGridViewTextBoxColumn.MinimumWidth = 6;
+            createdAtDataGridViewTextBoxColumn.Name = "createdAtDataGridViewTextBoxColumn";
+            createdAtDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // IssueView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -422,11 +422,6 @@
         private Button btnOpenChange;
         private Button btnAddNewChange;
         private BindingSource changeBindingSource;
-        private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn changeHashDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn createdAtDataGridViewTextBoxColumn;
         private Label lblIssueSeverityTitle;
         private Label lblIssueStatusTitle;
         private ComboBox comboBoxSeverityLevels;
@@ -437,5 +432,10 @@
         private Button btnIssueNameEditSave;
         private ImageList imageList;
         private TextBox textBoxIssueTitleEdit;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn changeHashDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn createdAtDataGridViewTextBoxColumn;
     }
 }
