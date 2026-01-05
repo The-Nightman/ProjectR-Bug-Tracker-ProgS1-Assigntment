@@ -1,6 +1,14 @@
 ﻿namespace ProjectR.Classes
 {
-    public class IssueListItem(int id, string title, int changesCount, string status, string severity, DateTime createdAt, DateTime lastUpdated)
+    public class IssueListItem(
+        int id,
+        string title,
+        int changesCount,
+        string status,
+        string severity,
+        DateTime createdAt,
+        DateTime lastUpdated
+    )
     {
         private readonly int _id = id;
         private string _title = title;
@@ -51,35 +59,41 @@
             set => _lastUpdated = value;
         }
 
-        public string CreatedAtToString()
+        public string FormattedCreatedAt
         {
-            if (_createdAt.Date == DateTime.Now.Date)
+            get
             {
-                return $"Today";
-            }
-            else if (_createdAt.Date == DateTime.Now.AddDays(-1))
-            {
-                return "Yesterday";
-            }
-            else
-            {
-                return _createdAt.ToString("dd/MM/yyyy");
+                if (_createdAt.Date == DateTime.Now.Date)
+                {
+                    return $"Today {_createdAt:HH:mm}";
+                }
+                else if (_createdAt.Date == DateTime.Now.AddDays(-1))
+                {
+                    return $"Yesterday {_createdAt:HH:mm}";
+                }
+                else
+                {
+                    return _createdAt.ToString("dd/MM/yyyy HH:mm");
+                }
             }
         }
 
-        public string LastUpdatedToString()
+        public string FormattedLastUpdated
         {
-            if (_lastUpdated.Date == DateTime.Now.Date)
+            get
             {
-                return $"Today";
-            }
-            else if (_lastUpdated.Date == DateTime.Now.AddDays(-1))
-            {
-                return $"Yesterday";
-            }
-            else
-            {
-                return _lastUpdated.ToString("dd/MM/yyyy");
+                if (_lastUpdated.Date == DateTime.Now.Date)
+                {
+                    return $"Today {_lastUpdated:HH:mm}";
+                }
+                else if (_lastUpdated.Date == DateTime.Now.AddDays(-1))
+                {
+                    return $"Yesterday {_lastUpdated:HH:mm}";
+                }
+                else
+                {
+                    return _lastUpdated.ToString("dd/MM/yyyy HH:mm");
+                }
             }
         }
     }

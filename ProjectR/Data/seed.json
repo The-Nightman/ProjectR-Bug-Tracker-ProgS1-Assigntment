@@ -32,7 +32,15 @@
             "IssueId": 1
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 1
+          }
+        ],
         "ProjectId": 1
       },
       {
@@ -58,7 +66,15 @@
             "IssueId": 2
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 2
+          }
+        ],
         "ProjectId": 1
       },
       {
@@ -84,7 +100,15 @@
             "IssueId": 3
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 3
+          }
+        ],
         "ProjectId": 1
       },
       {
@@ -103,7 +127,15 @@
             "IssueId": 4
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 4
+          }
+        ],
         "ProjectId": 1
       },
       {
@@ -122,7 +154,15 @@
             "IssueId": 5
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 5
+          }
+        ],
         "ProjectId": 1
       }
     ]
@@ -153,7 +193,15 @@
             "IssueId": 1
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 6
+          }
+        ],
         "ProjectId": 2
       },
       {
@@ -172,7 +220,15 @@
             "IssueId": 2
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 7
+          }
+        ],
         "ProjectId": 2
       },
       {
@@ -191,7 +247,15 @@
             "IssueId": 3
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 8
+          }
+        ],
         "ProjectId": 2
       }
     ]
@@ -215,7 +279,15 @@
             "IssueId": 1
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 9
+          }
+        ],
         "ProjectId": 3
       },
       {
@@ -241,7 +313,15 @@
             "IssueId": 2
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 10
+          }
+        ],
         "ProjectId": 3
       },
       {
@@ -260,7 +340,15 @@
             "IssueId": 3
           }
         ],
-        "Media": [],
+        "Media": [
+          {
+            "Title": "Test Image",
+            "Description": "Test Image",
+            "MediaType": "image",
+            "Path": "Data/Media/testImage.jpg",
+            "IssueId": 11
+          }
+        ],
         "ProjectId": 3
       }
     ]
