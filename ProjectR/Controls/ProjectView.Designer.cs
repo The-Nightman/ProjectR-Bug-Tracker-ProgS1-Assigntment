@@ -40,8 +40,6 @@
             panel1 = new Panel();
             issueListItemBindingSource = new BindingSource(components);
             dataGridViewIssues = new DataGridView();
-            btnAddNewIssue = new Button();
-            btnOpenIssue = new Button();
             Id = new DataGridViewTextBoxColumn();
             titleDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             changesCountDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -49,6 +47,8 @@
             severityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             createdAtDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             lastUpdatedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            btnAddNewIssue = new Button();
+            btnOpenIssue = new Button();
             panelHeatmap.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)issueListItemBindingSource).BeginInit();
@@ -181,32 +181,6 @@
             dataGridViewIssues.DataBindingComplete += dataGridViewIssues_DataBindingComplete;
             dataGridViewIssues.SelectionChanged += dataGridViewIssues_SelectionChanged;
             // 
-            // btnAddNewIssue
-            // 
-            btnAddNewIssue.BackColor = Color.LawnGreen;
-            btnAddNewIssue.FlatStyle = FlatStyle.Popup;
-            btnAddNewIssue.Location = new Point(845, 61);
-            btnAddNewIssue.Margin = new Padding(0, 0, 8, 0);
-            btnAddNewIssue.Name = "btnAddNewIssue";
-            btnAddNewIssue.Size = new Size(128, 30);
-            btnAddNewIssue.TabIndex = 26;
-            btnAddNewIssue.Text = "Track New Issue";
-            btnAddNewIssue.UseVisualStyleBackColor = false;
-            // 
-            // btnOpenIssue
-            // 
-            btnOpenIssue.BackColor = Color.DodgerBlue;
-            btnOpenIssue.Enabled = false;
-            btnOpenIssue.FlatStyle = FlatStyle.Flat;
-            btnOpenIssue.Location = new Point(989, 61);
-            btnOpenIssue.Margin = new Padding(8, 0, 0, 0);
-            btnOpenIssue.Name = "btnOpenIssue";
-            btnOpenIssue.Size = new Size(128, 30);
-            btnOpenIssue.TabIndex = 27;
-            btnOpenIssue.Text = "Open Issue";
-            btnOpenIssue.UseVisualStyleBackColor = false;
-            btnOpenIssue.Click += btnOpenIssue_Click;
-            // 
             // Id
             // 
             Id.DataPropertyName = "Id";
@@ -269,6 +243,33 @@
             lastUpdatedDataGridViewTextBoxColumn.MinimumWidth = 6;
             lastUpdatedDataGridViewTextBoxColumn.Name = "lastUpdatedDataGridViewTextBoxColumn";
             lastUpdatedDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // btnAddNewIssue
+            // 
+            btnAddNewIssue.BackColor = Color.LawnGreen;
+            btnAddNewIssue.FlatStyle = FlatStyle.Popup;
+            btnAddNewIssue.Location = new Point(845, 61);
+            btnAddNewIssue.Margin = new Padding(0, 0, 8, 0);
+            btnAddNewIssue.Name = "btnAddNewIssue";
+            btnAddNewIssue.Size = new Size(128, 30);
+            btnAddNewIssue.TabIndex = 26;
+            btnAddNewIssue.Text = "Track New Issue";
+            btnAddNewIssue.UseVisualStyleBackColor = false;
+            btnAddNewIssue.Click += btnAddNewIssue_Click;
+            // 
+            // btnOpenIssue
+            // 
+            btnOpenIssue.BackColor = Color.DodgerBlue;
+            btnOpenIssue.Enabled = false;
+            btnOpenIssue.FlatStyle = FlatStyle.Flat;
+            btnOpenIssue.Location = new Point(989, 61);
+            btnOpenIssue.Margin = new Padding(8, 0, 0, 0);
+            btnOpenIssue.Name = "btnOpenIssue";
+            btnOpenIssue.Size = new Size(128, 30);
+            btnOpenIssue.TabIndex = 27;
+            btnOpenIssue.Text = "Open Issue";
+            btnOpenIssue.UseVisualStyleBackColor = false;
+            btnOpenIssue.Click += btnOpenIssue_Click;
             // 
             // ProjectView
             // 

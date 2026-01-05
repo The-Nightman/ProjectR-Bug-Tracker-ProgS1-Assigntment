@@ -1,5 +1,8 @@
-﻿using ProjectR.Classes;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectR.Classes;
 using ProjectR.Data;
+using ProjectR.Entities;
+using ProjectR.Forms;
 using ScottPlot;
 using System.Globalization;
 
@@ -10,6 +13,7 @@ namespace ProjectR.Controls
         private readonly int _projectId;
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
+        private Project? _project;
 
         public ProjectView(DatabaseContext dbContext, Navigation mainNav, int projId)
         {
@@ -23,6 +27,11 @@ namespace ProjectR.Controls
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
+            _project = _context
+                .Projects
+                .Where(p => p.Id == _projectId)
+                .FirstOrDefault();
+
             lblProjectsProjectTitle.Text = _context
                 .Projects.Where(p => p.Id == _projectId)
                 .Select(p => p.Name)
@@ -259,6 +268,34 @@ namespace ProjectR.Controls
             int selectedIssueId = (int)dataGridViewIssues.SelectedRows[0].Cells["Id"].Value;
 
             _mainNav.UseNavigate(new IssueView(_context, selectedIssueId));
+        }
+
+        private async void btnAddNewIssue_Click(object sender, EventArgs e)
+        {
+            Form dialog = new AddNewIssueDialog(_project!, _context);
+            dialog.ShowDialog();
+
+            await RefreshIssues();
+        }
+
+        private async Task RefreshIssues()
+        {
+            var issuesQuery = await _context
+                .Issues.Where(i => i.ProjectId == _projectId)
+                .OrderByDescending(o => o.LastUpdated)
+                .Select(i => new IssueListItem(
+                    i.Id,
+                    i.Name,
+                    i.Changes.Count,
+                    i.Status,
+                    i.Severity,
+                    i.CreatedAt,
+                    i.LastUpdated
+                ))
+                .ToListAsync();
+
+            dataGridViewIssues.DataSource = issuesQuery;
+            dataGridViewIssues.Refresh();
         }
     }
 }
