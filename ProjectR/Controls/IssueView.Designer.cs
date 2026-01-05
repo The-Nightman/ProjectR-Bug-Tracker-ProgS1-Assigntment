@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IssueView));
             lblIssueTitle = new Label();
             richTextBoxIssueDesc = new RichTextBox();
             pictureBoxIssueMedia = new PictureBox();
@@ -364,7 +363,6 @@
             btnIssueNameEditSave.BackColor = Color.Transparent;
             btnIssueNameEditSave.FlatAppearance.BorderSize = 0;
             btnIssueNameEditSave.FlatStyle = FlatStyle.Flat;
-            btnIssueNameEditSave.ImageIndex = 0;
             btnIssueNameEditSave.ImageList = imageList;
             btnIssueNameEditSave.Location = new Point(185, 16);
             btnIssueNameEditSave.Margin = new Padding(0);
@@ -377,10 +375,8 @@
             // imageList
             // 
             imageList.ColorDepth = ColorDepth.Depth32Bit;
-            imageList.ImageStream = (ImageListStreamer)resources.GetObject("imageList.ImageStream");
+            imageList.ImageSize = new Size(32, 32);
             imageList.TransparentColor = Color.Transparent;
-            imageList.Images.SetKeyName(0, "editLight.png");
-            imageList.Images.SetKeyName(1, "saveLight.png");
             // 
             // textBoxIssueTitleEdit
             // 

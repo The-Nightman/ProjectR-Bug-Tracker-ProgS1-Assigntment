@@ -23,6 +23,10 @@ namespace ProjectR.Controls
             string[] severityLevels = ["Low", "Medium", "Critical"];
             string[] statusLevels = ["Investigating", "In Review", "Fixed"];
 
+            imageList.Images.Add("editLight", Properties.Resources.editLight);
+            imageList.Images.Add("saveLight", Properties.Resources.saveLight);
+            btnIssueNameEditSave.ImageKey = "editLight";
+
             comboBoxSeverityLevels.Items.AddRange(severityLevels);
             comboBoxStatusLevels.Items.AddRange(statusLevels);
 
@@ -101,7 +105,8 @@ namespace ProjectR.Controls
                 textBoxIssueTitleEdit.Visible = true;
                 btnIssueNameEditSave.AccessibleName = "Save Issue Name";
 
-                btnIssueNameEditSave.ImageIndex = 1;
+                //btnIssueNameEditSave.ImageIndex = 1;
+                btnIssueNameEditSave.ImageKey = "saveLight";
 
                 btnIssueNameEditSave.Location = new Point(
                     textBoxIssueTitleEdit.Location.X
@@ -117,7 +122,7 @@ namespace ProjectR.Controls
                 textBoxIssueTitleEdit.Visible = false;
                 btnIssueNameEditSave.AccessibleName = "Edit Issue Name";
 
-                btnIssueNameEditSave.ImageIndex = 0;
+                btnIssueNameEditSave.ImageKey = "editLight";
 
                 btnIssueNameEditSave.Location = new Point(
                     lblIssueTitle.Location.X + lblIssueTitle.Width + lblIssueTitle.Padding.Right,

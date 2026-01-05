@@ -83,6 +83,16 @@ namespace ProjectR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap editLight {
+            get {
+                object obj = ResourceManager.GetObject("editLight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap projectRLogoDark {
             get {
                 object obj = ResourceManager.GetObject("projectRLogoDark", resourceCulture);
@@ -116,6 +126,16 @@ namespace ProjectR.Properties {
         internal static System.Drawing.Bitmap projectsIconStateInactiveDark {
             get {
                 object obj = ResourceManager.GetObject("projectsIconStateInactiveDark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap saveLight {
+            get {
+                object obj = ResourceManager.GetObject("saveLight", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
