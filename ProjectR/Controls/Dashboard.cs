@@ -1,5 +1,6 @@
 ﻿using ProjectR.Classes;
 using ProjectR.Data;
+using ProjectR.Interfaces;
 using ScottPlot;
 
 namespace ProjectR.Controls
@@ -8,11 +9,17 @@ namespace ProjectR.Controls
     {
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
+        private IProjectsService _projectsService;
 
-        public Dashboard(DatabaseContext dbContext, Navigation mainNav)
+        public Dashboard(
+            DatabaseContext dbContext,
+            Navigation mainNav,
+            IProjectsService projectsService
+        )
         {
             _mainNav = mainNav;
             _context = dbContext;
+            _projectsService = projectsService;
             InitializeComponent();
         }
 
@@ -28,24 +35,12 @@ namespace ProjectR.Controls
         private List<GraphData<string>> radarData = [];
         private List<GraphData<string>> barData = [];
 
-        private void Dashboard_Load(object sender, EventArgs e)
+        private async void Dashboard_Load(object sender, EventArgs e)
         {
             DateTime startOfWeekRange = DateTime.Now.AddDays(-6).Date;
             DateTime todayWeekRange = DateTime.Now.Date;
 
-            projectPreviews =
-            [
-                .. _context.Projects.Select(p => new ProjectPreview(
-                    p.Id,
-                    p.Name,
-                    p.Issues.Count(i => i.Status != "Fixed"),
-                    p.Issues.Count(i => i.Severity == "Critical" && i.Status != "Fixed"),
-                    p.Issues.Count(i =>
-                        i.LastUpdated >= startOfWeekRange && i.LastUpdated <= todayWeekRange
-                    ),
-                    p.Issues.Max(i => i.LastUpdated)
-                )),
-            ];
+            projectPreviews = await _projectsService.GetProjectPreviews();
 
             scatterData =
             [
