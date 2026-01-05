@@ -192,5 +192,31 @@ namespace ProjectR.Controls
 
             lblIssueLastUpdated.Text = $"Last Updated: {_issue!.LastUpdated:dd/MM/yyyy HH:mm}";
         }
+
+        private async void btnSaveIssueEdits_Click(object sender, EventArgs e)
+        {
+            if (_issue == null)
+                return;
+
+            if (comboBoxSeverityLevels.SelectedItem == null || comboBoxStatusLevels.SelectedItem == null)
+            {
+                MessageBox.Show("Please select both severity and status levels.", "Validation Error");
+                return;
+            }
+
+            try
+            {
+                _issue.Name = lblIssueTitle.Text;
+                _issue.Description = richTextBoxIssueDesc.Text;
+                _issue.Severity = comboBoxSeverityLevels.SelectedItem.ToString()!;
+                _issue.Status = comboBoxStatusLevels.SelectedItem.ToString()!;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while saving the issue: {ex.Message}", "Error");
+            }
+        }
     }
 }

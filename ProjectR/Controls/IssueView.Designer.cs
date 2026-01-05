@@ -59,6 +59,7 @@
             btnIssueNameEditSave = new Button();
             imageList = new ImageList(components);
             textBoxIssueTitleEdit = new TextBox();
+            btnSaveIssueEdits = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBoxIssueMedia).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewChanges).BeginInit();
             ((System.ComponentModel.ISupportInitialize)changeBindingSource).BeginInit();
@@ -393,11 +394,27 @@
             textBoxIssueTitleEdit.TabIndex = 34;
             textBoxIssueTitleEdit.Visible = false;
             // 
+            // btnSaveIssueEdits
+            // 
+            btnSaveIssueEdits.AccessibleDescription = "Save changes to issue details";
+            btnSaveIssueEdits.AccessibleName = "";
+            btnSaveIssueEdits.BackColor = Color.LawnGreen;
+            btnSaveIssueEdits.FlatStyle = FlatStyle.Flat;
+            btnSaveIssueEdits.Location = new Point(1007, 16);
+            btnSaveIssueEdits.Margin = new Padding(0, 0, 8, 0);
+            btnSaveIssueEdits.Name = "btnSaveIssueEdits";
+            btnSaveIssueEdits.Size = new Size(109, 29);
+            btnSaveIssueEdits.TabIndex = 35;
+            btnSaveIssueEdits.Text = "Save";
+            btnSaveIssueEdits.UseVisualStyleBackColor = false;
+            btnSaveIssueEdits.Click += btnSaveIssueEdits_Click;
+            // 
             // IssueView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
+            Controls.Add(btnSaveIssueEdits);
             Controls.Add(textBoxIssueTitleEdit);
             Controls.Add(btnIssueNameEditSave);
             Controls.Add(groupBoxIssueMedia);
@@ -453,5 +470,6 @@
         private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdAtDataGridViewTextBoxColumn;
         private Label lblIssueLastUpdated;
+        private Button btnSaveIssueEdits;
     }
 }
