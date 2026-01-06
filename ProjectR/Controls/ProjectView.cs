@@ -59,7 +59,8 @@ namespace ProjectR.Controls
 
             dataGridViewIssues.DataSource = issuesQuery;
 
-            List<GraphData<string>> issuesData = await _graphService.GetProjectCurrentOpenIssuesBarGraphData(_projectId);
+            List<GraphData<string>> issuesData =
+                await _graphService.GetProjectCurrentOpenIssuesBarGraphData(_projectId);
 
             // project activity heatmap
             int year = DateTime.Now.Year;
@@ -69,7 +70,9 @@ namespace ProjectR.Controls
                 DateTime.Parse($"31-12-{year}", new CultureInfo("en-GB")).ToOADate() - 0.5
             );
 
-            var heatmap = formPlotProjectActivityHeatmap.Plot.Add.Heatmap(PreProcessHeatmapData());
+            var heatmap = formPlotProjectActivityHeatmap.Plot.Add.Heatmap(
+                await _graphService.GetProjectActivityHeatmap(_projectId, year)
+            );
             heatmap.Rectangle = new(xRange, new(0.5, 6.5));
             heatmap.CellAlignment = Alignment.LowerLeft;
             heatmap.Position = new(xRange.Min, xRange.Max, 0.5, 6.5);
@@ -147,84 +150,6 @@ namespace ProjectR.Controls
 
             formPlotCurrentOpenBugs.UserInputProcessor.Disable();
             formPlotCurrentOpenBugs.Refresh();
-        }
-
-        private double[,] PreProcessHeatmapData()
-        {
-            List<List<double>> yearData2d =
-            [
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-            ];
-
-            int year = DateTime.Now.Year;
-
-            DateOnly startDate = DateOnly.Parse($"01-01-{year}", new CultureInfo("en-GB"));
-            DateOnly endDate = DateOnly.Parse($"31-12-{year}", new CultureInfo("en-GB"));
-
-            var queryChangesHeatmap = _context
-                .Changes.Where(c =>
-                    c.Issue.ProjectId == _projectId
-                    && c.CreatedAt >= startDate.ToDateTime(TimeOnly.MinValue)
-                    && c.CreatedAt <= endDate.ToDateTime(TimeOnly.MaxValue)
-                )
-                .GroupBy(g => g.CreatedAt.DayOfYear)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            int maxDays = DateTime.IsLeapYear(year) ? 366 : 365;
-
-            int dayOffset = -(int)startDate.DayOfWeek;
-
-            int dayofyear = startDate.DayOfYear;
-
-            for (int i = dayOffset; i < maxDays + Math.Abs(dayOffset); i++)
-            {
-                double dayData;
-
-                if (i < 0 || i >= maxDays)
-                {
-                    dayData = double.NaN;
-                }
-                else
-                {
-                    // bucket the values into 5 levels for heatmap display, this lets us consolidate
-                    // values and is due to issues with the colour bar not showing the full colour
-                    // map and incremental values not being very relevant or understandable
-                    dayData = queryChangesHeatmap.TryGetValue(i + 1, out int value) switch
-                    {
-                        true => value switch
-                        {
-                            <= 5 => 1,
-                            <= 10 => 2,
-                            <= 15 => 3,
-                            _ => 4,
-                        },
-                        false => 0,
-                    };
-                }
-
-                DateOnly currentDate = startDate.AddDays(i);
-
-                yearData2d[(int)currentDate.DayOfWeek].Add(dayData);
-            }
-
-            double[,] processedData = new double[7, yearData2d[0].Count];
-
-            for (int w = 0; w < yearData2d.Count; w++)
-            {
-                for (int h = 0; h < yearData2d[w].Count; h++)
-                {
-                    processedData[w, h] = yearData2d[w][h];
-                }
-            }
-
-            return processedData;
         }
 
         private void dataGridViewIssues_SelectionChanged(object sender, EventArgs e)
