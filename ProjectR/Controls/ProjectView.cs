@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectR.Classes;
+﻿using ProjectR.Classes;
 using ProjectR.Data;
-using ProjectR.Entities;
 using ProjectR.Forms;
 using ProjectR.Interfaces;
 using ScottPlot;
@@ -14,7 +12,6 @@ namespace ProjectR.Controls
         private readonly int _projectId;
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
-        private Project? _project;
         private readonly IProjectsService _projectsService;
         private readonly IGraphDataService _graphService;
 
@@ -36,28 +33,18 @@ namespace ProjectR.Controls
 
         private async void ProjectView_Load(object sender, EventArgs e)
         {
-            _project = _context.Projects.Where(p => p.Id == _projectId).FirstOrDefault();
+            ProjectDisplay? projectQuery = await _projectsService.GetProjectViewDetailsById(
+                _projectId
+            );
 
-            lblProjectsProjectTitle.Text = _context
-                .Projects.Where(p => p.Id == _projectId)
-                .Select(p => p.Name)
-                .FirstOrDefault();
+            if (projectQuery == null)
+            {
+                return;
+            }
 
-            var issuesQuery = _context
-                .Issues.Where(i => i.ProjectId == _projectId)
-                .OrderByDescending(o => o.LastUpdated)
-                .Select(i => new IssueListItem(
-                    i.Id,
-                    i.Name,
-                    i.Changes.Count,
-                    i.Status,
-                    i.Severity,
-                    i.CreatedAt,
-                    i.LastUpdated
-                ))
-                .ToList();
+            lblProjectsProjectTitle.Text = projectQuery.ProjectName;
 
-            dataGridViewIssues.DataSource = issuesQuery;
+            dataGridViewIssues.DataSource = projectQuery.Issues;
 
             List<GraphData<string>> issuesData =
                 await _graphService.GetProjectCurrentOpenIssuesBarGraphData(_projectId);
@@ -182,21 +169,14 @@ namespace ProjectR.Controls
 
         private async Task RefreshIssues()
         {
-            var issuesQuery = await _context
-                .Issues.Where(i => i.ProjectId == _projectId)
-                .OrderByDescending(o => o.LastUpdated)
-                .Select(i => new IssueListItem(
-                    i.Id,
-                    i.Name,
-                    i.Changes.Count,
-                    i.Status,
-                    i.Severity,
-                    i.CreatedAt,
-                    i.LastUpdated
-                ))
-                .ToListAsync();
+            var query = await _projectsService.GetProjectViewDetailsById(_projectId);
 
-            dataGridViewIssues.DataSource = issuesQuery;
+            if (query == null)
+            {
+                return;
+            }
+
+            dataGridViewIssues.DataSource = query.Issues;
             dataGridViewIssues.Refresh();
         }
     }
