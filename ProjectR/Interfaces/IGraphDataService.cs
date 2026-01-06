@@ -4,6 +4,8 @@ namespace ProjectR.Interfaces
 {
     public interface IGraphDataService
     {
+        public Task<List<GraphData<DateTime>>> GetDashboardScatterGraphData();
+
         public Task<List<GraphData<string>>> GetDashboardRadarGraphData();
     }
 }

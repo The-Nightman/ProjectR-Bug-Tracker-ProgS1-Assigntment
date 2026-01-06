@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectR.Classes;
 using ProjectR.Interfaces;
 
 namespace ProjectR.Data.Repositories
@@ -6,6 +7,25 @@ namespace ProjectR.Data.Repositories
     public class GraphDataRepository(DatabaseContext dbContext) : IGraphDataRepository
     {
         private readonly DatabaseContext _context = dbContext;
+
+        public async Task<List<GraphData<DateTime>>> GetDashboardScatterGraphData()
+        {
+            var scatterData = await _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.CreatedAt.Date)
+                .Select(s => new GraphData<DateTime>
+                (
+                    s.Key,
+                    s.Count()
+                ))
+                .ToListAsync();
+
+            return scatterData;
+        }
+
 
         public async Task<(Dictionary<string, int>, Dictionary<string, int>)> GetDashboardRadarGraphData()
         {

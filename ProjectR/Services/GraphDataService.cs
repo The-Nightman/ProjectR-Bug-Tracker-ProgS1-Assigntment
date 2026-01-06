@@ -7,6 +7,26 @@ namespace ProjectR.Services
     {
         private readonly IGraphDataRepository _repository = repository;
 
+        public async Task<List<GraphData<DateTime>>> GetDashboardScatterGraphData()
+        {
+            var scatterData = await _repository.GetDashboardScatterGraphData();
+
+            for (int i = 0; i <= 6; i++)
+            {
+                DateTime targetDate = DateTime.Now.AddDays(-6 + i).Date;
+
+                if (!scatterData.Any(sq => sq.XSeries == targetDate))
+                {
+                    scatterData.Insert(
+                        i,
+                        new GraphData<DateTime>(DateTime.Now.AddDays(-6 + i).Date, 0)
+                    );
+                }
+            }
+
+            return scatterData;
+        }
+
         public async Task<List<GraphData<string>>> GetDashboardRadarGraphData()
         {
             List<string> severityLevels = ["Low", "Medium", "Critical"];

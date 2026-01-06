@@ -20,7 +20,84 @@ namespace ProjectR.Tests
 
         [Test]
         [Category("Unit")]
-        [Category("Projects Service")]
+        [Category("GraphData Service")]
+        public async Task GetDashboardScatterGraphData_FetchesScatterGraphData_CollectionIsList()
+        {
+            // Arrange
+            var dataList = new List<GraphData<DateTime>>
+            {
+                new(DateTime.Today.AddDays(-2), 5),
+                new(DateTime.Today.AddDays(-1), 3),
+                new(DateTime.Today, 7),
+            };
+
+            _mockRepository.GetDashboardScatterGraphData().Returns(Task.FromResult(dataList));
+
+            // Act
+            var result = await _service.GetDashboardScatterGraphData();
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<List<GraphData<DateTime>>>());
+                Assert.That(result, Has.Count.EqualTo(7));
+
+                Assert.That(result[0].XSeries, Is.EqualTo(DateTime.Today.AddDays(-6)));
+                Assert.That(result[0].Value, Is.EqualTo(0));
+                Assert.That(result[1].XSeries, Is.EqualTo(DateTime.Today.AddDays(-5)));
+                Assert.That(result[1].Value, Is.EqualTo(0));
+                Assert.That(result[2].XSeries, Is.EqualTo(DateTime.Today.AddDays(-4)));
+                Assert.That(result[2].Value, Is.EqualTo(0));
+                Assert.That(result[3].XSeries, Is.EqualTo(DateTime.Today.AddDays(-3)));
+                Assert.That(result[3].Value, Is.EqualTo(0));
+                Assert.That(result[4].XSeries, Is.EqualTo(DateTime.Today.AddDays(-2)));
+                Assert.That(result[4].Value, Is.EqualTo(5));
+                Assert.That(result[5].XSeries, Is.EqualTo(DateTime.Today.AddDays(-1)));
+                Assert.That(result[5].Value, Is.EqualTo(3));
+                Assert.That(result[6].XSeries, Is.EqualTo(DateTime.Today));
+                Assert.That(result[6].Value, Is.EqualTo(7));
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
+        public async Task GetDashboardScatterGraphData_WhenNoDataExists_ReturnsFullListWithZeroDatapointValues()
+        {
+            // Arrange
+            var dataList = new List<GraphData<DateTime>>();
+
+            _mockRepository.GetDashboardScatterGraphData().Returns(Task.FromResult(dataList));
+
+            // Act
+            var result = await _service.GetDashboardScatterGraphData();
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<List<GraphData<DateTime>>>());
+                Assert.That(result, Has.Count.EqualTo(7));
+
+                Assert.That(result[0].XSeries, Is.EqualTo(DateTime.Today.AddDays(-6)));
+                Assert.That(result[0].Value, Is.EqualTo(0));
+                Assert.That(result[1].XSeries, Is.EqualTo(DateTime.Today.AddDays(-5)));
+                Assert.That(result[1].Value, Is.EqualTo(0));
+                Assert.That(result[2].XSeries, Is.EqualTo(DateTime.Today.AddDays(-4)));
+                Assert.That(result[2].Value, Is.EqualTo(0));
+                Assert.That(result[3].XSeries, Is.EqualTo(DateTime.Today.AddDays(-3)));
+                Assert.That(result[3].Value, Is.EqualTo(0));
+                Assert.That(result[4].XSeries, Is.EqualTo(DateTime.Today.AddDays(-2)));
+                Assert.That(result[4].Value, Is.EqualTo(0));
+                Assert.That(result[5].XSeries, Is.EqualTo(DateTime.Today.AddDays(-1)));
+                Assert.That(result[5].Value, Is.EqualTo(0));
+                Assert.That(result[6].XSeries, Is.EqualTo(DateTime.Today));
+                Assert.That(result[6].Value, Is.EqualTo(0));
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
         public async Task GetDashboardRadarGraphData_FetchesRadarGraphData_CollectionIsList()
         {
             // Arrange
@@ -67,20 +144,13 @@ namespace ProjectR.Tests
 
         [Test]
         [Category("Unit")]
-        [Category("Projects Service")]
+        [Category("GraphData Service")]
         public async Task GetDashboardRadarGraphData_WhenRowWithColumnDoesNotExist_ReturnsColumnWithZero()
         {
             // Arrange
-            var severity = new Dictionary<string, int>
-            {
-                ["Low"] = 5,
-                ["Critical"] = 1,
-            };
+            var severity = new Dictionary<string, int> { ["Low"] = 5, ["Critical"] = 1 };
 
-            var status = new Dictionary<string, int>
-            {
-                ["In Review"] = 3,
-            };
+            var status = new Dictionary<string, int> { ["In Review"] = 3 };
 
             _mockRepository
                 .GetDashboardRadarGraphData()
