@@ -1,5 +1,6 @@
 ﻿using ProjectR.Classes;
 using ProjectR.Data;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Controls
 {
@@ -8,16 +9,19 @@ namespace ProjectR.Controls
         private readonly int _projId;
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
+        private readonly IGraphDataService _graphService;
 
         public ProjectCard(
             ProjectPreview previewData,
             DatabaseContext dbContext,
-            Navigation mainNav
+            Navigation mainNav,
+            IGraphDataService graphService
         )
         {
             _projId = previewData.ProjectId;
             _mainNav = mainNav;
             _context = dbContext;
+            _graphService = graphService;
             InitializeComponent();
 
             lblProjCardTitle.Text = previewData.ProjectName;
@@ -36,7 +40,7 @@ namespace ProjectR.Controls
 
         private void ProjectCard_Click(object sender, EventArgs e)
         {
-            _mainNav.UseNavigate(new ProjectView(_context, _mainNav, _projId));
+            _mainNav.UseNavigate(new ProjectView(_context, _mainNav, _projId, _graphService));
         }
     }
 }

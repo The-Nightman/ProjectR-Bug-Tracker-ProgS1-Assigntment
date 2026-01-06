@@ -3,6 +3,7 @@ using ProjectR.Classes;
 using ProjectR.Data;
 using ProjectR.Entities;
 using ProjectR.Forms;
+using ProjectR.Interfaces;
 using ScottPlot;
 using System.Globalization;
 
@@ -14,12 +15,14 @@ namespace ProjectR.Controls
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
         private Project? _project;
+        private readonly IGraphDataService _graphService;
 
-        public ProjectView(DatabaseContext dbContext, Navigation mainNav, int projId)
+        public ProjectView(DatabaseContext dbContext, Navigation mainNav, int projId, IGraphDataService graphService)
         {
             _projectId = projId;
             _mainNav = mainNav;
             _context = dbContext;
+            _graphService = graphService;
             InitializeComponent();
         }
 
