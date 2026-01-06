@@ -10,5 +10,7 @@ namespace ProjectR.Interfaces
             Dictionary<string, int>,
             Dictionary<string, int>
         )> GetDashboardRadarGraphData();
+
+        public Task<List<GraphData<string>>> GetDashboardBarGraphData();
     }
 }

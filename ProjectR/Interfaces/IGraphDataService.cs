@@ -7,5 +7,7 @@ namespace ProjectR.Interfaces
         public Task<List<GraphData<DateTime>>> GetDashboardScatterGraphData();
 
         public Task<List<GraphData<string>>> GetDashboardRadarGraphData();
+
+        public Task<List<GraphData<string>>> GetDashboardBarGraphData();
     }
 }

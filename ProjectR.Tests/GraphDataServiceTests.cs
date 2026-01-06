@@ -178,5 +178,59 @@ namespace ProjectR.Tests
                 Assert.That(result[5].Value, Is.EqualTo(0));
             });
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
+        public async Task GetDashboardBarGraphData_FetchesBarGraphData_CollectionIsList()
+        {
+            // Arrange
+            var dataList = new List<GraphData<string>>
+            {
+                new("Project A", 5),
+                new("Project B", 3),
+                new("Project C", 7),
+            };
+
+            _mockRepository.GetDashboardBarGraphData().Returns(Task.FromResult(dataList));
+
+            // Act
+            var result = await _service.GetDashboardBarGraphData();
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<List<GraphData<string>>>());
+                Assert.That(result, Has.Count.EqualTo(3));
+
+                Assert.That(result[0].XSeries, Is.EqualTo("Project A"));
+                Assert.That(result[0].Value, Is.EqualTo(5));
+                Assert.That(result[1].XSeries, Is.EqualTo("Project B"));
+                Assert.That(result[1].Value, Is.EqualTo(3));
+                Assert.That(result[2].XSeries, Is.EqualTo("Project C"));
+                Assert.That(result[2].Value, Is.EqualTo(7));
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
+        public async Task GetDashboardBarGraphData_WhenNoDataExists_ReturnsEmptyList()
+        {
+            // Arrange
+            var dataList = new List<GraphData<string>>();
+
+            _mockRepository.GetDashboardBarGraphData().Returns(Task.FromResult(dataList));
+
+            // Act
+            var result = await _service.GetDashboardBarGraphData();
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<List<GraphData<string>>>());
+                Assert.That(result, Has.Count.EqualTo(0));
+            });
+        }
     }
 }

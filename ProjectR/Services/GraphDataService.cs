@@ -52,5 +52,10 @@ namespace ProjectR.Services
 
             return [.. radarListSeverity.Concat(radarListStatus)];
         }
+
+        public async Task<List<GraphData<string>>> GetDashboardBarGraphData()
+        {
+            return await _repository.GetDashboardBarGraphData();
+        }
     }
 }
