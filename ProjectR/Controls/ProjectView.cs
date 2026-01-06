@@ -15,13 +15,21 @@ namespace ProjectR.Controls
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
         private Project? _project;
+        private readonly IProjectsService _projectsService;
         private readonly IGraphDataService _graphService;
 
-        public ProjectView(DatabaseContext dbContext, Navigation mainNav, int projId, IGraphDataService graphService)
+        public ProjectView(
+            DatabaseContext dbContext,
+            Navigation mainNav,
+            int projId,
+            IProjectsService projectsService,
+            IGraphDataService graphService
+        )
         {
             _projectId = projId;
             _mainNav = mainNav;
             _context = dbContext;
+            _projectsService = projectsService;
             _graphService = graphService;
             InitializeComponent();
         }
@@ -30,10 +38,7 @@ namespace ProjectR.Controls
 
         private void ProjectView_Load(object sender, EventArgs e)
         {
-            _project = _context
-                .Projects
-                .Where(p => p.Id == _projectId)
-                .FirstOrDefault();
+            _project = _context.Projects.Where(p => p.Id == _projectId).FirstOrDefault();
 
             lblProjectsProjectTitle.Text = _context
                 .Projects.Where(p => p.Id == _projectId)

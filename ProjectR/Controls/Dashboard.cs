@@ -49,7 +49,7 @@ namespace ProjectR.Controls
 
             foreach (ProjectPreview proj in projectPreviews)
             {
-                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav, _graphService));
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav, _projectsService, _graphService));
             }
 
             // Scatter Plot
