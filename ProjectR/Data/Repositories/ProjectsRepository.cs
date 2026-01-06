@@ -48,6 +48,7 @@ namespace ProjectR.Data.Repositories
                         IssueName = i.Name,
                         Status = i.Status,
                         Severity = i.Severity,
+                        CreatedAt = i.CreatedAt,
                         LastUpdated = i.LastUpdated,
                     }).OrderByDescending(i => i.LastUpdated).ToList(),
                 })
