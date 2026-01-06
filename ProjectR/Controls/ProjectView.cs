@@ -34,9 +34,7 @@ namespace ProjectR.Controls
             InitializeComponent();
         }
 
-        private List<GraphData<string>> issuesData = [];
-
-        private void ProjectView_Load(object sender, EventArgs e)
+        private async void ProjectView_Load(object sender, EventArgs e)
         {
             _project = _context.Projects.Where(p => p.Id == _projectId).FirstOrDefault();
 
@@ -44,37 +42,6 @@ namespace ProjectR.Controls
                 .Projects.Where(p => p.Id == _projectId)
                 .Select(p => p.Name)
                 .FirstOrDefault();
-
-            List<string> severityLevels = ["Low", "Medium", "Critical"];
-            List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
-
-            var querySeverity = _context
-                .Issues.Where(i => i.ProjectId == _projectId)
-                .GroupBy(g => g.Severity)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            var queryStatus = _context
-                .Issues.Where(c => c.ProjectId == _projectId)
-                .GroupBy(c => c.Status)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            List<GraphData<string>> listSeverity =
-            [
-                .. severityLevels.Select(s => new GraphData<string>(
-                    s,
-                    querySeverity.TryGetValue(s, out int value) ? value : 0
-                )),
-            ];
-
-            List<GraphData<string>> listStatus =
-            [
-                .. statusLevels.Select(s => new GraphData<string>(
-                    s,
-                    queryStatus.TryGetValue(s, out int value) ? value : 0
-                )),
-            ];
 
             var issuesQuery = _context
                 .Issues.Where(i => i.ProjectId == _projectId)
@@ -92,8 +59,9 @@ namespace ProjectR.Controls
 
             dataGridViewIssues.DataSource = issuesQuery;
 
-            issuesData = [.. listSeverity.Concat(listStatus)];
+            List<GraphData<string>> issuesData = await _graphService.GetProjectCurrentOpenIssuesBarGraphData(_projectId);
 
+            // project activity heatmap
             int year = DateTime.Now.Year;
 
             CoordinateRange xRange = new(
@@ -146,6 +114,7 @@ namespace ProjectR.Controls
             formPlotProjectActivityHeatmap.UserInputProcessor.Disable();
             formPlotProjectActivityHeatmap.Refresh();
 
+            // current open bugs bar graph
             for (int i = 0; i < issuesData.Count; i++)
             {
                 var bar = formPlotCurrentOpenBugs.Plot.Add.Bar(
