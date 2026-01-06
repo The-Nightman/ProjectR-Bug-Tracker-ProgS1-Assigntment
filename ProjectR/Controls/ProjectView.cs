@@ -14,13 +14,15 @@ namespace ProjectR.Controls
         private readonly DatabaseContext _context;
         private readonly IProjectsService _projectsService;
         private readonly IGraphDataService _graphService;
+        private readonly IIssuesService _issuesService;
 
         public ProjectView(
             DatabaseContext dbContext,
             Navigation mainNav,
             int projId,
             IProjectsService projectsService,
-            IGraphDataService graphService
+            IGraphDataService graphService,
+            IIssuesService issuesService
         )
         {
             _projectId = projId;
@@ -28,6 +30,7 @@ namespace ProjectR.Controls
             _context = dbContext;
             _projectsService = projectsService;
             _graphService = graphService;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -161,7 +164,7 @@ namespace ProjectR.Controls
 
         private async void btnAddNewIssue_Click(object sender, EventArgs e)
         {
-            Form dialog = new AddNewIssueDialog(_project!, _context);
+            Form dialog = new AddNewIssueDialog(_projectId, _issuesService);
             dialog.ShowDialog();
 
             await RefreshIssues();

@@ -11,18 +11,22 @@ namespace ProjectR.Controls
         private readonly DatabaseContext _context;
         private readonly IProjectsService _projectsService;
         private readonly IGraphDataService _graphService;
+        private readonly IIssuesService _issuesService;
+
 
         public Dashboard(
             DatabaseContext dbContext,
             Navigation mainNav,
             IProjectsService projectsService,
-            IGraphDataService graphService
+            IGraphDataService graphService,
+            IIssuesService issuesService
         )
         {
             _mainNav = mainNav;
             _context = dbContext;
             _projectsService = projectsService;
             _graphService = graphService;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -49,7 +53,7 @@ namespace ProjectR.Controls
 
             foreach (ProjectPreview proj in projectPreviews)
             {
-                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav, _projectsService, _graphService));
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav, _projectsService, _graphService, _issuesService));
             }
 
             // Scatter Plot
