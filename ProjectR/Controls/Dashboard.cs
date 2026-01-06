@@ -33,17 +33,15 @@ namespace ProjectR.Controls
             base.OnPaint(e);
         }
 
-        private List<ProjectPreview> projectPreviews = [];
-        private List<GraphData<DateTime>> scatterData = [];
-        private List<GraphData<string>> radarData = [];
-        private List<GraphData<string>> barData = [];
-
         private async void Dashboard_Load(object sender, EventArgs e)
         {
+            List<ProjectPreview> projectPreviews = await _projectsService.GetProjectPreviews();
+            List<GraphData<DateTime>> scatterData = [];
+            List<GraphData<string>> radarData = await _graphService.GetDashboardRadarGraphData();
+            List<GraphData<string>> barData = [];
+
             DateTime startOfWeekRange = DateTime.Now.AddDays(-6).Date;
             DateTime todayWeekRange = DateTime.Now.Date;
-
-            projectPreviews = await _projectsService.GetProjectPreviews();
 
             scatterData =
             [
@@ -108,8 +106,6 @@ namespace ProjectR.Controls
                 (ys.Max() + Math.Ceiling(ys.Max() / 10))
             );
             formPlotDashboardActivityWeekly.Refresh();
-
-            radarData = await _graphService.GetDashboardRadarGraphData();
 
             double[] radarYs = [.. radarData.Select(gd => gd.Value)];
 
