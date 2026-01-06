@@ -23,5 +23,33 @@ namespace ProjectR.Services
 
             return projectPreviews;
         }
+
+        public async Task<ProjectDisplay?> GetProjectViewDetailsById(int projectId)
+        {
+            var projectDto = await _repository.GetProjectViewDetailsById(projectId);
+
+            if (projectDto == null)
+            {
+                return null;
+            }
+
+            var projectDisplay = new ProjectDisplay(
+                projectDto.ProjectId,
+                projectDto.ProjectName,
+                [
+                    .. projectDto.Issues.Select(i => new IssueListItem(
+                        i.IssueId,
+                        i.IssueName,
+                        i.ChangesCount,
+                        i.Status,
+                        i.Severity,
+                        i.CreatedAt,
+                        i.LastUpdated
+                    )),
+                ]
+            );
+
+            return projectDisplay;
+        }
     }
 }

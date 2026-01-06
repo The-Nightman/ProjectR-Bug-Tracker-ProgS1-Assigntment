@@ -32,5 +32,28 @@ namespace ProjectR.Data.Repositories
 
             return results;
         }
+
+        public async Task<ProjectDisplayDto?> GetProjectViewDetailsById(int projectId)
+        {
+            var projectQuery = await _context
+                .Projects
+                .Where(p => p.Id == projectId)
+                .Select(p => new ProjectDisplayDto
+                {
+                    ProjectId = p.Id,
+                    ProjectName = p.Name,
+                    Issues = p.Issues.Select(i => new IssuePreviewDto
+                    {
+                        IssueId = i.Id,
+                        IssueName = i.Name,
+                        Status = i.Status,
+                        Severity = i.Severity,
+                        LastUpdated = i.LastUpdated,
+                    }).OrderByDescending(i => i.LastUpdated).ToList(),
+                })
+                .FirstOrDefaultAsync();
+
+            return projectQuery;
+        }
     }
 }

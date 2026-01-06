@@ -1,4 +1,5 @@
 using NSubstitute;
+using ProjectR.Classes;
 using ProjectR.DTOs;
 using ProjectR.Interfaces;
 using ProjectR.Services;
@@ -74,6 +75,72 @@ namespace ProjectR.Tests
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Projects Service")]
+        public async Task GetProjectViewDetailsById_WhenProjectExists_MapsDtoToProjectDisplayAndIssueListItem()
+        {
+            // Arrange
+            int projectId = 1;
+            var dto = new ProjectDisplayDto
+            {
+                ProjectId = projectId,
+                ProjectName = "Test Project",
+                Issues =
+                [
+                    new IssuePreviewDto
+                    {
+                        IssueId = 101,
+                        IssueName = "Test Issue",
+                        ChangesCount = 5,
+                        Status = "Open",
+                        Severity = "High",
+                        CreatedAt = DateTime.Today.AddDays(-10),
+                        LastUpdated = DateTime.Today,
+                    },
+                ],
+            };
+
+            _mockRepository
+                .GetProjectViewDetailsById(projectId)
+                .Returns(Task.FromResult<ProjectDisplayDto?>(dto));
+
+            // Act
+            var result = await _service.GetProjectViewDetailsById(projectId);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<ProjectDisplay?>());
+
+                Assert.That(result!.ProjectId, Is.EqualTo(dto.ProjectId));
+                Assert.That(result.ProjectName, Is.EqualTo(dto.ProjectName));
+
+                Assert.That(result.Issues, Has.Count.EqualTo(dto.Issues.Count));
+                Assert.That(result.Issues, Is.TypeOf<List<IssueListItem>>());
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Projects Service")]
+        public async Task GetProjectViewDetailsById_WhenProjectDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            int projectId = 999;
+
+            _mockRepository
+                .GetProjectViewDetailsById(projectId)
+                .Returns(Task.FromResult<ProjectDisplayDto?>(null));
+
+            // Act
+            var result = await _service.GetProjectViewDetailsById(projectId);
+
+            // Assert
+            Assert.That(result, Is.Null);
         }
     }
 }
