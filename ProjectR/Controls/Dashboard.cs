@@ -36,43 +36,12 @@ namespace ProjectR.Controls
         private async void Dashboard_Load(object sender, EventArgs e)
         {
             List<ProjectPreview> projectPreviews = await _projectsService.GetProjectPreviews();
-            List<GraphData<DateTime>> scatterData = [];
+            List<GraphData<DateTime>> scatterData = await _graphService.GetDashboardScatterGraphData();
             List<GraphData<string>> radarData = await _graphService.GetDashboardRadarGraphData();
             List<GraphData<string>> barData = [];
 
             DateTime startOfWeekRange = DateTime.Now.AddDays(-6).Date;
             DateTime todayWeekRange = DateTime.Now.Date;
-
-            scatterData =
-            [
-                .. _context
-                    .Changes.Where(c =>
-                        c.CreatedAt.Date >= startOfWeekRange && c.CreatedAt.Date <= todayWeekRange
-                    )
-                    .GroupBy(g => new
-                    {
-                        g.CreatedAt.Year,
-                        g.CreatedAt.Month,
-                        g.CreatedAt.Day,
-                    })
-                    .Select(o => new GraphData<DateTime>(
-                        new DateTime(o.Key.Year, o.Key.Month, o.Key.Day),
-                        o.Count()
-                    )),
-            ];
-
-            for (int i = 0; i <= 6; i++)
-            {
-                DateTime targetDate = DateTime.Now.AddDays(-6 + i).Date;
-
-                if (!scatterData.Any(sq => sq.XSeries == targetDate))
-                {
-                    scatterData.Insert(
-                        i,
-                        new GraphData<DateTime>(DateTime.Now.AddDays(-6 + i).Date, 0)
-                    );
-                }
-            }
 
             HandleResizeables();
             // If this isnt handled a vertical scroll bar will appear when the window is resized to overflow.
