@@ -4,7 +4,7 @@ using ProjectR.Interfaces;
 
 namespace ProjectR.Data.Repositories
 {
-    internal class ProjectsRepository(DatabaseContext dbContext) : IProjectsRepository
+    public class ProjectsRepository(DatabaseContext dbContext) : IProjectsRepository
     {
         private readonly DatabaseContext _context = dbContext;
 
