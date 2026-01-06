@@ -12,5 +12,10 @@ namespace ProjectR.Interfaces
         )> GetDashboardRadarGraphData();
 
         public Task<List<GraphData<string>>> GetDashboardBarGraphData();
+
+        public Task<(
+            Dictionary<string, int>,
+            Dictionary<string, int>
+        )> GetProjectCurrentOpenIssuesBarGraphData(int projectId);
     }
 }

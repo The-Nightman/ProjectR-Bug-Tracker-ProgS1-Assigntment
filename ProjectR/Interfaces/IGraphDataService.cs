@@ -9,5 +9,7 @@ namespace ProjectR.Interfaces
         public Task<List<GraphData<string>>> GetDashboardRadarGraphData();
 
         public Task<List<GraphData<string>>> GetDashboardBarGraphData();
+
+        public Task<List<GraphData<string>>> GetProjectCurrentOpenIssuesBarGraphData(int projectId);
     }
 }

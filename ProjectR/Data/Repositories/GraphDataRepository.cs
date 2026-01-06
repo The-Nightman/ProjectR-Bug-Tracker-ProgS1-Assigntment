@@ -59,5 +59,25 @@ namespace ProjectR.Data.Repositories
                 .Select(g => new GraphData<string>(g.Key, g.Count()))
                 .ToListAsync();
         }
+
+        public async Task<(
+            Dictionary<string, int>,
+            Dictionary<string, int>
+        )> GetProjectCurrentOpenIssuesBarGraphData(int projectId)
+        {
+            var querySeverity = await _context
+                .Issues.Where(i => i.ProjectId == projectId)
+                .GroupBy(g => g.Severity)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            var queryStatus = await _context
+                .Issues.Where(c => c.ProjectId == projectId)
+                .GroupBy(c => c.Status)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            return (querySeverity, queryStatus);
+        }
     }
 }

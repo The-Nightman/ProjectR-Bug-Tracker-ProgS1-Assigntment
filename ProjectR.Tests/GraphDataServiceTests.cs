@@ -232,5 +232,92 @@ namespace ProjectR.Tests
                 Assert.That(result, Has.Count.EqualTo(0));
             });
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
+        public async Task GetProjectOpenIssuesGraphData_FetchesBarGraphData_CollectionIsList()
+        {
+            // Arrange
+            var severity = new Dictionary<string, int>
+            {
+                ["Low"] = 5,
+                ["Medium"] = 3,
+                ["Critical"] = 1,
+            };
+
+            var status = new Dictionary<string, int>
+            {
+                ["Investigating"] = 6,
+                ["In Review"] = 3,
+                ["Fixed"] = 12,
+            };
+
+            _mockRepository
+                .GetProjectCurrentOpenIssuesBarGraphData(1)
+                .Returns(Task.FromResult((severity, status)));
+
+            // Act
+
+            var result = await _service.GetProjectCurrentOpenIssuesBarGraphData(1);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<List<GraphData<string>>>());
+                Assert.That(result, Has.Count.EqualTo(6));
+
+                Assert.That(result[0].XSeries, Is.EqualTo("Low"));
+                Assert.That(result[0].Value, Is.EqualTo(5));
+                Assert.That(result[1].XSeries, Is.EqualTo("Medium"));
+                Assert.That(result[1].Value, Is.EqualTo(3));
+                Assert.That(result[2].XSeries, Is.EqualTo("Critical"));
+                Assert.That(result[2].Value, Is.EqualTo(1));
+                Assert.That(result[3].XSeries, Is.EqualTo("Investigating"));
+                Assert.That(result[3].Value, Is.EqualTo(6));
+                Assert.That(result[4].XSeries, Is.EqualTo("In Review"));
+                Assert.That(result[4].Value, Is.EqualTo(3));
+                Assert.That(result[5].XSeries, Is.EqualTo("Fixed"));
+                Assert.That(result[5].Value, Is.EqualTo(12));
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
+        public async Task GetProjectOpenIssuesGraphData_WhenRowWithColumnDoesNotExist_ReturnsColumnWithZero()
+        {
+            // Arrange
+            var severity = new Dictionary<string, int> { ["Low"] = 5, ["Critical"] = 1 };
+
+            var status = new Dictionary<string, int> { ["In Review"] = 3 };
+
+            _mockRepository
+                .GetProjectCurrentOpenIssuesBarGraphData(1)
+                .Returns(Task.FromResult((severity, status)));
+
+            // Act
+            var result = await _service.GetProjectCurrentOpenIssuesBarGraphData(1);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<List<GraphData<string>>>());
+                Assert.That(result, Has.Count.EqualTo(6));
+
+                Assert.That(result[0].XSeries, Is.EqualTo("Low"));
+                Assert.That(result[0].Value, Is.EqualTo(5));
+                Assert.That(result[1].XSeries, Is.EqualTo("Medium"));
+                Assert.That(result[1].Value, Is.EqualTo(0));
+                Assert.That(result[2].XSeries, Is.EqualTo("Critical"));
+                Assert.That(result[2].Value, Is.EqualTo(1));
+                Assert.That(result[3].XSeries, Is.EqualTo("Investigating"));
+                Assert.That(result[3].Value, Is.EqualTo(0));
+                Assert.That(result[4].XSeries, Is.EqualTo("In Review"));
+                Assert.That(result[4].Value, Is.EqualTo(3));
+                Assert.That(result[5].XSeries, Is.EqualTo("Fixed"));
+                Assert.That(result[5].Value, Is.EqualTo(0));
+            });
+        }
     }
 }
