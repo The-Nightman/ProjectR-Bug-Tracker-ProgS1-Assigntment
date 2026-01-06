@@ -9,17 +9,20 @@ namespace ProjectR.Controls
     {
         private readonly Navigation _mainNav;
         private readonly DatabaseContext _context;
-        private IProjectsService _projectsService;
+        private readonly IProjectsService _projectsService;
+        private readonly IGraphDataService _graphService;
 
         public Dashboard(
             DatabaseContext dbContext,
             Navigation mainNav,
-            IProjectsService projectsService
+            IProjectsService projectsService,
+            IGraphDataService graphService
         )
         {
             _mainNav = mainNav;
             _context = dbContext;
             _projectsService = projectsService;
+            _graphService = graphService;
             InitializeComponent();
         }
 
@@ -106,44 +109,7 @@ namespace ProjectR.Controls
             );
             formPlotDashboardActivityWeekly.Refresh();
 
-            List<string> severityLevels = ["Low", "Medium", "Critical"];
-            List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
-
-            var radarQuerySeverity = _context
-                .Changes.Where(c =>
-                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                    && c.CreatedAt.Date <= DateTime.Now.Date
-                )
-                .GroupBy(c => c.Issue.Severity)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            var radarQueryStatus = _context
-                .Changes.Where(c =>
-                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                    && c.CreatedAt.Date <= DateTime.Now.Date
-                )
-                .GroupBy(c => c.Issue.Status)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            List<GraphData<string>> radarListSeverity =
-            [
-                .. severityLevels.Select(s => new GraphData<string>(
-                    s,
-                    radarQuerySeverity.TryGetValue(s, out int value) ? value : 0
-                )),
-            ];
-
-            List<GraphData<string>> radarListStatus =
-            [
-                .. statusLevels.Select(s => new GraphData<string>(
-                    s,
-                    radarQueryStatus.TryGetValue(s, out int value) ? value : 0
-                )),
-            ];
-
-            radarData = [.. radarListSeverity.Concat(radarListStatus)];
+            radarData = await _graphService.GetDashboardRadarGraphData();
 
             double[] radarYs = [.. radarData.Select(gd => gd.Value)];
 

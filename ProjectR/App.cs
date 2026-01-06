@@ -12,6 +12,8 @@ namespace ProjectR
         private DatabaseContext? dbContext;
         private IProjectsRepository? projectsRepository;
         private IProjectsService? projectsService;
+        private IGraphDataRepository? graphRepository;
+        private IGraphDataService? graphService;
 
         private string currentView = "DASHBOARD";
 
@@ -26,10 +28,12 @@ namespace ProjectR
             dbContext = new DatabaseContext();
             projectsRepository = new ProjectsRepository(dbContext);
             projectsService = new ProjectsService(projectsRepository);
+            graphRepository = new GraphDataRepository(dbContext);
+            graphService = new GraphDataService(graphRepository);
 
             await SeedData.SeedDatabase(dbContext);
 
-            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav, projectsService!));
+            mainNav!.UseNavigate(new Controls.Dashboard(dbContext, mainNav, projectsService, graphService));
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
                 Properties.Resources.dashboardIconStateActiveDark
@@ -58,7 +62,7 @@ namespace ProjectR
                 return;
 
             currentView = "DASHBOARD";
-            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav, projectsService!));
+            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav, projectsService!, graphService!));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"
