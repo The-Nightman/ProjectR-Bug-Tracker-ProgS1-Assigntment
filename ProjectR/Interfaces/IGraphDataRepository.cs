@@ -17,5 +17,7 @@ namespace ProjectR.Interfaces
             Dictionary<string, int>,
             Dictionary<string, int>
         )> GetProjectCurrentOpenIssuesBarGraphData(int projectId);
+
+        public Task<Dictionary<int, int>> GetProjectActivityHeatmap(int projectId, int year);
     }
 }

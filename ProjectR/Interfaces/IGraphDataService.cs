@@ -11,5 +11,7 @@ namespace ProjectR.Interfaces
         public Task<List<GraphData<string>>> GetDashboardBarGraphData();
 
         public Task<List<GraphData<string>>> GetProjectCurrentOpenIssuesBarGraphData(int projectId);
+
+        public Task<double[,]> GetProjectActivityHeatmap(int projectId, int year);
     }
 }

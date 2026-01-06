@@ -319,5 +319,41 @@ namespace ProjectR.Tests
                 Assert.That(result[5].Value, Is.EqualTo(0));
             });
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("GraphData Service")]
+        public async Task GetProjectActivityHeatmap_FetchesHeatmapData_ArrayIs2DDouble_OffsetIsDoubleNaN()
+        {
+            // Arrange
+            var actictivyDict = new Dictionary<int, int>
+            {
+                [1] = 1, // index [3, 0] expected bin value: 1
+                [74] = 7, // index [6, 10] expected bin value: 2
+                [181] = 12, // index [1, 26] expected bin value: 3
+            };
+
+            _mockRepository
+                .GetProjectActivityHeatmap(1, 2025) // Hardcoded year for ease of testing and predictability
+                .Returns(Task.FromResult(actictivyDict));
+
+            // Act
+            var result = await _service.GetProjectActivityHeatmap(1, 2025); //! This method is not particularly easy to test, remember the offsets and value bins!
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<double[,]>());
+                Assert.That(result.GetLength(0), Is.EqualTo(7)); // Days of the week
+                Assert.That(result.GetLength(1), Is.EqualTo(53)); // Weeks in a year + buffer for offset e.g. year starting on a wednesday as 2025 did
+
+                Assert.That(double.IsNaN(result[0, 0]), Is.True); // Before start of year
+                Assert.That(double.IsNaN(result[6, 52]), Is.True); // After end of year
+
+                Assert.That(result[3, 0], Is.EqualTo(1));
+                Assert.That(result[6, 10], Is.EqualTo(2));
+                Assert.That(result[1, 26], Is.EqualTo(3));
+            });
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectR.Classes;
 using ProjectR.Interfaces;
+using System.Globalization;
 
 namespace ProjectR.Data.Repositories
 {
@@ -78,6 +79,24 @@ namespace ProjectR.Data.Repositories
                 .ToDictionaryAsync(x => x.Key, x => x.Value);
 
             return (querySeverity, queryStatus);
+        }
+
+        public async Task<Dictionary<int, int>> GetProjectActivityHeatmap(int projectId, int year)
+        {
+            DateOnly startDate = DateOnly.Parse($"01-01-{year}", new CultureInfo("en-GB"));
+            DateOnly endDate = DateOnly.Parse($"31-12-{year}", new CultureInfo("en-GB"));
+
+            var queryChangesHeatmap = await _context
+                .Changes.Where(c =>
+                    c.Issue.ProjectId == projectId
+                    && c.CreatedAt >= startDate.ToDateTime(TimeOnly.MinValue)
+                    && c.CreatedAt <= endDate.ToDateTime(TimeOnly.MaxValue)
+                )
+                .GroupBy(g => g.CreatedAt.DayOfYear)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            return queryChangesHeatmap;
         }
     }
 }
