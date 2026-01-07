@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProjectR.Classes;
 using ProjectR.Data;
 using ProjectR.Entities;
 using ProjectR.Forms;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Controls
 {
@@ -10,11 +12,13 @@ namespace ProjectR.Controls
         private readonly int _issueId;
         private readonly DatabaseContext _context;
         private Issue? _issue;
+        private readonly IIssuesService _issuesService;
 
-        public IssueView(DatabaseContext dbContenxt, int issueId)
+        public IssueView(DatabaseContext dbContenxt, int issueId, IIssuesService issuesService)
         {
             _issueId = issueId;
             _context = dbContenxt;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -23,6 +27,8 @@ namespace ProjectR.Controls
             string[] severityLevels = ["Low", "Medium", "Critical"];
             string[] statusLevels = ["Investigating", "In Review", "Fixed"];
 
+            IssueDisplay issue = await _issuesService.GetIssueById(_issueId);
+
             imageList.Images.Add("editLight", Properties.Resources.editLight);
             imageList.Images.Add("saveLight", Properties.Resources.saveLight);
             btnIssueNameEditSave.ImageKey = "editLight";
@@ -30,28 +36,21 @@ namespace ProjectR.Controls
             comboBoxSeverityLevels.Items.AddRange(severityLevels);
             comboBoxStatusLevels.Items.AddRange(statusLevels);
 
-            // Loading related entities as a property technically runs multiple queries
-            // and this may cause the related entities to not be loaded even with async
-            _issue = await _context
-                .Issues.Include(i => i.Media)
-                .Include(i => i.Changes)
-                .FirstAsync(i => i.Id == _issueId);
-
-            lblIssueTitle.Text = _issue.Name;
-            lblIssueCreatedDate.Text = $"Created: {_issue.CreatedAt:dd/MM/yyyy HH:mm}";
-            lblIssueLastUpdated.Text = $"Last Updated: {_issue.LastUpdated:dd/MM/yyyy HH:mm}";
-            richTextBoxIssueDesc.Text = _issue.Description;
+            lblIssueTitle.Text = issue.Name;
+            lblIssueCreatedDate.Text = $"Created: {issue.CreatedAt:dd/MM/yyyy HH:mm}";
+            lblIssueLastUpdated.Text = $"Last Updated: {issue.LastUpdated:dd/MM/yyyy HH:mm}";
+            richTextBoxIssueDesc.Text = issue.Description;
             listBoxMedia.DisplayMember = "Title";
-            listBoxMedia.DataSource = _issue.Media;
-            dataGridViewChanges.DataSource = _issue.Changes.OrderByDescending(c => c.CreatedAt).ToList();
+            listBoxMedia.DataSource = issue.MediaList;
+            dataGridViewChanges.DataSource = issue.ChangesList;
 
             btnIssueNameEditSave.Location = new Point(
                 lblIssueTitle.Location.X + lblIssueTitle.Width + lblIssueTitle.Padding.Right,
                 lblIssueTitle.Location.Y
             );
 
-            comboBoxSeverityLevels.SelectedItem = _issue.Severity;
-            comboBoxStatusLevels.SelectedItem = _issue.Status;
+            comboBoxSeverityLevels.SelectedItem = issue.Severity;
+            comboBoxStatusLevels.SelectedItem = issue.Status;
 
             toolTip.SetToolTip(pictureBoxIssueMedia, "Click to view fullscreen");
         }
@@ -84,7 +83,7 @@ namespace ProjectR.Controls
             if (listBoxMedia.SelectedItem == null)
                 return;
 
-            Media image = (Media)listBoxMedia.SelectedItem;
+            MediaDisplay image = (MediaDisplay)listBoxMedia.SelectedItem;
 
             pictureBoxIssueMedia.ImageLocation = Path.Combine(AppContext.BaseDirectory, image.Path);
 

@@ -159,7 +159,7 @@ namespace ProjectR.Controls
         {
             int selectedIssueId = (int)dataGridViewIssues.SelectedRows[0].Cells["Id"].Value;
 
-            _mainNav.UseNavigate(new IssueView(_context, selectedIssueId));
+            _mainNav.UseNavigate(new IssueView(_context, selectedIssueId, _issuesService));
         }
 
         private async void btnAddNewIssue_Click(object sender, EventArgs e)
