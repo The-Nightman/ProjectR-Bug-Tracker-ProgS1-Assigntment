@@ -42,5 +42,46 @@ namespace ProjectR.Tests
             await _mockRepository.Received(1).AddNewIssue(projectId, newIssueDto);
         }
 
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task GetIssueById_ReturnsCorrectIssueDisplay()
+        {
+            // Arrange
+            int issueId = 1;
+            var issueDto = new IssueDto
+            {
+                Id = issueId,
+                Name = "Test Issue",
+                Description = "Test Description",
+                Severity = "Medium",
+                Status = "In Progress",
+                CreatedAt = DateTime.UtcNow.AddDays(-1),
+                LastUpdated = DateTime.UtcNow,
+                Changes = [],
+                Media = [],
+                ProjectId = 2,
+            };
+
+            _mockRepository.GetIssueById(issueId).Returns(Task.FromResult(issueDto));
+
+            // Act
+            var result = await _service.GetIssueById(issueId);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IssueId, Is.EqualTo(issueDto.Id));
+                Assert.That(result.Name, Is.EqualTo(issueDto.Name));
+                Assert.That(result.Description, Is.EqualTo(issueDto.Description));
+                Assert.That(result.Severity, Is.EqualTo(issueDto.Severity));
+                Assert.That(result.Status, Is.EqualTo(issueDto.Status));
+                Assert.That(result.CreatedAt, Is.EqualTo(issueDto.CreatedAt));
+                Assert.That(result.LastUpdated, Is.EqualTo(issueDto.LastUpdated));
+                Assert.That(result.ChangesList, Has.Count.EqualTo(issueDto.Changes.Count));
+                Assert.That(result.MediaList, Has.Count.EqualTo(issueDto.Media.Count));
+                Assert.That(result.ProjectId, Is.EqualTo(issueDto.ProjectId));
+            });
+        }
     }
 }
