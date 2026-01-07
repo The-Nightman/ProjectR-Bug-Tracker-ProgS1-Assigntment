@@ -142,5 +142,20 @@ namespace ProjectR.Tests
             // Assert
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Projects Service")]
+        public async Task AddNewProject_CallsRepositoryWithNewParameters()
+        {
+            // Arrange
+            var newProjectDto = new NewProjectDto { Name = "New Test Project" };
+
+            // Act
+            await _service.AddNewProject(newProjectDto);
+
+            // Assert
+            await _mockRepository.Received(1).AddNewProject(newProjectDto);
+        }
     }
 }

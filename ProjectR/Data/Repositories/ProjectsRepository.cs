@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectR.DTOs;
+using ProjectR.Entities;
 using ProjectR.Interfaces;
 
 namespace ProjectR.Data.Repositories
@@ -36,26 +37,35 @@ namespace ProjectR.Data.Repositories
         public async Task<ProjectDisplayDto?> GetProjectViewDetailsById(int projectId)
         {
             var projectQuery = await _context
-                .Projects
-                .Where(p => p.Id == projectId)
+                .Projects.Where(p => p.Id == projectId)
                 .Select(p => new ProjectDisplayDto
                 {
                     ProjectId = p.Id,
                     ProjectName = p.Name,
-                    Issues = p.Issues.Select(i => new IssuePreviewDto
-                    {
-                        IssueId = i.Id,
-                        IssueName = i.Name,
-                        ChangesCount = i.Changes.Count,
-                        Status = i.Status,
-                        Severity = i.Severity,
-                        CreatedAt = i.CreatedAt,
-                        LastUpdated = i.LastUpdated,
-                    }).OrderByDescending(i => i.LastUpdated).ToList(),
+                    Issues = p
+                        .Issues.Select(i => new IssuePreviewDto
+                        {
+                            IssueId = i.Id,
+                            IssueName = i.Name,
+                            ChangesCount = i.Changes.Count,
+                            Status = i.Status,
+                            Severity = i.Severity,
+                            CreatedAt = i.CreatedAt,
+                            LastUpdated = i.LastUpdated,
+                        })
+                        .OrderByDescending(i => i.LastUpdated)
+                        .ToList(),
                 })
                 .FirstOrDefaultAsync();
 
             return projectQuery;
+        }
+
+        public async Task AddNewProject(NewProjectDto newProject)
+        {
+            await _context.Projects.AddAsync(new Project { Name = newProject.Name });
+
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -7,5 +7,7 @@ namespace ProjectR.Interfaces
         public Task<List<ProjectPreviewDto>> GetProjectPreviews();
 
         public Task<ProjectDisplayDto?> GetProjectViewDetailsById(int projectId);
+
+        public Task AddNewProject(NewProjectDto newProject);
     }
 }

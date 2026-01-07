@@ -1,4 +1,5 @@
 ﻿using ProjectR.Classes;
+using ProjectR.DTOs;
 using ProjectR.Interfaces;
 
 namespace ProjectR.Services
@@ -50,6 +51,11 @@ namespace ProjectR.Services
             );
 
             return projectDisplay;
+        }
+
+        public async Task AddNewProject(NewProjectDto newProject)
+        {
+            await _repository.AddNewProject(newProject);
         }
     }
 }
