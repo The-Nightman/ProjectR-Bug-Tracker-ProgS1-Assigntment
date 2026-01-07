@@ -214,5 +214,27 @@ namespace ProjectR.Tests
             // Assert
             await _mockRepository.Received(1).DeleteMediaById(mediaId);
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task AddNewChange_CallsRepositoryWithCorrectParameters()
+        {
+            // Arrange
+            int issueId = 1;
+            var newChangeDto = new NewChangeDto
+            {
+                ChangeHash = "abc123",
+                Name = "New Change",
+                Description = "Change Description",
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            // Act
+            await _service.AddNewChange(issueId, newChangeDto);
+
+            // Assert
+            await _mockRepository.Received(1).AddNewChange(issueId, newChangeDto);
+        }
     }
 }

@@ -83,5 +83,10 @@ namespace ProjectR.Services
         {
             await _repository.DeleteMediaById(mediaId);
         }
+
+        public async Task AddNewChange(int issueId, NewChangeDto newChange)
+        {
+            await _repository.AddNewChange(issueId, newChange);
+        }
     }
 }

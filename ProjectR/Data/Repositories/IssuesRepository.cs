@@ -150,5 +150,28 @@ namespace ProjectR.Data.Repositories
         {
             _ = await _context.Media.Where(m => m.Id == mediaId).ExecuteDeleteAsync();
         }
+
+        public async Task AddNewChange(int issueId, NewChangeDto newChange)
+        {
+            var trackedIssue =
+                await _context.Issues.FindAsync(issueId)
+                ?? throw new ArgumentException($"Issue with ID {issueId} does not exist.");
+
+            _ = await _context.Changes.AddAsync(
+                new Change
+                {
+                    IssueId = issueId,
+                    ChangeHash = newChange.ChangeHash,
+                    Name = newChange.Name,
+                    Description = newChange.Description,
+                    CreatedAt = newChange.CreatedAt,
+                    Issue = trackedIssue,
+                }
+            );
+
+            trackedIssue.LastUpdated = newChange.CreatedAt;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
