@@ -1,5 +1,4 @@
 ﻿using ProjectR.Classes;
-using ProjectR.Data;
 using ProjectR.DTOs;
 using ProjectR.Forms;
 using ProjectR.Interfaces;
@@ -9,13 +8,11 @@ namespace ProjectR.Controls
     public partial class IssueView : UserControl
     {
         private readonly int _issueId;
-        private readonly DatabaseContext _context;
         private readonly IIssuesService _issuesService;
 
-        public IssueView(DatabaseContext dbContenxt, int issueId, IIssuesService issuesService)
+        public IssueView(int issueId, IIssuesService issuesService)
         {
             _issueId = issueId;
-            _context = dbContenxt;
             _issuesService = issuesService;
             InitializeComponent();
         }
@@ -140,7 +137,10 @@ namespace ProjectR.Controls
             if (listBoxMedia.SelectedItem == null)
                 return;
 
-            Form dialog = new EditMediaDialog((MediaDisplay)listBoxMedia.SelectedItem, _issuesService);
+            Form dialog = new EditMediaDialog(
+                (MediaDisplay)listBoxMedia.SelectedItem,
+                _issuesService
+            );
             dialog.ShowDialog();
 
             await ReloadMedia();
@@ -163,25 +163,6 @@ namespace ProjectR.Controls
             dialog.ShowDialog();
 
             await ReloadChanges(); // The dialog does have functionality to edit the changes so we should still reload
-        }
-
-        private async Task ReloadMedia()
-        {
-            var newMedia = await _issuesService.GetIssueMedia(_issueId);
-
-            listBoxMedia.DataSource = newMedia;
-            listBoxMedia.Refresh();
-        }
-
-        private async Task ReloadChanges()
-        {
-            var refreshIssueQuery = await _issuesService.GetIssueById(_issueId);
-
-            dataGridViewChanges.DataSource = refreshIssueQuery.ChangesList;
-            dataGridViewChanges.Refresh();
-
-            lblIssueLastUpdated.Text =
-                $"Last Updated: {refreshIssueQuery.LastUpdated:dd/MM/yyyy HH:mm}";
         }
 
         private async void btnSaveIssueEdits_Click(object sender, EventArgs e)
@@ -215,6 +196,25 @@ namespace ProjectR.Controls
             {
                 MessageBox.Show($"An error occurred while saving the issue: {ex.Message}", "Error");
             }
+        }
+
+        private async Task ReloadMedia()
+        {
+            var newMedia = await _issuesService.GetIssueMedia(_issueId);
+
+            listBoxMedia.DataSource = newMedia;
+            listBoxMedia.Refresh();
+        }
+
+        private async Task ReloadChanges()
+        {
+            var refreshIssueQuery = await _issuesService.GetIssueById(_issueId);
+
+            dataGridViewChanges.DataSource = refreshIssueQuery.ChangesList;
+            dataGridViewChanges.Refresh();
+
+            lblIssueLastUpdated.Text =
+                $"Last Updated: {refreshIssueQuery.LastUpdated:dd/MM/yyyy HH:mm}";
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ProjectR.Classes;
-using ProjectR.Data;
 using ProjectR.Interfaces;
 using ScottPlot;
 
@@ -8,14 +7,12 @@ namespace ProjectR.Controls
     public partial class Dashboard : UserControl
     {
         private readonly Navigation _mainNav;
-        private readonly DatabaseContext _context;
         private readonly IProjectsService _projectsService;
         private readonly IGraphDataService _graphService;
         private readonly IIssuesService _issuesService;
 
 
         public Dashboard(
-            DatabaseContext dbContext,
             Navigation mainNav,
             IProjectsService projectsService,
             IGraphDataService graphService,
@@ -23,7 +20,6 @@ namespace ProjectR.Controls
         )
         {
             _mainNav = mainNav;
-            _context = dbContext;
             _projectsService = projectsService;
             _graphService = graphService;
             _issuesService = issuesService;
@@ -53,7 +49,7 @@ namespace ProjectR.Controls
 
             foreach (ProjectPreview proj in projectPreviews)
             {
-                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav, _projectsService, _graphService, _issuesService));
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _mainNav, _projectsService, _graphService, _issuesService));
             }
 
             // Scatter Plot

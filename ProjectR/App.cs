@@ -38,7 +38,7 @@ namespace ProjectR
 
             await SeedData.SeedDatabase(dbContext);
 
-            mainNav!.UseNavigate(new Dashboard(dbContext, mainNav, projectsService, graphService, issuesService));
+            mainNav!.UseNavigate(new Dashboard(mainNav, projectsService, graphService, issuesService));
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
                 Properties.Resources.dashboardIconStateActiveDark
@@ -67,7 +67,7 @@ namespace ProjectR
                 return;
 
             currentView = "DASHBOARD";
-            mainNav!.UseNavigate(new Dashboard(dbContext!, mainNav, projectsService!, graphService!, issuesService));
+            mainNav!.UseNavigate(new Dashboard(mainNav, projectsService!, graphService!, issuesService));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"

@@ -1,5 +1,4 @@
 ﻿using ProjectR.Classes;
-using ProjectR.Data;
 using ProjectR.Forms;
 using ProjectR.Interfaces;
 using ScottPlot;
@@ -11,13 +10,11 @@ namespace ProjectR.Controls
     {
         private readonly int _projectId;
         private readonly Navigation _mainNav;
-        private readonly DatabaseContext _context;
         private readonly IProjectsService _projectsService;
         private readonly IGraphDataService _graphService;
         private readonly IIssuesService _issuesService;
 
         public ProjectView(
-            DatabaseContext dbContext,
             Navigation mainNav,
             int projId,
             IProjectsService projectsService,
@@ -27,7 +24,6 @@ namespace ProjectR.Controls
         {
             _projectId = projId;
             _mainNav = mainNav;
-            _context = dbContext;
             _projectsService = projectsService;
             _graphService = graphService;
             _issuesService = issuesService;
@@ -159,7 +155,7 @@ namespace ProjectR.Controls
         {
             int selectedIssueId = (int)dataGridViewIssues.SelectedRows[0].Cells["Id"].Value;
 
-            _mainNav.UseNavigate(new IssueView(_context, selectedIssueId, _issuesService));
+            _mainNav.UseNavigate(new IssueView(selectedIssueId, _issuesService));
         }
 
         private async void btnAddNewIssue_Click(object sender, EventArgs e)
