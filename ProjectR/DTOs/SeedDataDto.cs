@@ -3,6 +3,7 @@
     public class SeedProjectDataDto
     {
         public string Name { get; set; }
+        public int CreatedAt { get; set; }
         public List<IssueDTO> Issues { get; set; } = [];
     }
 

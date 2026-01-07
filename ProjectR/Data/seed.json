@@ -1,6 +1,7 @@
 ﻿[
   {
     "Name": "Open Health",
+    "CreatedAt": -40,
     "issues": [
       {
         "Name": "Appointment Daylight savings",
@@ -169,6 +170,7 @@
   },
   {
     "Name": "Smart Wallet",
+    "CreatedAt": -25,
     "issues": [
       {
         "Name": "Transaction double-charge",
@@ -262,6 +264,7 @@
   },
   {
     "Name": "GoAir",
+    "CreatedAt": -22,
     "issues": [
       {
         "Name": "Booking date mismatch in confirmation email",
