@@ -1,6 +1,5 @@
 ﻿using ProjectR.Classes;
-using ProjectR.Data;
-using ProjectR.Entities;
+using ProjectR.DTOs;
 using ProjectR.Interfaces;
 
 namespace ProjectR.Forms
@@ -8,14 +7,14 @@ namespace ProjectR.Forms
     public partial class OpenChangeDialog : Form
     {
         private readonly int _changeId;
-        private readonly DatabaseContext _context;
-        private Change? _change;
         private readonly IIssuesService _issuesService;
 
-        public OpenChangeDialog(int changeId, DatabaseContext dbContext, IIssuesService issuesService)
+        public OpenChangeDialog(
+            int changeId,
+            IIssuesService issuesService
+        )
         {
             _changeId = changeId;
-            _context = dbContext;
             _issuesService = issuesService;
             InitializeComponent();
         }
@@ -77,12 +76,16 @@ namespace ProjectR.Forms
 
                 try
                 {
-                    _change!.Name = textBoxChangeName.Text;
-                    _change.ChangeHash = textBoxChangeHash.Text;
-                    _change.Description = richTextBoxChangeDesc.Text;
-                    _change.CreatedAt = dateTimePicker.Value;
-
-                    await _context.SaveChangesAsync();
+                    await _issuesService.UpdateChange(
+                        new EditChangeDto
+                        {
+                            Id = _changeId,
+                            ChangeHash = textBoxChangeHash.Text,
+                            Name = textBoxChangeName.Text,
+                            Description = richTextBoxChangeDesc.Text,
+                            CreatedAt = dateTimePicker.Value,
+                        }
+                    );
                 }
                 catch (Exception ex)
                 {
