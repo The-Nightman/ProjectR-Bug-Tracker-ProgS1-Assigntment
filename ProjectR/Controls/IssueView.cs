@@ -158,7 +158,8 @@ namespace ProjectR.Controls
         {
             Form dialog = new OpenChangeDialog(
                 (int)dataGridViewChanges.SelectedRows[0].Cells["Id"].Value,
-                _context
+                _context,
+                _issuesService
             );
             dialog.ShowDialog();
 
