@@ -1,7 +1,6 @@
 ﻿using ProjectR.Classes;
 using ProjectR.Data;
 using ProjectR.DTOs;
-using ProjectR.Entities;
 using ProjectR.Forms;
 using ProjectR.Interfaces;
 
@@ -141,7 +140,7 @@ namespace ProjectR.Controls
             if (listBoxMedia.SelectedItem == null)
                 return;
 
-            Form dialog = new EditMediaDialog((Media)listBoxMedia.SelectedItem, _context);
+            Form dialog = new EditMediaDialog((MediaDisplay)listBoxMedia.SelectedItem, _issuesService);
             dialog.ShowDialog();
 
             await ReloadMedia();
