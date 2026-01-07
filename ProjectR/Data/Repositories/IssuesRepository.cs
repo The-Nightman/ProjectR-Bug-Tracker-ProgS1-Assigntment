@@ -151,6 +151,23 @@ namespace ProjectR.Data.Repositories
             _ = await _context.Media.Where(m => m.Id == mediaId).ExecuteDeleteAsync();
         }
 
+        public async Task<ChangeDto> GetChangeById(int changeId)
+        {
+            var change =
+                await _context.Changes.FindAsync(changeId)
+                ?? throw new ArgumentException($"Change with ID {changeId} does not exist.");
+
+            return new ChangeDto
+            {
+                Id = change.Id,
+                ChangeHash = change.ChangeHash,
+                Name = change.Name,
+                Description = change.Description,
+                CreatedAt = change.CreatedAt,
+                IssueId = change.IssueId,
+            };
+        }
+
         public async Task AddNewChange(int issueId, NewChangeDto newChange)
         {
             var trackedIssue =

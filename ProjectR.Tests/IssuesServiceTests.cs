@@ -218,6 +218,42 @@ namespace ProjectR.Tests
         [Test]
         [Category("Unit")]
         [Category("Issues Service")]
+        public async Task GetChangeById_ReturnsCorrectChangeDisplay()
+        {
+            // Arrange
+            int changeId = 1;
+            var changeDto = new ChangeDto
+            {
+                Id = changeId,
+                ChangeHash = "abc123",
+                Name = "Test Change",
+                Description = "Test Desc",
+                CreatedAt = DateTime.Now,
+                IssueId = changeId,
+            };
+
+            _mockRepository.GetChangeById(changeId).Returns(Task.FromResult(changeDto));
+
+            // Act
+            var result = await _service.GetChangeById(changeId);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.TypeOf<ChangeDisplay>());
+
+                Assert.That(result.ChangeId, Is.EqualTo(changeId));
+                Assert.That(result.ChangeHash, Is.EqualTo(changeDto.ChangeHash));
+                Assert.That(result.Name, Is.EqualTo(changeDto.Name));
+                Assert.That(result.Description, Is.EqualTo(changeDto.Description));
+                Assert.That(result.CreatedAt, Is.EqualTo(changeDto.CreatedAt));
+                Assert.That(result.IssueId, Is.EqualTo(changeDto.IssueId));
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
         public async Task AddNewChange_CallsRepositoryWithCorrectParameters()
         {
             // Arrange

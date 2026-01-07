@@ -84,6 +84,20 @@ namespace ProjectR.Services
             await _repository.DeleteMediaById(mediaId);
         }
 
+        public async Task<ChangeDisplay> GetChangeById(int changeId)
+        {
+            var changeQuery = await _repository.GetChangeById(changeId);
+
+            return new ChangeDisplay(
+                changeQuery.Id,
+                changeQuery.ChangeHash,
+                changeQuery.Name,
+                changeQuery.Description,
+                changeQuery.CreatedAt,
+                changeQuery.IssueId
+            );
+        }
+
         public async Task AddNewChange(int issueId, NewChangeDto newChange)
         {
             await _repository.AddNewChange(issueId, newChange);
