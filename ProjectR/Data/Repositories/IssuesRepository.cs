@@ -83,6 +83,20 @@ namespace ProjectR.Data.Repositories
             };
         }
 
+        public async Task UpdateIssueDetails(int issueId, EditIssueDetailsDto editIssueDetailsDto)
+        {
+            var trackedIssue =
+                await _context.Issues.FirstOrDefaultAsync(i => i.Id == issueId)
+                ?? throw new ArgumentException($"Issue with ID {issueId} does not exist.");
+
+            trackedIssue.Name = editIssueDetailsDto.Name;
+            trackedIssue.Description = editIssueDetailsDto.Description;
+            trackedIssue.Severity = editIssueDetailsDto.Severity;
+            trackedIssue.Status = editIssueDetailsDto.Status;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<MediaDto>> GetIssueMedia(int issueId)
         {
             return await _context

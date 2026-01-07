@@ -143,5 +143,28 @@ namespace ProjectR.Tests
             // Assert
             await _mockRepository.Received(1).AddNewMedia(projectId, newMediaDto);
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task UpdateIssueDetails_CallsRepositoryWithCorrectParameters()
+        {
+            // Arrange
+            int issueId = 1;
+            var editIssueDto = new EditIssueDetailsDto
+            {
+                Name = "Updated Issue Name",
+                Description = "Updated Description",
+                Severity = "Low",
+                Status = "Closed",
+            };
+
+            // Act
+            await _service.UpdateIssueDetails(issueId, editIssueDto);
+
+            // Assert
+            await _mockRepository.Received(1).UpdateIssueDetails(issueId, editIssueDto);
+        }
+
     }
 }

@@ -48,11 +48,25 @@ namespace ProjectR.Services
             );
         }
 
+        public async Task UpdateIssueDetails(int issueId, EditIssueDetailsDto editIssueDetailsDto)
+        {
+            await _repository.UpdateIssueDetails(issueId, editIssueDetailsDto);
+        }
+
         public async Task<List<MediaDisplay>> GetIssueMedia(int issueId)
         {
             var mediaDtos = await _repository.GetIssueMedia(issueId);
 
-            return [.. mediaDtos.Select(m => new MediaDisplay(m.Id, m.Title, m.Description, m.Path, m.IssueId))];
+            return
+            [
+                .. mediaDtos.Select(m => new MediaDisplay(
+                    m.Id,
+                    m.Title,
+                    m.Description,
+                    m.Path,
+                    m.IssueId
+                )),
+            ];
         }
 
         public async Task AddNewMedia(int projectId, NewMediaDto newMedia)

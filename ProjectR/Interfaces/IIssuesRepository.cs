@@ -8,6 +8,8 @@ namespace ProjectR.Interfaces
 
         public Task<IssueDto> GetIssueById(int issueId);
 
+        public Task UpdateIssueDetails(int issueId, EditIssueDetailsDto editIssueDetailsDto);
+
         public Task<List<MediaDto>> GetIssueMedia(int issueId);
 
         public Task AddNewMedia(int projectId, NewMediaDto mediaDto);
