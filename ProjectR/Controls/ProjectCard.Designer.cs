@@ -103,6 +103,7 @@
             // 
             // ProjectCard
             // 
+            AccessibleRole = AccessibleRole.PushButton;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(139, 139, 139);
@@ -116,7 +117,11 @@
             Name = "ProjectCard";
             Padding = new Padding(16, 20, 16, 20);
             Size = new Size(320, 250);
+            Load += ProjectCard_Load;
             Click += ProjectCard_Click;
+            Enter += ProjectCard_Enter;
+            KeyPress += ProjectCard_KeyPress;
+            Leave += ProjectCard_Leave;
             ResumeLayout(false);
             PerformLayout();
 
