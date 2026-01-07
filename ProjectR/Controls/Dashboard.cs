@@ -1,4 +1,5 @@
 ﻿using ProjectR.Classes;
+using ProjectR.Forms;
 using ProjectR.Interfaces;
 using ScottPlot;
 
@@ -139,6 +140,26 @@ namespace ProjectR.Controls
             // This is need to ensure the FlowLayoutPanel is correctly sized on load or else it will be significantly smaller on load.
             flowLayoutPanelProjectCards.Width = Width - 32;
             separator.Width = Width - 32;
+        }
+
+        private async void btnAddNewProject_Click(object sender, EventArgs e)
+        {
+            Form newProjectDialog = new AddNewProjectDialog(_projectsService);
+            newProjectDialog.ShowDialog();
+
+            await RefreshProjectCards();
+        }
+
+        private async Task RefreshProjectCards()
+        {
+            flowLayoutPanelProjectCards.Controls.Clear();
+
+            List<ProjectPreview> projectPreviews = await _projectsService.GetProjectPreviews();
+
+            foreach (ProjectPreview proj in projectPreviews)
+            {
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _mainNav, _projectsService, _graphService, _issuesService));
+            }
         }
     }
 }
