@@ -98,5 +98,26 @@ namespace ProjectR.Data.Repositories
                 .OrderBy(m => m.Title)
                 .ToListAsync();
         }
+
+        public async Task AddNewMedia(int issueId, NewMediaDto newMedia)
+        {
+            var trackedIssue =
+                await _context.Issues.FindAsync(issueId)
+                ?? throw new ArgumentException($"Issue with ID {issueId} does not exist.");
+
+            _ = await _context.Media.AddAsync(
+                new Media
+                {
+                    IssueId = issueId,
+                    Title = newMedia.Title,
+                    Description = newMedia.Description,
+                    MediaType = "Image",
+                    Path = newMedia.Path,
+                    Issue = trackedIssue,
+                }
+            );
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

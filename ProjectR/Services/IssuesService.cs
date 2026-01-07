@@ -1,4 +1,5 @@
 ﻿using ProjectR.Classes;
+using ProjectR.DTOs;
 using ProjectR.Interfaces;
 
 namespace ProjectR.Services
@@ -7,7 +8,7 @@ namespace ProjectR.Services
     {
         private readonly IIssuesRepository _repository = repository;
 
-        public async Task AddNewIssue(int projectId, DTOs.AddNewIssueDto newIssueDto)
+        public async Task AddNewIssue(int projectId, AddNewIssueDto newIssueDto)
         {
             await _repository.AddNewIssue(projectId, newIssueDto);
         }
@@ -52,6 +53,11 @@ namespace ProjectR.Services
             var mediaDtos = await _repository.GetIssueMedia(issueId);
 
             return [.. mediaDtos.Select(m => new MediaDisplay(m.Id, m.Title, m.Description, m.Path, m.IssueId))];
+        }
+
+        public async Task AddNewMedia(int projectId, NewMediaDto newMedia)
+        {
+            await _repository.AddNewMedia(projectId, newMedia);
         }
     }
 }

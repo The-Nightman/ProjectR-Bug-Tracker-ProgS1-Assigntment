@@ -121,5 +121,27 @@ namespace ProjectR.Tests
                 Assert.That(result[1].IssueId, Is.EqualTo(mediaDtos[1].IssueId));
             });
         }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task AddNewMedia_CallsRepositoryWithCorrectParameters()
+        {
+            // Arrange
+            int projectId = 1;
+
+            var newMediaDto = new NewMediaDto
+            {
+                Title = "New Media",
+                Description = "Media Description",
+                Path = "/path/to/media",
+            };
+
+            // Act
+            await _service.AddNewMedia(projectId, newMediaDto);
+
+            // Assert
+            await _mockRepository.Received(1).AddNewMedia(projectId, newMediaDto);
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace ProjectR.Interfaces
         public Task<IssueDisplay> GetIssueById(int issueId);
 
         public Task<List<MediaDisplay>> GetIssueMedia(int issueId);
+
+        public Task AddNewMedia(int issueId, NewMediaDto newMedia);
     }
 }
