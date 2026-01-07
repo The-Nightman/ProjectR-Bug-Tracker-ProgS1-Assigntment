@@ -37,6 +37,7 @@ namespace ProjectR.Services
             var projectDisplay = new ProjectDisplay(
                 projectDto.ProjectId,
                 projectDto.ProjectName,
+                projectDto.CreatedAt,
                 [
                     .. projectDto.Issues.Select(i => new IssueListItem(
                         i.IssueId,

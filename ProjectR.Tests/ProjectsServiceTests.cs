@@ -149,7 +149,7 @@ namespace ProjectR.Tests
         public async Task AddNewProject_CallsRepositoryWithNewParameters()
         {
             // Arrange
-            var newProjectDto = new NewProjectDto { Name = "New Test Project" };
+            var newProjectDto = new NewProjectDto { Name = "New Test Project", CreatedAt = DateTime.Now };
 
             // Act
             await _service.AddNewProject(newProjectDto);

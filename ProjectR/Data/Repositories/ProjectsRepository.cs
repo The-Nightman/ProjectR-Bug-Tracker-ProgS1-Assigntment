@@ -42,6 +42,7 @@ namespace ProjectR.Data.Repositories
                 {
                     ProjectId = p.Id,
                     ProjectName = p.Name,
+                    CreatedAt = p.CreatedAt,
                     Issues = p
                         .Issues.Select(i => new IssuePreviewDto
                         {
@@ -63,7 +64,7 @@ namespace ProjectR.Data.Repositories
 
         public async Task AddNewProject(NewProjectDto newProject)
         {
-            await _context.Projects.AddAsync(new Project { Name = newProject.Name });
+            await _context.Projects.AddAsync(new Project { Name = newProject.Name, Issues = [], CreatedAt = newProject.CreatedAt });
 
             await _context.SaveChangesAsync();
         }
