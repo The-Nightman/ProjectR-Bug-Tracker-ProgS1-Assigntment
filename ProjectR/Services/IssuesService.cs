@@ -102,5 +102,10 @@ namespace ProjectR.Services
         {
             await _repository.AddNewChange(issueId, newChange);
         }
+
+        public async Task UpdateChange(EditChangeDto editChange)
+        {
+            await _repository.UpdateChange(editChange);
+        }
     }
 }

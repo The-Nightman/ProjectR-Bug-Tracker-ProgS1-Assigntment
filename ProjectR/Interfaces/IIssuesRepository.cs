@@ -21,5 +21,7 @@ namespace ProjectR.Interfaces
         public Task<ChangeDto> GetChangeById(int changeId);
 
         public Task AddNewChange(int issueId, NewChangeDto newChange);
+
+        public Task UpdateChange(EditChangeDto editChange);
     }
 }

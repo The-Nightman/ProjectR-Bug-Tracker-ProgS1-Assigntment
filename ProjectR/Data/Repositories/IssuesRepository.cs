@@ -190,5 +190,19 @@ namespace ProjectR.Data.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateChange(EditChangeDto editChange)
+        {
+            var trackedChange =
+                await _context.Changes.FindAsync(editChange.Id)
+                ?? throw new ArgumentException($"Change with ID {editChange.Id} does not exist.");
+
+            trackedChange.ChangeHash = editChange.ChangeHash;
+            trackedChange.Name = editChange.Name;
+            trackedChange.Description = editChange.Description;
+            trackedChange.CreatedAt = editChange.CreatedAt;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
