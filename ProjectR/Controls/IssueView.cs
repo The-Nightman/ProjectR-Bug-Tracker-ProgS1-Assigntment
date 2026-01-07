@@ -148,7 +148,7 @@ namespace ProjectR.Controls
 
         private async void btnAddNewChange_Click(object sender, EventArgs e)
         {
-            Form dialog = new AddNewChangeDialog(_issue!, _context);
+            Form dialog = new AddNewChangeDialog(_issueId, _issuesService);
             dialog.ShowDialog();
 
             await ReloadChanges();
