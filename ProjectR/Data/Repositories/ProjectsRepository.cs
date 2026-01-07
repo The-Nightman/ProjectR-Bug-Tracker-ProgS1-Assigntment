@@ -26,7 +26,7 @@ namespace ProjectR.Data.Repositories
                     ThisWeekIssues = p.Issues.Count(i =>
                         i.LastUpdated >= startOfWeekRange && i.LastUpdated <= todayWeekRange
                     ),
-                    LastUpdated = p.Issues.Max(i => i.LastUpdated),
+                    LastUpdated = p.Issues.Count > 0 ? p.Issues.Max(i => i.LastUpdated) : p.CreatedAt,
                 })
                 .OrderBy(p => p.ProjectName)
                 .ToListAsync();
