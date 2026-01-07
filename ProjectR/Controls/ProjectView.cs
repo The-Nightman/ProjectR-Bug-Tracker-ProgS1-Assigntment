@@ -42,6 +42,7 @@ namespace ProjectR.Controls
             }
 
             lblProjectsProjectTitle.Text = projectQuery.ProjectName;
+            lblProjectCreatedAt.Text = $"Created: {projectQuery.CreatedAt:dd/MM/yyyy}";
 
             dataGridViewIssues.DataSource = projectQuery.Issues;
 

@@ -49,6 +49,7 @@
             lastUpdatedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             btnAddNewIssue = new Button();
             btnOpenIssue = new Button();
+            lblProjectCreatedAt = new Label();
             panelHeatmap.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)issueListItemBindingSource).BeginInit();
@@ -271,11 +272,23 @@
             btnOpenIssue.UseVisualStyleBackColor = false;
             btnOpenIssue.Click += btnOpenIssue_Click;
             // 
+            // lblProjectCreatedAt
+            // 
+            lblProjectCreatedAt.AutoSize = true;
+            lblProjectCreatedAt.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblProjectCreatedAt.ForeColor = SystemColors.ControlText;
+            lblProjectCreatedAt.Location = new Point(866, 17);
+            lblProjectCreatedAt.Name = "lblProjectCreatedAt";
+            lblProjectCreatedAt.Size = new Size(235, 31);
+            lblProjectCreatedAt.TabIndex = 28;
+            lblProjectCreatedAt.Text = "Created: dd/mm/yyyy";
+            // 
             // ProjectView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
+            Controls.Add(lblProjectCreatedAt);
             Controls.Add(btnOpenIssue);
             Controls.Add(btnAddNewIssue);
             Controls.Add(dataGridViewIssues);
@@ -321,5 +334,6 @@
         private DataGridViewTextBoxColumn severityDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdAtDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn lastUpdatedDataGridViewTextBoxColumn;
+        private Label lblProjectCreatedAt;
     }
 }
