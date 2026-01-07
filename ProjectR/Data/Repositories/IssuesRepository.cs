@@ -133,5 +133,22 @@ namespace ProjectR.Data.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateMedia(EditMediaDto editMedia)
+        {
+            Media media =
+                await _context.Media.FindAsync(editMedia.Id)
+                ?? throw new ArgumentException($"Media with ID {editMedia.Id} does not exist.");
+
+            media.Title = editMedia.Title;
+            media.Description = editMedia.Description;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteMediaById(int mediaId)
+        {
+            _ = await _context.Media.Where(m => m.Id == mediaId).ExecuteDeleteAsync();
+        }
     }
 }

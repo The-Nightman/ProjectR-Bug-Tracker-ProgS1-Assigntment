@@ -73,5 +73,15 @@ namespace ProjectR.Services
         {
             await _repository.AddNewMedia(projectId, newMedia);
         }
+
+        public async Task UpdateMedia(EditMediaDto editMedia)
+        {
+            await _repository.UpdateMedia(editMedia);
+        }
+
+        public async Task DeleteMediaById(int mediaId)
+        {
+            await _repository.DeleteMediaById(mediaId);
+        }
     }
 }

@@ -94,8 +94,22 @@ namespace ProjectR.Tests
             int issueId = 1;
             var mediaDtos = new List<MediaDto>
             {
-                new() { Id = 1, Title = "Media 1", Description = "Desc 1", Path = "/path/1", IssueId = issueId },
-                new() { Id = 2, Title = "Media 2", Description = "Desc 2", Path = "/path/2", IssueId = issueId },
+                new()
+                {
+                    Id = 1,
+                    Title = "Media 1",
+                    Description = "Desc 1",
+                    Path = "/path/1",
+                    IssueId = issueId,
+                },
+                new()
+                {
+                    Id = 2,
+                    Title = "Media 2",
+                    Description = "Desc 2",
+                    Path = "/path/2",
+                    IssueId = issueId,
+                },
             };
 
             _mockRepository.GetIssueMedia(issueId).Returns(Task.FromResult(mediaDtos));
@@ -166,5 +180,39 @@ namespace ProjectR.Tests
             await _mockRepository.Received(1).UpdateIssueDetails(issueId, editIssueDto);
         }
 
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task UpdateMedia_CallsRepositoryWithCorrectParameters()
+        {
+            // Arrange
+            var editMediaDto = new EditMediaDto
+            {
+                Id = 1,
+                Title = "test title",
+                Description = "test desc",
+            };
+
+            // Act
+            await _service.UpdateMedia(editMediaDto);
+
+            // Assert
+            await _mockRepository.Received(1).UpdateMedia(editMediaDto);
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task DeleteMediaById_CallsRepositoryWithCorrectParameters()
+        {
+            // Arrange
+            int mediaId = 1;
+
+            // Act
+            await _service.DeleteMediaById(mediaId);
+
+            // Assert
+            await _mockRepository.Received(1).DeleteMediaById(mediaId);
+        }
     }
 }
