@@ -1,5 +1,6 @@
 ﻿using ProjectR.Classes;
 using ProjectR.Data;
+using ProjectR.DTOs;
 using ProjectR.Entities;
 using ProjectR.Forms;
 using ProjectR.Interfaces;
@@ -102,7 +103,6 @@ namespace ProjectR.Controls
                 textBoxIssueTitleEdit.Visible = true;
                 btnIssueNameEditSave.AccessibleName = "Save Issue Name";
 
-                //btnIssueNameEditSave.ImageIndex = 1;
                 btnIssueNameEditSave.ImageKey = "saveLight";
 
                 btnIssueNameEditSave.Location = new Point(
@@ -141,10 +141,7 @@ namespace ProjectR.Controls
             if (listBoxMedia.SelectedItem == null)
                 return;
 
-            Form dialog = new EditMediaDialog(
-                (Media)listBoxMedia.SelectedItem,
-                _context
-            );
+            Form dialog = new EditMediaDialog((Media)listBoxMedia.SelectedItem, _context);
             dialog.ShowDialog();
 
             await ReloadMedia();
@@ -184,28 +181,36 @@ namespace ProjectR.Controls
             dataGridViewChanges.DataSource = refreshIssueQuery.ChangesList;
             dataGridViewChanges.Refresh();
 
-            lblIssueLastUpdated.Text = $"Last Updated: {refreshIssueQuery.LastUpdated:dd/MM/yyyy HH:mm}";
+            lblIssueLastUpdated.Text =
+                $"Last Updated: {refreshIssueQuery.LastUpdated:dd/MM/yyyy HH:mm}";
         }
 
         private async void btnSaveIssueEdits_Click(object sender, EventArgs e)
         {
-            if (_issue == null)
-                return;
-
-            if (comboBoxSeverityLevels.SelectedItem == null || comboBoxStatusLevels.SelectedItem == null)
+            if (
+                comboBoxSeverityLevels.SelectedItem == null
+                || comboBoxStatusLevels.SelectedItem == null
+            )
             {
-                MessageBox.Show("Please select both severity and status levels.", "Validation Error");
+                MessageBox.Show(
+                    "Please select both severity and status levels.",
+                    "Validation Error"
+                );
                 return;
             }
 
             try
             {
-                _issue.Name = lblIssueTitle.Text;
-                _issue.Description = richTextBoxIssueDesc.Text;
-                _issue.Severity = comboBoxSeverityLevels.SelectedItem.ToString()!;
-                _issue.Status = comboBoxStatusLevels.SelectedItem.ToString()!;
-
-                await _context.SaveChangesAsync();
+                await _issuesService.UpdateIssueDetails(
+                    _issueId,
+                    new EditIssueDetailsDto
+                    {
+                        Name = lblIssueTitle.Text,
+                        Description = richTextBoxIssueDesc.Text,
+                        Severity = comboBoxSeverityLevels.SelectedItem.ToString()!,
+                        Status = comboBoxStatusLevels.SelectedItem.ToString()!,
+                    }
+                );
             }
             catch (Exception ex)
             {
