@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectR.Classes;
+﻿using ProjectR.Classes;
 using ProjectR.Data;
 using ProjectR.Entities;
 using ProjectR.Forms;
@@ -11,7 +10,6 @@ namespace ProjectR.Controls
     {
         private readonly int _issueId;
         private readonly DatabaseContext _context;
-        private Issue? _issue;
         private readonly IIssuesService _issuesService;
 
         public IssueView(DatabaseContext dbContenxt, int issueId, IIssuesService issuesService)
@@ -132,7 +130,7 @@ namespace ProjectR.Controls
 
         private async void btnAddNewMedia_Click(object sender, EventArgs e)
         {
-            Form dialog = new AddMediaDialog(_issue!, _context);
+            Form dialog = new AddMediaDialog(_issueId, _issuesService);
             dialog.ShowDialog();
 
             await ReloadMedia();
@@ -173,28 +171,20 @@ namespace ProjectR.Controls
 
         private async Task ReloadMedia()
         {
-            var newMedia = await _context.Media.Where(m => m.IssueId == _issueId).ToListAsync();
+            var newMedia = await _issuesService.GetIssueMedia(_issueId);
 
-            _issue!.Media = newMedia;
-
-            listBoxMedia.DataSource = _issue!.Media;
+            listBoxMedia.DataSource = newMedia;
             listBoxMedia.Refresh();
         }
 
         private async Task ReloadChanges()
         {
-            var newChanges = await _context.Changes.Where(m => m.IssueId == _issueId).ToListAsync();
+            var refreshIssueQuery = await _issuesService.GetIssueById(_issueId);
 
-            _issue!.Changes = newChanges;
-
-            dataGridViewChanges.DataSource = newChanges.OrderByDescending(c => c.CreatedAt).ToList();
+            dataGridViewChanges.DataSource = refreshIssueQuery.ChangesList;
             dataGridViewChanges.Refresh();
 
-            var issueToUpdate = await _context.Issues.Where(i => i.Id == _issueId).Select(i => i.LastUpdated).FirstAsync();
-
-            _issue!.LastUpdated = issueToUpdate;
-
-            lblIssueLastUpdated.Text = $"Last Updated: {_issue!.LastUpdated:dd/MM/yyyy HH:mm}";
+            lblIssueLastUpdated.Text = $"Last Updated: {refreshIssueQuery.LastUpdated:dd/MM/yyyy HH:mm}";
         }
 
         private async void btnSaveIssueEdits_Click(object sender, EventArgs e)
