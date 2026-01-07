@@ -82,5 +82,21 @@ namespace ProjectR.Data.Repositories
                 ProjectId = issueQuery.ProjectId,
             };
         }
+
+        public async Task<List<MediaDto>> GetIssueMedia(int issueId)
+        {
+            return await _context
+                .Media.Where(m => m.IssueId == issueId)
+                .Select(m => new MediaDto
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Description = m.Description,
+                    Path = m.Path,
+                    IssueId = m.IssueId,
+                })
+                .OrderBy(m => m.Title)
+                .ToListAsync();
+        }
     }
 }

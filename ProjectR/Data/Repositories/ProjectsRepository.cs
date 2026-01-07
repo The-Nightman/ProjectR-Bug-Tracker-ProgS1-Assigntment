@@ -46,6 +46,7 @@ namespace ProjectR.Data.Repositories
                     {
                         IssueId = i.Id,
                         IssueName = i.Name,
+                        ChangesCount = i.Changes.Count,
                         Status = i.Status,
                         Severity = i.Severity,
                         CreatedAt = i.CreatedAt,

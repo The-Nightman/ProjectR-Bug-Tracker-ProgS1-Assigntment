@@ -1,4 +1,5 @@
 using NSubstitute;
+using ProjectR.Classes;
 using ProjectR.DTOs;
 using ProjectR.Interfaces;
 using ProjectR.Services;
@@ -81,6 +82,43 @@ namespace ProjectR.Tests
                 Assert.That(result.ChangesList, Has.Count.EqualTo(issueDto.Changes.Count));
                 Assert.That(result.MediaList, Has.Count.EqualTo(issueDto.Media.Count));
                 Assert.That(result.ProjectId, Is.EqualTo(issueDto.ProjectId));
+            });
+        }
+
+        [Test]
+        [Category("Unit")]
+        [Category("Issues Service")]
+        public async Task GetIssueMedia_ReturnsCorrectMediaList()
+        {
+            // Arrange
+            int issueId = 1;
+            var mediaDtos = new List<MediaDto>
+            {
+                new() { Id = 1, Title = "Media 1", Description = "Desc 1", Path = "/path/1", IssueId = issueId },
+                new() { Id = 2, Title = "Media 2", Description = "Desc 2", Path = "/path/2", IssueId = issueId },
+            };
+
+            _mockRepository.GetIssueMedia(issueId).Returns(Task.FromResult(mediaDtos));
+
+            // Act
+            var result = await _service.GetIssueMedia(issueId);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Has.Count.EqualTo(mediaDtos.Count));
+                Assert.That(result, Is.TypeOf<List<MediaDisplay>>());
+
+                Assert.That(result[0].MediaId, Is.EqualTo(mediaDtos[0].Id));
+                Assert.That(result[0].Title, Is.EqualTo(mediaDtos[0].Title));
+                Assert.That(result[0].Description, Is.EqualTo(mediaDtos[0].Description));
+                Assert.That(result[0].Path, Is.EqualTo(mediaDtos[0].Path));
+                Assert.That(result[0].IssueId, Is.EqualTo(mediaDtos[0].IssueId));
+                Assert.That(result[1].MediaId, Is.EqualTo(mediaDtos[1].Id));
+                Assert.That(result[1].Title, Is.EqualTo(mediaDtos[1].Title));
+                Assert.That(result[1].Description, Is.EqualTo(mediaDtos[1].Description));
+                Assert.That(result[1].Path, Is.EqualTo(mediaDtos[1].Path));
+                Assert.That(result[1].IssueId, Is.EqualTo(mediaDtos[1].IssueId));
             });
         }
     }
