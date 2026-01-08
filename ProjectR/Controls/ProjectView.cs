@@ -41,6 +41,22 @@ namespace ProjectR.Controls
                 return;
             }
 
+            if (projectQuery.Issues.Count > 0)
+            {
+                int minYear = projectQuery.Issues.MinBy(i => i.CreatedAt)!.CreatedAt.Year;
+
+                int[] years =
+                [
+                    .. Enumerable.Range(minYear, DateTime.Now.Year - minYear + 1).Reverse(),
+                ];
+
+                comboBoxHeatmapActivityYear.DataSource = years;
+            }
+            else
+            {
+                comboBoxHeatmapActivityYear.DataSource = new int[] { DateTime.Now.Year };
+            }
+
             lblProjectsProjectTitle.Text = projectQuery.ProjectName;
             lblProjectCreatedAt.Text = $"Created: {projectQuery.CreatedAt:dd/MM/yyyy}";
 
@@ -49,67 +65,7 @@ namespace ProjectR.Controls
             List<GraphData<string>> issuesData =
                 await _graphService.GetProjectCurrentOpenIssuesBarGraphData(_projectId);
 
-            // project activity heatmap
-            int year = DateTime.Now.Year;
-
-            CoordinateRange xRange = new(
-                DateTime.Parse($"01-01-{year}", new CultureInfo("en-GB")).ToOADate(),
-                DateTime.Parse($"31-12-{year}", new CultureInfo("en-GB")).ToOADate() - 0.5
-            );
-
-            var heatmap = formPlotProjectActivityHeatmap.Plot.Add.Heatmap(
-                await _graphService.GetProjectActivityHeatmap(_projectId, year)
-            );
-            heatmap.Rectangle = new(xRange, new(0.5, 6.5));
-            heatmap.CellAlignment = Alignment.LowerLeft;
-            heatmap.Position = new(xRange.Min, xRange.Max, 0.5, 6.5);
-            string[] colourStrings = ["#151b23", "#033a16", "#196c2e", "#2ea043", "#56d364"]; // github heatmap colour map
-            ScottPlot.Color[] colours =
-            [
-                .. colourStrings.Select(cs => ScottPlot.Color.FromHex(cs)),
-            ];
-            heatmap.Colormap = new ScottPlot.Colormaps.Custom(colours, false);
-            heatmap.ManualRange = new ScottPlot.Range(0, 4);
-            formPlotProjectActivityHeatmap.Plot.HideGrid();
-            formPlotProjectActivityHeatmap.Plot.Axes.Margins(0, 0);
-            formPlotProjectActivityHeatmap.Plot.Axes.FrameColor(Colors.White);
-            formPlotProjectActivityHeatmap.Plot.FigureBackground.Color = Colors.Transparent;
-            formPlotProjectActivityHeatmap.Plot.DataBackground.Color = Colors.Transparent;
-            formPlotProjectActivityHeatmap.Plot.Axes.Left.MajorTickStyle.Color = Colors.White;
-            formPlotProjectActivityHeatmap.Plot.Axes.Left.TickLabelStyle.ForeColor = Colors.White;
-            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.MajorTickStyle.Color = Colors.White;
-            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.TickLabelStyle.ForeColor = Colors.White;
-
-            Tick[] dayTicks =
-            [
-                new(7, "Sun"),
-                new(6, "Mon"),
-                new(5, "Tue"),
-                new(4, "Wed"),
-                new(3, "Thu"),
-                new(2, "Fri"),
-                new(1, "Sat"),
-            ];
-
-            formPlotProjectActivityHeatmap.Plot.Axes.Left.TickGenerator =
-                new ScottPlot.TickGenerators.NumericManual(dayTicks);
-
-            ScottPlot.TickGenerators.DateTimeManual axisX = new();
-
-            for (int m = 1; m <= 12; m++)
-            {
-                DateTime dt = new(year, m, 1);
-                double oa = dt.ToOADate();
-                if (oa >= xRange.Min && oa <= xRange.Max)
-                {
-                    axisX.AddMajor(dt, dt.ToString("MMM"));
-                }
-            }
-
-            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.TickGenerator = axisX;
-
-            formPlotProjectActivityHeatmap.UserInputProcessor.Disable();
-            formPlotProjectActivityHeatmap.Refresh();
+            //! project activity heatmap is cleared and created by comboBox selectedIndexChanged event so we no longer create it here
 
             // current open bugs bar graph
             for (int i = 0; i < issuesData.Count; i++)
@@ -174,6 +130,15 @@ namespace ProjectR.Controls
             await RefreshIssues();
         }
 
+        private async void comboBoxHeatmapActivityYear_SelectedIndexChanged(
+            object sender,
+            EventArgs e
+        )
+        {
+            formPlotProjectActivityHeatmap.Plot.Clear();
+            await CreateHeatmap((int)comboBoxHeatmapActivityYear.SelectedValue!);
+        }
+
         private async Task RefreshIssues()
         {
             var query = await _projectsService.GetProjectViewDetailsById(_projectId);
@@ -185,6 +150,68 @@ namespace ProjectR.Controls
 
             dataGridViewIssues.DataSource = query.Issues;
             dataGridViewIssues.Refresh();
+        }
+
+        private async Task CreateHeatmap(int year)
+        {
+            CoordinateRange xRange = new(
+                DateTime.Parse($"01-01-{year}", new CultureInfo("en-GB")).ToOADate(),
+                DateTime.Parse($"31-12-{year}", new CultureInfo("en-GB")).ToOADate() - 0.5
+            );
+
+            var heatmap = formPlotProjectActivityHeatmap.Plot.Add.Heatmap(
+                await _graphService.GetProjectActivityHeatmap(_projectId, year)
+            );
+            heatmap.Rectangle = new(xRange, new(0.5, 6.5));
+            heatmap.CellAlignment = Alignment.LowerLeft;
+            heatmap.Position = new(xRange.Min, xRange.Max, 0.5, 6.5);
+            string[] colourStrings = ["#151b23", "#033a16", "#196c2e", "#2ea043", "#56d364"]; // github heatmap colour map
+            ScottPlot.Color[] colours =
+            [
+                .. colourStrings.Select(cs => ScottPlot.Color.FromHex(cs)),
+            ];
+            heatmap.Colormap = new ScottPlot.Colormaps.Custom(colours, false);
+            heatmap.ManualRange = new ScottPlot.Range(0, 4);
+            formPlotProjectActivityHeatmap.Plot.HideGrid();
+            formPlotProjectActivityHeatmap.Plot.Axes.Margins(0, 0);
+            formPlotProjectActivityHeatmap.Plot.Axes.FrameColor(Colors.White);
+            formPlotProjectActivityHeatmap.Plot.FigureBackground.Color = Colors.Transparent;
+            formPlotProjectActivityHeatmap.Plot.DataBackground.Color = Colors.Transparent;
+            formPlotProjectActivityHeatmap.Plot.Axes.Left.MajorTickStyle.Color = Colors.White;
+            formPlotProjectActivityHeatmap.Plot.Axes.Left.TickLabelStyle.ForeColor = Colors.White;
+            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.MajorTickStyle.Color = Colors.White;
+            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.TickLabelStyle.ForeColor = Colors.White;
+
+            Tick[] dayTicks =
+            [
+                new(7, "Sun"),
+                new(6, "Mon"),
+                new(5, "Tue"),
+                new(4, "Wed"),
+                new(3, "Thu"),
+                new(2, "Fri"),
+                new(1, "Sat"),
+            ];
+
+            formPlotProjectActivityHeatmap.Plot.Axes.Left.TickGenerator =
+                new ScottPlot.TickGenerators.NumericManual(dayTicks);
+
+            ScottPlot.TickGenerators.DateTimeManual axisX = new();
+
+            for (int m = 1; m <= 12; m++)
+            {
+                DateTime dt = new(year, m, 1);
+                double oa = dt.ToOADate();
+                if (oa >= xRange.Min && oa <= xRange.Max)
+                {
+                    axisX.AddMajor(dt, dt.ToString("MMM"));
+                }
+            }
+
+            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.TickGenerator = axisX;
+
+            formPlotProjectActivityHeatmap.UserInputProcessor.Disable();
+            formPlotProjectActivityHeatmap.Refresh();
         }
     }
 }

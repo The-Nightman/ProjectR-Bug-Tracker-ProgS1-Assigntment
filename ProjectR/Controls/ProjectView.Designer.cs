@@ -37,6 +37,7 @@
             formPlotCurrentOpenBugs = new ScottPlot.WinForms.FormsPlot();
             lblProjectCurrentOpenBugs = new Label();
             panelHeatmap = new Panel();
+            comboBoxHeatmapActivityYear = new ComboBox();
             lblHeatmapLegendMore = new Label();
             lblHeatmapLegend5 = new Label();
             lblHeatmapLegend4 = new Label();
@@ -141,6 +142,7 @@
             // panelHeatmap
             // 
             panelHeatmap.BackColor = Color.FromArgb(57, 57, 57);
+            panelHeatmap.Controls.Add(comboBoxHeatmapActivityYear);
             panelHeatmap.Controls.Add(lblHeatmapLegendMore);
             panelHeatmap.Controls.Add(lblHeatmapLegend5);
             panelHeatmap.Controls.Add(lblHeatmapLegend4);
@@ -156,6 +158,17 @@
             panelHeatmap.Padding = new Padding(16);
             panelHeatmap.Size = new Size(639, 296);
             panelHeatmap.TabIndex = 22;
+            // 
+            // comboBoxHeatmapActivityYear
+            // 
+            comboBoxHeatmapActivityYear.AccessibleDescription = "Select a year to view activity";
+            comboBoxHeatmapActivityYear.AccessibleName = "Project activity year";
+            comboBoxHeatmapActivityYear.FormattingEnabled = true;
+            comboBoxHeatmapActivityYear.Location = new Point(331, 13);
+            comboBoxHeatmapActivityYear.Name = "comboBoxHeatmapActivityYear";
+            comboBoxHeatmapActivityYear.Size = new Size(87, 28);
+            comboBoxHeatmapActivityYear.TabIndex = 23;
+            comboBoxHeatmapActivityYear.SelectedIndexChanged += comboBoxHeatmapActivityYear_SelectedIndexChanged;
             // 
             // lblHeatmapLegendMore
             // 
@@ -426,5 +439,6 @@
         private Label lblHeatmapLegend5;
         private Label lblHeatmapLegend4;
         private Label lblHeatmapLegendMore;
+        private ComboBox comboBoxHeatmapActivityYear;
     }
 }
