@@ -72,6 +72,13 @@ namespace ProjectR.Controls
             heatmap.ManualRange = new ScottPlot.Range(0, 4);
             formPlotProjectActivityHeatmap.Plot.HideGrid();
             formPlotProjectActivityHeatmap.Plot.Axes.Margins(0, 0);
+            formPlotProjectActivityHeatmap.Plot.Axes.FrameColor(Colors.White);
+            formPlotProjectActivityHeatmap.Plot.FigureBackground.Color = Colors.Transparent;
+            formPlotProjectActivityHeatmap.Plot.DataBackground.Color = Colors.Transparent;
+            formPlotProjectActivityHeatmap.Plot.Axes.Left.MajorTickStyle.Color = Colors.White;
+            formPlotProjectActivityHeatmap.Plot.Axes.Left.TickLabelStyle.ForeColor = Colors.White;
+            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.MajorTickStyle.Color = Colors.White;
+            formPlotProjectActivityHeatmap.Plot.Axes.Bottom.TickLabelStyle.ForeColor = Colors.White;
 
             Tick[] dayTicks =
             [
