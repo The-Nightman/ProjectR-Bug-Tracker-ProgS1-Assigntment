@@ -106,9 +106,12 @@ namespace ProjectR.Services
 
             int maxDays = DateTime.IsLeapYear(year) ? 366 : 365;
 
-            int dayOffset = -(int)startDate.DayOfWeek;
-
-            for (int i = dayOffset; i < maxDays + Math.Abs(dayOffset); i++)
+            // Fix for incorrectly calculated trailing days and more efficient refactor adapted from: https://stackoverflow.com/a/20364799
+            for (
+                int i = -(int)startDate.DayOfWeek;
+                i < maxDays + (6 - ((int)startDate.DayOfWeek + maxDays - 1) % 7);
+                i++
+            )
             {
                 double dayData;
 
