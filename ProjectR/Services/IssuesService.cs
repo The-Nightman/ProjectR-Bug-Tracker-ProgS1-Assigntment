@@ -1,0 +1,111 @@
+﻿using ProjectR.Classes;
+using ProjectR.DTOs;
+using ProjectR.Interfaces;
+
+namespace ProjectR.Services
+{
+    public class IssuesService(IIssuesRepository repository) : IIssuesService
+    {
+        private readonly IIssuesRepository _repository = repository;
+
+        public async Task AddNewIssue(int projectId, AddNewIssueDto newIssueDto)
+        {
+            await _repository.AddNewIssue(projectId, newIssueDto);
+        }
+
+        public async Task<IssueDisplay> GetIssueById(int issueId)
+        {
+            var issueQuery = await _repository.GetIssueById(issueId);
+
+            return new IssueDisplay(
+                issueQuery.Id,
+                issueQuery.Name,
+                issueQuery.Description,
+                issueQuery.Severity,
+                issueQuery.Status,
+                issueQuery.CreatedAt,
+                issueQuery.LastUpdated,
+                [
+                    .. issueQuery.Changes.Select(c => new ChangeDisplay(
+                        c.Id,
+                        c.ChangeHash,
+                        c.Name,
+                        c.Description,
+                        c.CreatedAt,
+                        c.IssueId
+                    )),
+                ],
+                [
+                    .. issueQuery.Media.Select(m => new MediaDisplay(
+                        m.Id,
+                        m.Title,
+                        m.Description,
+                        m.Path,
+                        m.IssueId
+                    )),
+                ],
+                issueQuery.ProjectId
+            );
+        }
+
+        public async Task UpdateIssueDetails(int issueId, EditIssueDetailsDto editIssueDetailsDto)
+        {
+            await _repository.UpdateIssueDetails(issueId, editIssueDetailsDto);
+        }
+
+        public async Task<List<MediaDisplay>> GetIssueMedia(int issueId)
+        {
+            var mediaDtos = await _repository.GetIssueMedia(issueId);
+
+            return
+            [
+                .. mediaDtos.Select(m => new MediaDisplay(
+                    m.Id,
+                    m.Title,
+                    m.Description,
+                    m.Path,
+                    m.IssueId
+                )),
+            ];
+        }
+
+        public async Task AddNewMedia(int projectId, NewMediaDto newMedia)
+        {
+            await _repository.AddNewMedia(projectId, newMedia);
+        }
+
+        public async Task UpdateMedia(EditMediaDto editMedia)
+        {
+            await _repository.UpdateMedia(editMedia);
+        }
+
+        public async Task DeleteMediaById(int mediaId)
+        {
+            await _repository.DeleteMediaById(mediaId);
+        }
+
+        public async Task<ChangeDisplay> GetChangeById(int changeId)
+        {
+            var changeQuery = await _repository.GetChangeById(changeId);
+
+            return new ChangeDisplay(
+                changeQuery.Id,
+                changeQuery.ChangeHash,
+                changeQuery.Name,
+                changeQuery.Description,
+                changeQuery.CreatedAt,
+                changeQuery.IssueId
+            );
+        }
+
+        public async Task AddNewChange(int issueId, NewChangeDto newChange)
+        {
+            await _repository.AddNewChange(issueId, newChange);
+        }
+
+        public async Task UpdateChange(EditChangeDto editChange)
+        {
+            await _repository.UpdateChange(editChange);
+        }
+    }
+}

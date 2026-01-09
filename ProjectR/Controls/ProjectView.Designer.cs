@@ -37,6 +37,14 @@
             formPlotCurrentOpenBugs = new ScottPlot.WinForms.FormsPlot();
             lblProjectCurrentOpenBugs = new Label();
             panelHeatmap = new Panel();
+            comboBoxHeatmapActivityYear = new ComboBox();
+            lblHeatmapLegendMore = new Label();
+            lblHeatmapLegend5 = new Label();
+            lblHeatmapLegend4 = new Label();
+            lblHeatmapLegend3 = new Label();
+            lblHeatmapLegend2 = new Label();
+            lblHeatmapLegend1 = new Label();
+            lblHeatmapLegendLess = new Label();
             panel1 = new Panel();
             issueListItemBindingSource = new BindingSource(components);
             dataGridViewIssues = new DataGridView();
@@ -49,6 +57,7 @@
             lastUpdatedDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             btnAddNewIssue = new Button();
             btnOpenIssue = new Button();
+            lblProjectCreatedAt = new Label();
             panelHeatmap.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)issueListItemBindingSource).BeginInit();
@@ -82,10 +91,10 @@
             // formPlotProjectActivityHeatmap
             // 
             formPlotProjectActivityHeatmap.DisplayScale = 1.25F;
-            formPlotProjectActivityHeatmap.Location = new Point(16, 49);
+            formPlotProjectActivityHeatmap.Location = new Point(0, 40);
             formPlotProjectActivityHeatmap.Margin = new Padding(0);
             formPlotProjectActivityHeatmap.Name = "formPlotProjectActivityHeatmap";
-            formPlotProjectActivityHeatmap.Size = new Size(604, 233);
+            formPlotProjectActivityHeatmap.Size = new Size(639, 256);
             formPlotProjectActivityHeatmap.TabIndex = 13;
             // 
             // separator
@@ -133,6 +142,14 @@
             // panelHeatmap
             // 
             panelHeatmap.BackColor = Color.FromArgb(57, 57, 57);
+            panelHeatmap.Controls.Add(comboBoxHeatmapActivityYear);
+            panelHeatmap.Controls.Add(lblHeatmapLegendMore);
+            panelHeatmap.Controls.Add(lblHeatmapLegend5);
+            panelHeatmap.Controls.Add(lblHeatmapLegend4);
+            panelHeatmap.Controls.Add(lblHeatmapLegend3);
+            panelHeatmap.Controls.Add(lblHeatmapLegend2);
+            panelHeatmap.Controls.Add(lblHeatmapLegend1);
+            panelHeatmap.Controls.Add(lblHeatmapLegendLess);
             panelHeatmap.Controls.Add(lblProjectActivityHeatmapTitle);
             panelHeatmap.Controls.Add(formPlotProjectActivityHeatmap);
             panelHeatmap.Location = new Point(16, 406);
@@ -141,6 +158,87 @@
             panelHeatmap.Padding = new Padding(16);
             panelHeatmap.Size = new Size(639, 296);
             panelHeatmap.TabIndex = 22;
+            // 
+            // comboBoxHeatmapActivityYear
+            // 
+            comboBoxHeatmapActivityYear.AccessibleDescription = "Select a year to view activity";
+            comboBoxHeatmapActivityYear.AccessibleName = "Project activity year";
+            comboBoxHeatmapActivityYear.FormattingEnabled = true;
+            comboBoxHeatmapActivityYear.Location = new Point(331, 13);
+            comboBoxHeatmapActivityYear.Name = "comboBoxHeatmapActivityYear";
+            comboBoxHeatmapActivityYear.Size = new Size(87, 28);
+            comboBoxHeatmapActivityYear.TabIndex = 23;
+            comboBoxHeatmapActivityYear.SelectedIndexChanged += comboBoxHeatmapActivityYear_SelectedIndexChanged;
+            // 
+            // lblHeatmapLegendMore
+            // 
+            lblHeatmapLegendMore.AutoSize = true;
+            lblHeatmapLegendMore.ForeColor = SystemColors.ControlLightLight;
+            lblHeatmapLegendMore.Location = new Point(576, 16);
+            lblHeatmapLegendMore.Name = "lblHeatmapLegendMore";
+            lblHeatmapLegendMore.Size = new Size(44, 20);
+            lblHeatmapLegendMore.TabIndex = 22;
+            lblHeatmapLegendMore.Text = "More";
+            // 
+            // lblHeatmapLegend5
+            // 
+            lblHeatmapLegend5.BackColor = Color.FromArgb(86, 211, 100);
+            lblHeatmapLegend5.BorderStyle = BorderStyle.FixedSingle;
+            lblHeatmapLegend5.Location = new Point(555, 19);
+            lblHeatmapLegend5.Margin = new Padding(2, 0, 2, 0);
+            lblHeatmapLegend5.Name = "lblHeatmapLegend5";
+            lblHeatmapLegend5.Size = new Size(16, 16);
+            lblHeatmapLegend5.TabIndex = 21;
+            // 
+            // lblHeatmapLegend4
+            // 
+            lblHeatmapLegend4.BackColor = Color.FromArgb(46, 160, 67);
+            lblHeatmapLegend4.BorderStyle = BorderStyle.FixedSingle;
+            lblHeatmapLegend4.Location = new Point(535, 19);
+            lblHeatmapLegend4.Margin = new Padding(2, 0, 2, 0);
+            lblHeatmapLegend4.Name = "lblHeatmapLegend4";
+            lblHeatmapLegend4.Size = new Size(16, 16);
+            lblHeatmapLegend4.TabIndex = 20;
+            // 
+            // lblHeatmapLegend3
+            // 
+            lblHeatmapLegend3.BackColor = Color.FromArgb(25, 108, 46);
+            lblHeatmapLegend3.BorderStyle = BorderStyle.FixedSingle;
+            lblHeatmapLegend3.Location = new Point(515, 19);
+            lblHeatmapLegend3.Margin = new Padding(2, 0, 2, 0);
+            lblHeatmapLegend3.Name = "lblHeatmapLegend3";
+            lblHeatmapLegend3.Size = new Size(16, 16);
+            lblHeatmapLegend3.TabIndex = 19;
+            // 
+            // lblHeatmapLegend2
+            // 
+            lblHeatmapLegend2.BackColor = Color.FromArgb(3, 58, 22);
+            lblHeatmapLegend2.BorderStyle = BorderStyle.FixedSingle;
+            lblHeatmapLegend2.Location = new Point(495, 19);
+            lblHeatmapLegend2.Margin = new Padding(2, 0, 2, 0);
+            lblHeatmapLegend2.Name = "lblHeatmapLegend2";
+            lblHeatmapLegend2.Size = new Size(16, 16);
+            lblHeatmapLegend2.TabIndex = 18;
+            // 
+            // lblHeatmapLegend1
+            // 
+            lblHeatmapLegend1.BackColor = Color.FromArgb(21, 27, 35);
+            lblHeatmapLegend1.BorderStyle = BorderStyle.FixedSingle;
+            lblHeatmapLegend1.Location = new Point(475, 19);
+            lblHeatmapLegend1.Margin = new Padding(2, 0, 2, 0);
+            lblHeatmapLegend1.Name = "lblHeatmapLegend1";
+            lblHeatmapLegend1.Size = new Size(16, 16);
+            lblHeatmapLegend1.TabIndex = 17;
+            // 
+            // lblHeatmapLegendLess
+            // 
+            lblHeatmapLegendLess.AutoSize = true;
+            lblHeatmapLegendLess.ForeColor = SystemColors.ControlLightLight;
+            lblHeatmapLegendLess.Location = new Point(434, 16);
+            lblHeatmapLegendLess.Name = "lblHeatmapLegendLess";
+            lblHeatmapLegendLess.Size = new Size(36, 20);
+            lblHeatmapLegendLess.TabIndex = 16;
+            lblHeatmapLegendLess.Text = "Less";
             // 
             // panel1
             // 
@@ -271,11 +369,23 @@
             btnOpenIssue.UseVisualStyleBackColor = false;
             btnOpenIssue.Click += btnOpenIssue_Click;
             // 
+            // lblProjectCreatedAt
+            // 
+            lblProjectCreatedAt.AutoSize = true;
+            lblProjectCreatedAt.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblProjectCreatedAt.ForeColor = SystemColors.ControlText;
+            lblProjectCreatedAt.Location = new Point(866, 17);
+            lblProjectCreatedAt.Name = "lblProjectCreatedAt";
+            lblProjectCreatedAt.Size = new Size(235, 31);
+            lblProjectCreatedAt.TabIndex = 28;
+            lblProjectCreatedAt.Text = "Created: dd/mm/yyyy";
+            // 
             // ProjectView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
+            Controls.Add(lblProjectCreatedAt);
             Controls.Add(btnOpenIssue);
             Controls.Add(btnAddNewIssue);
             Controls.Add(dataGridViewIssues);
@@ -321,5 +431,14 @@
         private DataGridViewTextBoxColumn severityDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdAtDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn lastUpdatedDataGridViewTextBoxColumn;
+        private Label lblProjectCreatedAt;
+        private Label lblHeatmapLegendLess;
+        private Label lblHeatmapLegend1;
+        private Label lblHeatmapLegend3;
+        private Label lblHeatmapLegend2;
+        private Label lblHeatmapLegend5;
+        private Label lblHeatmapLegend4;
+        private Label lblHeatmapLegendMore;
+        private ComboBox comboBoxHeatmapActivityYear;
     }
 }

@@ -1,0 +1,102 @@
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectR.Classes;
+using ProjectR.Interfaces;
+using System.Globalization;
+
+namespace ProjectR.Data.Repositories
+{
+    public class GraphDataRepository(DatabaseContext dbContext) : IGraphDataRepository
+    {
+        private readonly DatabaseContext _context = dbContext;
+
+        public async Task<List<GraphData<DateTime>>> GetDashboardScatterGraphData()
+        {
+            var scatterData = await _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.CreatedAt.Date)
+                .Select(s => new GraphData<DateTime>(s.Key, s.Count()))
+                .ToListAsync();
+
+            return scatterData;
+        }
+
+        public async Task<(
+            Dictionary<string, int>,
+            Dictionary<string, int>
+        )> GetDashboardRadarGraphData()
+        {
+            var radarQuerySeverity = await _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.Issue.Severity)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            var radarQueryStatus = await _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.Issue.Status)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            return (radarQuerySeverity, radarQueryStatus);
+        }
+
+        public async Task<List<GraphData<string>>> GetDashboardBarGraphData()
+        {
+            return await _context
+                .Changes.Where(c =>
+                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
+                    && c.CreatedAt.Date <= DateTime.Now.Date
+                )
+                .GroupBy(c => c.Issue.Project.Name)
+                .Select(g => new GraphData<string>(g.Key, g.Count()))
+                .ToListAsync();
+        }
+
+        public async Task<(
+            Dictionary<string, int>,
+            Dictionary<string, int>
+        )> GetProjectCurrentOpenIssuesBarGraphData(int projectId)
+        {
+            var querySeverity = await _context
+                .Issues.Where(i => i.ProjectId == projectId)
+                .GroupBy(g => g.Severity)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            var queryStatus = await _context
+                .Issues.Where(c => c.ProjectId == projectId)
+                .GroupBy(c => c.Status)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            return (querySeverity, queryStatus);
+        }
+
+        public async Task<Dictionary<int, int>> GetProjectActivityHeatmap(int projectId, int year)
+        {
+            DateOnly startDate = DateOnly.Parse($"01-01-{year}", new CultureInfo("en-GB"));
+            DateOnly endDate = DateOnly.Parse($"31-12-{year}", new CultureInfo("en-GB"));
+
+            var queryChangesHeatmap = await _context
+                .Changes.Where(c =>
+                    c.Issue.ProjectId == projectId
+                    && c.CreatedAt >= startDate.ToDateTime(TimeOnly.MinValue)
+                    && c.CreatedAt <= endDate.ToDateTime(TimeOnly.MaxValue)
+                )
+                .GroupBy(g => g.CreatedAt.DayOfYear)
+                .Select(s => new { s.Key, Value = s.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Value);
+
+            return queryChangesHeatmap;
+        }
+    }
+}

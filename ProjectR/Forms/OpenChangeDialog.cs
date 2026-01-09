@@ -1,18 +1,21 @@
-﻿using ProjectR.Data;
-using ProjectR.Entities;
+﻿using ProjectR.Classes;
+using ProjectR.DTOs;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Forms
 {
     public partial class OpenChangeDialog : Form
     {
         private readonly int _changeId;
-        private readonly DatabaseContext _context;
-        private Change? _change;
+        private readonly IIssuesService _issuesService;
 
-        public OpenChangeDialog(int changeId, DatabaseContext dbContext)
+        public OpenChangeDialog(
+            int changeId,
+            IIssuesService issuesService
+        )
         {
             _changeId = changeId;
-            _context = dbContext;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -20,12 +23,12 @@ namespace ProjectR.Forms
         {
             dateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
 
-            _change = await _context.Changes.FindAsync(_changeId);
+            ChangeDisplay change = await _issuesService.GetChangeById(_changeId);
 
-            textBoxChangeHash.Text = _change?.ChangeHash;
-            textBoxChangeName.Text = _change?.Name;
-            richTextBoxChangeDesc.Text = _change?.Description;
-            dateTimePicker.Value = _change?.CreatedAt ?? DateTime.Now;
+            textBoxChangeHash.Text = change.ChangeHash;
+            textBoxChangeName.Text = change.Name;
+            richTextBoxChangeDesc.Text = change.Description;
+            dateTimePicker.Value = change.CreatedAt;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -73,12 +76,16 @@ namespace ProjectR.Forms
 
                 try
                 {
-                    _change!.Name = textBoxChangeName.Text;
-                    _change.ChangeHash = textBoxChangeHash.Text;
-                    _change.Description = richTextBoxChangeDesc.Text;
-                    _change.CreatedAt = dateTimePicker.Value;
-
-                    await _context.SaveChangesAsync();
+                    await _issuesService.UpdateChange(
+                        new EditChangeDto
+                        {
+                            Id = _changeId,
+                            ChangeHash = textBoxChangeHash.Text,
+                            Name = textBoxChangeName.Text,
+                            Description = richTextBoxChangeDesc.Text,
+                            CreatedAt = dateTimePicker.Value,
+                        }
+                    );
                 }
                 catch (Exception ex)
                 {

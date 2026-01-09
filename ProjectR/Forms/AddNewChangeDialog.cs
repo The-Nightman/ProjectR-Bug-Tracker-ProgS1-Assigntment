@@ -1,18 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectR.Data;
-using ProjectR.Entities;
+﻿using ProjectR.DTOs;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Forms
 {
     public partial class AddNewChangeDialog : Form
     {
-        private readonly Issue _issue;
-        private readonly DatabaseContext _context;
+        private readonly int _issueId;
+        private readonly IIssuesService _issuesService;
 
-        public AddNewChangeDialog(Issue issue, DatabaseContext dbContext)
+        public AddNewChangeDialog(int issueId, IIssuesService issueService)
         {
-            _issue = issue;
-            _context = dbContext;
+            _issueId = issueId;
+            _issuesService = issueService;
             InitializeComponent();
         }
 
@@ -22,7 +21,7 @@ namespace ProjectR.Forms
             dateTimePicker.Value = DateTime.Now;
         }
 
-        private async void btnSaveNewMedia_Click(object sender, EventArgs e)
+        private async void btnSaveNewChange_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBoxChangeHash.Text))
             {
@@ -44,23 +43,16 @@ namespace ProjectR.Forms
 
             try
             {
-                _ = await _context.Changes.AddAsync(
-                    new Change
+                await _issuesService.AddNewChange(
+                    _issueId,
+                    new NewChangeDto
                     {
-                        IssueId = _issue.Id,
                         ChangeHash = textBoxChangeHash.Text,
                         Name = textBoxChangeName.Text,
                         Description = richTextBoxChangeDesc.Text,
-                        CreatedAt = dateTimePicker.Value,
-                        Issue = _issue,
+                        CreatedAt = dateTimePicker.Value
                     }
                 );
-
-                Issue issueToUpdate = await _context.Issues.Where(i => i.Id == _issue.Id).FirstAsync();
-
-                issueToUpdate.LastUpdated = dateTimePicker.Value;
-
-                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -74,8 +66,6 @@ namespace ProjectR.Forms
             {
                 Close();
             }
-
-            await _context.SaveChangesAsync();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

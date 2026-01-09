@@ -38,6 +38,7 @@
             lblDashboardActivityByLevels = new Label();
             lblDashboardActivityProjects = new Label();
             formPlotDashboardActivityProjects = new ScottPlot.WinForms.FormsPlot();
+            btnAddNewProject = new Button();
             SuspendLayout();
             // 
             // flowLayoutPanelProjectCards
@@ -141,11 +142,26 @@
             formPlotDashboardActivityProjects.Size = new Size(384, 233);
             formPlotDashboardActivityProjects.TabIndex = 10;
             // 
+            // btnAddNewProject
+            // 
+            btnAddNewProject.AccessibleDescription = "Add new project to track";
+            btnAddNewProject.BackColor = Color.LawnGreen;
+            btnAddNewProject.FlatStyle = FlatStyle.Popup;
+            btnAddNewProject.Location = new Point(960, 16);
+            btnAddNewProject.Margin = new Padding(0, 0, 8, 0);
+            btnAddNewProject.Name = "btnAddNewProject";
+            btnAddNewProject.Size = new Size(154, 30);
+            btnAddNewProject.TabIndex = 27;
+            btnAddNewProject.Text = "Add New Project";
+            btnAddNewProject.UseVisualStyleBackColor = false;
+            btnAddNewProject.Click += btnAddNewProject_Click;
+            // 
             // Dashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(57, 57, 57);
+            Controls.Add(btnAddNewProject);
             Controls.Add(formPlotDashboardActivityProjects);
             Controls.Add(lblDashboardActivityProjects);
             Controls.Add(lblDashboardActivityByLevels);
@@ -178,5 +194,6 @@
         private Label lblDashboardActivityByLevels;
         private Label lblDashboardActivityProjects;
         private ScottPlot.WinForms.FormsPlot formPlotDashboardActivityProjects;
+        private Button btnAddNewProject;
     }
 }

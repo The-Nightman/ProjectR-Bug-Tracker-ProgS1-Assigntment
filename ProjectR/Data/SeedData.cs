@@ -26,7 +26,8 @@ namespace ProjectR.Data
             {
                 var newProject = new Entities.Project
                 {
-                    Name = project.Name
+                    Name = project.Name,
+                    CreatedAt = DateTime.Now.AddDays(project.CreatedAt),
                 };
 
                 context.Projects.Add(newProject);

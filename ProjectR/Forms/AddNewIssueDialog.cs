@@ -1,17 +1,17 @@
-﻿using ProjectR.Data;
-using ProjectR.Entities;
+﻿using ProjectR.DTOs;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Forms
 {
     public partial class AddNewIssueDialog : Form
     {
-        private readonly Project _project;
-        private readonly DatabaseContext _context;
+        private readonly int _projectId;
+        private readonly IIssuesService _issuesService;
 
-        public AddNewIssueDialog(Project project, DatabaseContext dbContext)
+        public AddNewIssueDialog(int projectId, IIssuesService issuesService)
         {
-            _project = project;
-            _context = dbContext;
+            _projectId = projectId;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -49,23 +49,17 @@ namespace ProjectR.Forms
 
             try
             {
-                _ = await _context.Issues.AddAsync(
-                    new Issue
-                    {
-                        ProjectId = _project.Id,
-                        Name = textBoxNewIssueTitle.Text,
-                        Description = richTextBoxNewIssueDesc.Text,
-                        Severity = comboBoxNewIssueSeverity.SelectedItem.ToString()!,
-                        Status = textBoxNewIssueStatus.Text,
-                        CreatedAt = dateTimePickerNewIssue.Value,
-                        LastUpdated = dateTimePickerNewIssue.Value,
-                        Media = [],
-                        Changes = [],
-                        Project = _project,
-                    }
-                );
+                AddNewIssueDto newIssueDto = new()
+                {
+                    ProjectId = _projectId,
+                    Name = textBoxNewIssueTitle.Text.Trim(),
+                    Description = richTextBoxNewIssueDesc.Text.Trim(),
+                    Severity = comboBoxNewIssueSeverity.SelectedItem.ToString()!,
+                    Status = textBoxNewIssueStatus.Text.Trim(),
+                    CreatedAt = dateTimePickerNewIssue.Value,
+                };
 
-                await _context.SaveChangesAsync();
+                await _issuesService.AddNewIssue(_projectId, newIssueDto);
             }
             catch (Exception ex)
             {
@@ -79,8 +73,6 @@ namespace ProjectR.Forms
             {
                 Close();
             }
-
-            await _context.SaveChangesAsync();
         }
     }
 }

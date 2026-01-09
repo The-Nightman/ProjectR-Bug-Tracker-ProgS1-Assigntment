@@ -1,17 +1,17 @@
-﻿using ProjectR.Data;
-using ProjectR.Entities;
+﻿using ProjectR.DTOs;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Forms
 {
     public partial class AddMediaDialog : Form
     {
-        private readonly Issue _issue;
-        private readonly DatabaseContext _context;
+        private readonly int _issueId;
+        private readonly IIssuesService _issuesService;
 
-        public AddMediaDialog(Issue issue, DatabaseContext dbContext)
+        public AddMediaDialog(int issueId, IIssuesService issuesService)
         {
-            _issue = issue;
-            _context = dbContext;
+            _issueId = issueId;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -23,7 +23,9 @@ namespace ProjectR.Forms
 
                 textBoxFilePath.Text = openFileDialog1.FileName;
 
-                textBoxMediaTitle.Text = Path.GetFileNameWithoutExtension(openFileDialog1.SafeFileName);
+                textBoxMediaTitle.Text = Path.GetFileNameWithoutExtension(
+                    openFileDialog1.SafeFileName
+                );
 
                 richTextBoxMediaDesc.Text = "";
             }
@@ -79,25 +81,21 @@ namespace ProjectR.Forms
                     Directory.CreateDirectory("Data/Media");
                 }
 
+                await _issuesService.AddNewMedia(
+                    _issueId,
+                    new NewMediaDto
+                    {
+                        Title = textBoxMediaTitle.Text,
+                        Description = richTextBoxMediaDesc.Text,
+                        Path = $"Data/Media/{openFileDialog1.SafeFileName}",
+                    }
+                );
+
                 File.Copy(
                     openFileDialog1.FileName,
                     Path.Combine("Data/Media", openFileDialog1.SafeFileName),
                     false
                 );
-
-                _ = await _context.Media.AddAsync(
-                    new Media
-                    {
-                        IssueId = _issue.Id,
-                        Title = textBoxMediaTitle.Text,
-                        Description = richTextBoxMediaDesc.Text,
-                        MediaType = "Image",
-                        Path = $"Data/Media/{openFileDialog1.SafeFileName}",
-                        Issue = _issue,
-                    }
-                );
-
-                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

@@ -1,20 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectR.Data;
-using ProjectR.Entities;
+﻿using ProjectR.Classes;
+using ProjectR.DTOs;
 using ProjectR.Forms;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Controls
 {
     public partial class IssueView : UserControl
     {
         private readonly int _issueId;
-        private readonly DatabaseContext _context;
-        private Issue? _issue;
+        private readonly IIssuesService _issuesService;
 
-        public IssueView(DatabaseContext dbContenxt, int issueId)
+        public IssueView(int issueId, IIssuesService issuesService)
         {
             _issueId = issueId;
-            _context = dbContenxt;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -23,6 +22,8 @@ namespace ProjectR.Controls
             string[] severityLevels = ["Low", "Medium", "Critical"];
             string[] statusLevels = ["Investigating", "In Review", "Fixed"];
 
+            IssueDisplay issue = await _issuesService.GetIssueById(_issueId);
+
             imageList.Images.Add("editLight", Properties.Resources.editLight);
             imageList.Images.Add("saveLight", Properties.Resources.saveLight);
             btnIssueNameEditSave.ImageKey = "editLight";
@@ -30,28 +31,21 @@ namespace ProjectR.Controls
             comboBoxSeverityLevels.Items.AddRange(severityLevels);
             comboBoxStatusLevels.Items.AddRange(statusLevels);
 
-            // Loading related entities as a property technically runs multiple queries
-            // and this may cause the related entities to not be loaded even with async
-            _issue = await _context
-                .Issues.Include(i => i.Media)
-                .Include(i => i.Changes)
-                .FirstAsync(i => i.Id == _issueId);
-
-            lblIssueTitle.Text = _issue.Name;
-            lblIssueCreatedDate.Text = $"Created: {_issue.CreatedAt:dd/MM/yyyy HH:mm}";
-            lblIssueLastUpdated.Text = $"Last Updated: {_issue.LastUpdated:dd/MM/yyyy HH:mm}";
-            richTextBoxIssueDesc.Text = _issue.Description;
+            lblIssueTitle.Text = issue.Name;
+            lblIssueCreatedDate.Text = $"Created: {issue.CreatedAt:dd/MM/yyyy HH:mm}";
+            lblIssueLastUpdated.Text = $"Last Updated: {issue.LastUpdated:dd/MM/yyyy HH:mm}";
+            richTextBoxIssueDesc.Text = issue.Description;
             listBoxMedia.DisplayMember = "Title";
-            listBoxMedia.DataSource = _issue.Media;
-            dataGridViewChanges.DataSource = _issue.Changes.OrderByDescending(c => c.CreatedAt).ToList();
+            listBoxMedia.DataSource = issue.MediaList;
+            dataGridViewChanges.DataSource = issue.ChangesList;
 
             btnIssueNameEditSave.Location = new Point(
                 lblIssueTitle.Location.X + lblIssueTitle.Width + lblIssueTitle.Padding.Right,
                 lblIssueTitle.Location.Y
             );
 
-            comboBoxSeverityLevels.SelectedItem = _issue.Severity;
-            comboBoxStatusLevels.SelectedItem = _issue.Status;
+            comboBoxSeverityLevels.SelectedItem = issue.Severity;
+            comboBoxStatusLevels.SelectedItem = issue.Status;
 
             toolTip.SetToolTip(pictureBoxIssueMedia, "Click to view fullscreen");
         }
@@ -84,7 +78,7 @@ namespace ProjectR.Controls
             if (listBoxMedia.SelectedItem == null)
                 return;
 
-            Media image = (Media)listBoxMedia.SelectedItem;
+            MediaDisplay image = (MediaDisplay)listBoxMedia.SelectedItem;
 
             pictureBoxIssueMedia.ImageLocation = Path.Combine(AppContext.BaseDirectory, image.Path);
 
@@ -105,7 +99,6 @@ namespace ProjectR.Controls
                 textBoxIssueTitleEdit.Visible = true;
                 btnIssueNameEditSave.AccessibleName = "Save Issue Name";
 
-                //btnIssueNameEditSave.ImageIndex = 1;
                 btnIssueNameEditSave.ImageKey = "saveLight";
 
                 btnIssueNameEditSave.Location = new Point(
@@ -133,7 +126,7 @@ namespace ProjectR.Controls
 
         private async void btnAddNewMedia_Click(object sender, EventArgs e)
         {
-            Form dialog = new AddMediaDialog(_issue!, _context);
+            Form dialog = new AddMediaDialog(_issueId, _issuesService);
             dialog.ShowDialog();
 
             await ReloadMedia();
@@ -145,8 +138,8 @@ namespace ProjectR.Controls
                 return;
 
             Form dialog = new EditMediaDialog(
-                (Media)listBoxMedia.SelectedItem,
-                _context
+                (MediaDisplay)listBoxMedia.SelectedItem,
+                _issuesService
             );
             dialog.ShowDialog();
 
@@ -155,7 +148,7 @@ namespace ProjectR.Controls
 
         private async void btnAddNewChange_Click(object sender, EventArgs e)
         {
-            Form dialog = new AddNewChangeDialog(_issue!, _context);
+            Form dialog = new AddNewChangeDialog(_issueId, _issuesService);
             dialog.ShowDialog();
 
             await ReloadChanges();
@@ -165,63 +158,63 @@ namespace ProjectR.Controls
         {
             Form dialog = new OpenChangeDialog(
                 (int)dataGridViewChanges.SelectedRows[0].Cells["Id"].Value,
-                _context
+                _issuesService
             );
             dialog.ShowDialog();
 
             await ReloadChanges(); // The dialog does have functionality to edit the changes so we should still reload
         }
 
-        private async Task ReloadMedia()
-        {
-            var newMedia = await _context.Media.Where(m => m.IssueId == _issueId).ToListAsync();
-
-            _issue!.Media = newMedia;
-
-            listBoxMedia.DataSource = _issue!.Media;
-            listBoxMedia.Refresh();
-        }
-
-        private async Task ReloadChanges()
-        {
-            var newChanges = await _context.Changes.Where(m => m.IssueId == _issueId).ToListAsync();
-
-            _issue!.Changes = newChanges;
-
-            dataGridViewChanges.DataSource = newChanges.OrderByDescending(c => c.CreatedAt).ToList();
-            dataGridViewChanges.Refresh();
-
-            var issueToUpdate = await _context.Issues.Where(i => i.Id == _issueId).Select(i => i.LastUpdated).FirstAsync();
-
-            _issue!.LastUpdated = issueToUpdate;
-
-            lblIssueLastUpdated.Text = $"Last Updated: {_issue!.LastUpdated:dd/MM/yyyy HH:mm}";
-        }
-
         private async void btnSaveIssueEdits_Click(object sender, EventArgs e)
         {
-            if (_issue == null)
-                return;
-
-            if (comboBoxSeverityLevels.SelectedItem == null || comboBoxStatusLevels.SelectedItem == null)
+            if (
+                comboBoxSeverityLevels.SelectedItem == null
+                || comboBoxStatusLevels.SelectedItem == null
+            )
             {
-                MessageBox.Show("Please select both severity and status levels.", "Validation Error");
+                MessageBox.Show(
+                    "Please select both severity and status levels.",
+                    "Validation Error"
+                );
                 return;
             }
 
             try
             {
-                _issue.Name = lblIssueTitle.Text;
-                _issue.Description = richTextBoxIssueDesc.Text;
-                _issue.Severity = comboBoxSeverityLevels.SelectedItem.ToString()!;
-                _issue.Status = comboBoxStatusLevels.SelectedItem.ToString()!;
-
-                await _context.SaveChangesAsync();
+                await _issuesService.UpdateIssueDetails(
+                    _issueId,
+                    new EditIssueDetailsDto
+                    {
+                        Name = lblIssueTitle.Text,
+                        Description = richTextBoxIssueDesc.Text,
+                        Severity = comboBoxSeverityLevels.SelectedItem.ToString()!,
+                        Status = comboBoxStatusLevels.SelectedItem.ToString()!,
+                    }
+                );
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"An error occurred while saving the issue: {ex.Message}", "Error");
             }
+        }
+
+        private async Task ReloadMedia()
+        {
+            var newMedia = await _issuesService.GetIssueMedia(_issueId);
+
+            listBoxMedia.DataSource = newMedia;
+            listBoxMedia.Refresh();
+        }
+
+        private async Task ReloadChanges()
+        {
+            var refreshIssueQuery = await _issuesService.GetIssueById(_issueId);
+
+            dataGridViewChanges.DataSource = refreshIssueQuery.ChangesList;
+            dataGridViewChanges.Refresh();
+
+            lblIssueLastUpdated.Text =
+                $"Last Updated: {refreshIssueQuery.LastUpdated:dd/MM/yyyy HH:mm}";
         }
     }
 }

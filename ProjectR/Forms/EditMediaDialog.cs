@@ -1,18 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectR.Data;
-using ProjectR.Entities;
+﻿using ProjectR.Classes;
+using ProjectR.DTOs;
+using ProjectR.Interfaces;
 
 namespace ProjectR.Forms
 {
     public partial class EditMediaDialog : Form
     {
-        private readonly Media _media;
-        private readonly DatabaseContext _context;
+        private readonly MediaDisplay _media;
+        private readonly IIssuesService _issuesService;
 
-        public EditMediaDialog(Media media, DatabaseContext dbContext)
+        public EditMediaDialog(
+            MediaDisplay media,
+            IIssuesService issuesService
+        )
         {
             _media = media;
-            _context = dbContext;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -32,11 +35,14 @@ namespace ProjectR.Forms
         {
             try
             {
-                _ = await _context.Media.Where(m => m.Id == _media.Id).ExecuteDeleteAsync();
+                await _issuesService.DeleteMediaById(_media.MediaId);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred while deleting the media: {ex.Message}", "Error");
+                MessageBox.Show(
+                    $"An error occurred while deleting the media: {ex.Message}",
+                    "Error"
+                );
                 return;
             }
 
@@ -47,12 +53,14 @@ namespace ProjectR.Forms
         {
             try
             {
-                Media media = await _context.Media.FirstAsync(m => m.Id == _media.Id);
-
-                media.Title = textBoxMediaTitle.Text;
-                media.Description = richTextBoxMediaDesc.Text;
-
-                await _context.SaveChangesAsync();
+                await _issuesService.UpdateMedia(
+                    new EditMediaDto
+                    {
+                        Id = _media.MediaId,
+                        Title = textBoxMediaTitle.Text,
+                        Description = richTextBoxMediaDesc.Text,
+                    }
+                );
             }
             catch (Exception ex)
             {

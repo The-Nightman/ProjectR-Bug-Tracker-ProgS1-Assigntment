@@ -36,7 +36,7 @@
             textBoxChangeName = new TextBox();
             richTextBoxChangeDesc = new RichTextBox();
             dateTimePicker = new DateTimePicker();
-            btnSaveNewMedia = new Button();
+            btnSaveNewChange = new Button();
             btnCancel = new Button();
             groupBoxNewChangeDetails = new GroupBox();
             groupBoxNewChangeDetails.SuspendLayout();
@@ -115,20 +115,20 @@
             dateTimePicker.Size = new Size(389, 27);
             dateTimePicker.TabIndex = 7;
             // 
-            // btnSaveNewMedia
+            // btnSaveNewChange
             // 
-            btnSaveNewMedia.AccessibleDescription = "Save Change";
-            btnSaveNewMedia.AccessibleName = "";
-            btnSaveNewMedia.BackColor = Color.LawnGreen;
-            btnSaveNewMedia.FlatStyle = FlatStyle.Flat;
-            btnSaveNewMedia.Location = new Point(256, 388);
-            btnSaveNewMedia.Margin = new Padding(0, 0, 8, 0);
-            btnSaveNewMedia.Name = "btnSaveNewMedia";
-            btnSaveNewMedia.Size = new Size(155, 29);
-            btnSaveNewMedia.TabIndex = 26;
-            btnSaveNewMedia.Text = "Save";
-            btnSaveNewMedia.UseVisualStyleBackColor = false;
-            btnSaveNewMedia.Click += btnSaveNewMedia_Click;
+            btnSaveNewChange.AccessibleDescription = "Save Change";
+            btnSaveNewChange.AccessibleName = "";
+            btnSaveNewChange.BackColor = Color.LawnGreen;
+            btnSaveNewChange.FlatStyle = FlatStyle.Flat;
+            btnSaveNewChange.Location = new Point(256, 388);
+            btnSaveNewChange.Margin = new Padding(0, 0, 8, 0);
+            btnSaveNewChange.Name = "btnSaveNewChange";
+            btnSaveNewChange.Size = new Size(155, 29);
+            btnSaveNewChange.TabIndex = 26;
+            btnSaveNewChange.Text = "Save";
+            btnSaveNewChange.UseVisualStyleBackColor = false;
+            btnSaveNewChange.Click += btnSaveNewChange_Click;
             // 
             // btnCancel
             // 
@@ -168,7 +168,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(420, 426);
             Controls.Add(groupBoxNewChangeDetails);
-            Controls.Add(btnSaveNewMedia);
+            Controls.Add(btnSaveNewChange);
             Controls.Add(btnCancel);
             Name = "AddNewChangeDialog";
             Text = "AddNewChange";
@@ -188,7 +188,7 @@
         private TextBox textBoxChangeName;
         private RichTextBox richTextBoxChangeDesc;
         private DateTimePicker dateTimePicker;
-        private Button btnSaveNewMedia;
+        private Button btnSaveNewChange;
         private Button btnCancel;
         private GroupBox groupBoxNewChangeDetails;
     }

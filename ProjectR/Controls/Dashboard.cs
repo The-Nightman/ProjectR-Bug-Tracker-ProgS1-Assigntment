@@ -1,5 +1,6 @@
 ﻿using ProjectR.Classes;
-using ProjectR.Data;
+using ProjectR.Forms;
+using ProjectR.Interfaces;
 using ScottPlot;
 
 namespace ProjectR.Controls
@@ -7,12 +8,22 @@ namespace ProjectR.Controls
     public partial class Dashboard : UserControl
     {
         private readonly Navigation _mainNav;
-        private readonly DatabaseContext _context;
+        private readonly IProjectsService _projectsService;
+        private readonly IGraphDataService _graphService;
+        private readonly IIssuesService _issuesService;
 
-        public Dashboard(DatabaseContext dbContext, Navigation mainNav)
+
+        public Dashboard(
+            Navigation mainNav,
+            IProjectsService projectsService,
+            IGraphDataService graphService,
+            IIssuesService issuesService
+        )
         {
             _mainNav = mainNav;
-            _context = dbContext;
+            _projectsService = projectsService;
+            _graphService = graphService;
+            _issuesService = issuesService;
             InitializeComponent();
         }
 
@@ -23,60 +34,15 @@ namespace ProjectR.Controls
             base.OnPaint(e);
         }
 
-        private List<ProjectPreview> projectPreviews = [];
-        private List<GraphData<DateTime>> scatterData = [];
-        private List<GraphData<string>> radarData = [];
-        private List<GraphData<string>> barData = [];
-
-        private void Dashboard_Load(object sender, EventArgs e)
+        private async void Dashboard_Load(object sender, EventArgs e)
         {
+            List<ProjectPreview> projectPreviews = await _projectsService.GetProjectPreviews();
+            List<GraphData<DateTime>> scatterData = await _graphService.GetDashboardScatterGraphData();
+            List<GraphData<string>> radarData = await _graphService.GetDashboardRadarGraphData();
+            List<GraphData<string>> barData = await _graphService.GetDashboardBarGraphData();
+
             DateTime startOfWeekRange = DateTime.Now.AddDays(-6).Date;
             DateTime todayWeekRange = DateTime.Now.Date;
-
-            projectPreviews =
-            [
-                .. _context.Projects.Select(p => new ProjectPreview(
-                    p.Id,
-                    p.Name,
-                    p.Issues.Count(i => i.Status != "Fixed"),
-                    p.Issues.Count(i => i.Severity == "Critical" && i.Status != "Fixed"),
-                    p.Issues.Count(i =>
-                        i.LastUpdated >= startOfWeekRange && i.LastUpdated <= todayWeekRange
-                    ),
-                    p.Issues.Max(i => i.LastUpdated)
-                )),
-            ];
-
-            scatterData =
-            [
-                .. _context
-                    .Changes.Where(c =>
-                        c.CreatedAt.Date >= startOfWeekRange && c.CreatedAt.Date <= todayWeekRange
-                    )
-                    .GroupBy(g => new
-                    {
-                        g.CreatedAt.Year,
-                        g.CreatedAt.Month,
-                        g.CreatedAt.Day,
-                    })
-                    .Select(o => new GraphData<DateTime>(
-                        new DateTime(o.Key.Year, o.Key.Month, o.Key.Day),
-                        o.Count()
-                    )),
-            ];
-
-            for (int i = 0; i <= 6; i++)
-            {
-                DateTime targetDate = DateTime.Now.AddDays(-6 + i).Date;
-
-                if (!scatterData.Any(sq => sq.XSeries == targetDate))
-                {
-                    scatterData.Insert(
-                        i,
-                        new GraphData<DateTime>(DateTime.Now.AddDays(-6 + i).Date, 0)
-                    );
-                }
-            }
 
             HandleResizeables();
             // If this isnt handled a vertical scroll bar will appear when the window is resized to overflow.
@@ -84,9 +50,10 @@ namespace ProjectR.Controls
 
             foreach (ProjectPreview proj in projectPreviews)
             {
-                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _context, _mainNav));
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _mainNav, _projectsService, _graphService, _issuesService));
             }
 
+            // Scatter Plot
             double[] xs = [.. scatterData.Select(gd => gd.XSeries.Date.ToOADate())];
             double[] ys = [.. scatterData.Select(gd => gd.Value)];
 
@@ -111,45 +78,7 @@ namespace ProjectR.Controls
             );
             formPlotDashboardActivityWeekly.Refresh();
 
-            List<string> severityLevels = ["Low", "Medium", "Critical"];
-            List<string> statusLevels = ["Investigating", "In Review", "Fixed"];
-
-            var radarQuerySeverity = _context
-                .Changes.Where(c =>
-                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                    && c.CreatedAt.Date <= DateTime.Now.Date
-                )
-                .GroupBy(c => c.Issue.Severity)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            var radarQueryStatus = _context
-                .Changes.Where(c =>
-                    c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                    && c.CreatedAt.Date <= DateTime.Now.Date
-                )
-                .GroupBy(c => c.Issue.Status)
-                .Select(s => new { s.Key, Value = s.Count() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            List<GraphData<string>> radarListSeverity =
-            [
-                .. severityLevels.Select(s => new GraphData<string>(
-                    s,
-                    radarQuerySeverity.TryGetValue(s, out int value) ? value : 0
-                )),
-            ];
-
-            List<GraphData<string>> radarListStatus =
-            [
-                .. statusLevels.Select(s => new GraphData<string>(
-                    s,
-                    radarQueryStatus.TryGetValue(s, out int value) ? value : 0
-                )),
-            ];
-
-            radarData = [.. radarListSeverity.Concat(radarListStatus)];
-
+            // Radar Chart
             double[] radarYs = [.. radarData.Select(gd => gd.Value)];
 
             double radarAxisMax = radarYs.Max() switch
@@ -176,17 +105,7 @@ namespace ProjectR.Controls
             );
             formPlotDashboardActivityLevels.Refresh();
 
-            barData =
-            [
-                .. _context
-                    .Changes.Where(c =>
-                        c.CreatedAt.Date >= DateTime.Now.AddDays(-6).Date
-                        && c.CreatedAt.Date <= DateTime.Now.Date
-                    )
-                    .GroupBy(c => c.Issue.Project.Name)
-                    .Select(g => new GraphData<string>(g.Key, g.Count())),
-            ];
-
+            // Bar Graph
             for (int i = 0; i < barData.Count; i++)
             {
                 formPlotDashboardActivityProjects.Plot.Add.Bar(
@@ -221,6 +140,26 @@ namespace ProjectR.Controls
             // This is need to ensure the FlowLayoutPanel is correctly sized on load or else it will be significantly smaller on load.
             flowLayoutPanelProjectCards.Width = Width - 32;
             separator.Width = Width - 32;
+        }
+
+        private async void btnAddNewProject_Click(object sender, EventArgs e)
+        {
+            Form newProjectDialog = new AddNewProjectDialog(_projectsService);
+            newProjectDialog.ShowDialog();
+
+            await RefreshProjectCards();
+        }
+
+        private async Task RefreshProjectCards()
+        {
+            flowLayoutPanelProjectCards.Controls.Clear();
+
+            List<ProjectPreview> projectPreviews = await _projectsService.GetProjectPreviews();
+
+            foreach (ProjectPreview proj in projectPreviews)
+            {
+                flowLayoutPanelProjectCards.Controls.Add(new ProjectCard(proj, _mainNav, _projectsService, _graphService, _issuesService));
+            }
         }
     }
 }

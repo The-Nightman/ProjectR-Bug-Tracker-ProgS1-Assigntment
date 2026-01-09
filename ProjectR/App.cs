@@ -1,5 +1,9 @@
 using ProjectR.Classes;
+using ProjectR.Controls;
 using ProjectR.Data;
+using ProjectR.Data.Repositories;
+using ProjectR.Interfaces;
+using ProjectR.Services;
 
 namespace ProjectR
 {
@@ -7,6 +11,12 @@ namespace ProjectR
     {
         private Navigation? mainNav;
         private DatabaseContext? dbContext;
+        private IProjectsRepository? projectsRepository;
+        private IProjectsService? projectsService;
+        private IGraphDataRepository? graphRepository;
+        private IGraphDataService? graphService;
+        private IIssuesRepository? issuesRepository;
+        private IIssuesService? issuesService;
 
         private string currentView = "DASHBOARD";
 
@@ -19,10 +29,16 @@ namespace ProjectR
         {
             mainNav = new(panelMainView);
             dbContext = new DatabaseContext();
+            projectsRepository = new ProjectsRepository(dbContext);
+            projectsService = new ProjectsService(projectsRepository);
+            graphRepository = new GraphDataRepository(dbContext);
+            graphService = new GraphDataService(graphRepository);
+            issuesRepository = new IssuesRepository(dbContext);
+            issuesService = new IssuesService(issuesRepository);
 
             await SeedData.SeedDatabase(dbContext);
 
-            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav));
+            mainNav!.UseNavigate(new Dashboard(mainNav, projectsService, graphService, issuesService));
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
                 Properties.Resources.dashboardIconStateActiveDark
@@ -51,7 +67,7 @@ namespace ProjectR
                 return;
 
             currentView = "DASHBOARD";
-            mainNav!.UseNavigate(new Controls.Dashboard(dbContext!, mainNav));
+            mainNav!.UseNavigate(new Dashboard(mainNav, projectsService!, graphService!, issuesService));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"
