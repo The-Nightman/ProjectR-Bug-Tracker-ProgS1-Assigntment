@@ -85,21 +85,22 @@ namespace ProjectR
             btnNavBack.Visible = false;
         }
 
+        // For now this is disabled, i should have gotten started sooner so i may come back to it if theres time but i need to focus on moving on to other assignments
         private void btnNavbarProjects_Click(object sender, EventArgs e)
         {
-            if (mainNav!.History[^1].GetType() == typeof(ProjectView))
-                return;
+            //if (mainNav!.History[^1].GetType() == typeof(ProjectView))
+            //    return;
 
-            btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
-            btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
-                "#575757"
-            );
-            btnNavbarDashboard.ImageKey = "dashboardDarkInactive";
-            btnNavbarProjects.ForeColor = ColorTranslator.FromHtml("#DEB660");
-            btnNavbarProjects.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
-                "#33DEB660"
-            );
-            btnNavbarProjects.ImageKey = "projectsDarkActive";
+            //btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
+            //btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
+            //    "#575757"
+            //);
+            //btnNavbarDashboard.ImageKey = "dashboardDarkInactive";
+            //btnNavbarProjects.ForeColor = ColorTranslator.FromHtml("#DEB660");
+            //btnNavbarProjects.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
+            //    "#33DEB660"
+            //);
+            //btnNavbarProjects.ImageKey = "projectsDarkActive";
         }
 
         private void panelMainView_ControlAdded(object sender, ControlEventArgs e)

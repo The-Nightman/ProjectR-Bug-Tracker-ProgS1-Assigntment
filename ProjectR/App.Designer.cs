@@ -103,6 +103,7 @@
             btnNavbarProjects.TextAlign = ContentAlignment.MiddleLeft;
             btnNavbarProjects.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnNavbarProjects.UseVisualStyleBackColor = false;
+            btnNavbarProjects.Visible = false;
             btnNavbarProjects.Click += btnNavbarProjects_Click;
             // 
             // imageListNavbarIconsControl
