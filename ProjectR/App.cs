@@ -18,8 +18,6 @@ namespace ProjectR
         private IIssuesRepository? issuesRepository;
         private IIssuesService? issuesService;
 
-        private string currentView = "DASHBOARD";
-
         public App()
         {
             InitializeComponent();
@@ -38,7 +36,9 @@ namespace ProjectR
 
             await SeedData.SeedDatabase(dbContext);
 
-            mainNav!.UseNavigate(new Dashboard(mainNav, projectsService, graphService, issuesService));
+            mainNav!.UseNavigate(
+                new Dashboard(mainNav, projectsService, graphService, issuesService)
+            );
             imageListNavbarIconsControl.Images.Add(
                 "dashboardDarkActive",
                 Properties.Resources.dashboardIconStateActiveDark
@@ -55,6 +55,8 @@ namespace ProjectR
                 "projectsDarkInactive",
                 Properties.Resources.projectsIconStateInactiveDark
             );
+            imageListNavbarIconsControl.Images.Add("backDark", Properties.Resources.backDark);
+            btnNavBack.ImageKey = "backDark";
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.ImageKey = "dashboardDarkActive";
             btnNavbarProjects.ForeColor = ColorTranslator.FromHtml("#ffffff");
@@ -63,11 +65,12 @@ namespace ProjectR
 
         private void btnNavbarDashboard_Click(object sender, EventArgs e)
         {
-            if (currentView == "DASHBOARD")
+            if (mainNav!.History[^1].GetType() == typeof(Dashboard))
                 return;
 
-            currentView = "DASHBOARD";
-            mainNav!.UseNavigate(new Dashboard(mainNav, projectsService!, graphService!, issuesService));
+            mainNav!.UseNavigate(
+                new Dashboard(mainNav, projectsService!, graphService!, issuesService!)
+            );
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#DEB660");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#33DEB660"
@@ -78,15 +81,15 @@ namespace ProjectR
                 "#575757"
             );
             btnNavbarProjects.ImageKey = "projectsDarkInactive";
+
+            btnNavBack.Visible = false;
         }
 
         private void btnNavbarProjects_Click(object sender, EventArgs e)
         {
-            if (currentView == "PROJECTS")
+            if (mainNav!.History[^1].GetType() == typeof(ProjectView))
                 return;
 
-            currentView = "PROJECTS";
-            //mainNav!.UseNavigate(new Controls.ProjectView(dbContext!, mainNav, ));
             btnNavbarDashboard.ForeColor = ColorTranslator.FromHtml("#ffffff");
             btnNavbarDashboard.FlatAppearance.MouseOverBackColor = ColorTranslator.FromHtml(
                 "#575757"
@@ -97,6 +100,23 @@ namespace ProjectR
                 "#33DEB660"
             );
             btnNavbarProjects.ImageKey = "projectsDarkActive";
+        }
+
+        private void panelMainView_ControlAdded(object sender, ControlEventArgs e)
+        {
+            if (mainNav!.History[^1].GetType() == typeof(Dashboard))
+            {
+                btnNavBack.Visible = false;
+            }
+            else
+            {
+                btnNavBack.Visible = true;
+            }
+        }
+
+        private void btnNavBack_Click(object sender, EventArgs e)
+        {
+            mainNav!.UseBackNavigate();
         }
 
         private void App_FormClosing(object sender, FormClosingEventArgs e)

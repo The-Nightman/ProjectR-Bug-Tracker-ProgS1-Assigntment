@@ -36,6 +36,7 @@
             btnNavbarProjects = new Button();
             imageListNavbarIconsControl = new ImageList(components);
             btnNavbarDashboard = new Button();
+            btnNavBack = new Button();
             panelNavBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -47,6 +48,7 @@
             panelMainView.Name = "panelMainView";
             panelMainView.Size = new Size(1138, 718);
             panelMainView.TabIndex = 0;
+            panelMainView.ControlAdded += panelMainView_ControlAdded;
             // 
             // panelNavBar
             // 
@@ -130,12 +132,35 @@
             btnNavbarDashboard.UseVisualStyleBackColor = false;
             btnNavbarDashboard.Click += btnNavbarDashboard_Click;
             // 
+            // btnNavBack
+            // 
+            btnNavBack.AccessibleDescription = "Navigate backwards";
+            btnNavBack.AccessibleName = "Navigate Back";
+            btnNavBack.FlatAppearance.BorderSize = 0;
+            btnNavBack.FlatAppearance.MouseDownBackColor = Color.FromArgb(204, 18, 18, 18);
+            btnNavBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(204, 87, 87, 87);
+            btnNavBack.FlatStyle = FlatStyle.Flat;
+            btnNavBack.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnNavBack.ForeColor = SystemColors.ControlLightLight;
+            btnNavBack.ImageAlign = ContentAlignment.MiddleLeft;
+            btnNavBack.ImageList = imageListNavbarIconsControl;
+            btnNavBack.Location = new Point(267, 13);
+            btnNavBack.Name = "btnNavBack";
+            btnNavBack.Size = new Size(120, 51);
+            btnNavBack.TabIndex = 2;
+            btnNavBack.Text = "Back";
+            btnNavBack.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnNavBack.UseVisualStyleBackColor = true;
+            btnNavBack.Visible = false;
+            btnNavBack.Click += btnNavBack_Click;
+            // 
             // App
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
             ClientSize = new Size(1422, 822);
+            Controls.Add(btnNavBack);
             Controls.Add(panelNavBar);
             Controls.Add(panelMainView);
             Margin = new Padding(3, 4, 3, 4);
@@ -158,5 +183,6 @@
         private Button btnNavbarProjects;
         private PictureBox pictureBox1;
         private Label lblApplicationTitle;
+        private Button btnNavBack;
     }
 }

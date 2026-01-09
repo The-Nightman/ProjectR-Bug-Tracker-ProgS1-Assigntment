@@ -63,6 +63,16 @@ namespace ProjectR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap backDark {
+            get {
+                object obj = ResourceManager.GetObject("backDark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap dashboardIconStateActiveDark {
             get {
                 object obj = ResourceManager.GetObject("dashboardIconStateActiveDark", resourceCulture);
